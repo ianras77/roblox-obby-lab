@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Install format and lint tools
+        run: |
+          cargo install stylua --version 2.3.1 --locked
+          cargo install selene --version 0.29.0 --locked
+      - name: Format & lint
+        run: ./scripts/check.sh

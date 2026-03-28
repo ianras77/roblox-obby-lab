@@ -1,0 +1,6 @@
+std = "roblox"
+exclude = ["place/**"]
+
+[rules]
+shadowing = "warn"
+undefined_variable = "deny"

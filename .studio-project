@@ -1,0 +1,6 @@
+STUDIO_PROJECT_ID=obby-of-legends
+STUDIO_PROJECT_NAME="Obby of Legends"
+STUDIO_ROJO_PROJECT=default.project.json
+STUDIO_ROJO_PORT=34872
+STUDIO_GIT_REPO=roblox-obby-lab
+STUDIO_GIT_VISIBILITY=private

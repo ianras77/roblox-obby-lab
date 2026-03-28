@@ -1,0 +1,2516 @@
+<roblox version="4">
+  <Item class="ReplicatedStorage" referent="0">
+    <Properties>
+      <string name="Name">ReplicatedStorage</string>
+    </Properties>
+    <Item class="Folder" referent="1">
+      <Properties>
+        <string name="Name">Config</string>
+      </Properties>
+      <Item class="ModuleScript" referent="2">
+        <Properties>
+          <string name="Name">GameConfig</string>
+          <string name="Source"><![CDATA[local GameConfig = {
+  -- Kid Notes: change this seed to reshape the whole obby deterministically.
+  Seed = 12345,
+  Zones = 3,
+  StagesPerZone = 6,
+  StageSpacing = Vector3.new(55, 0, 0),
+  ElevationPerZone = 10,
+  AllowlistUserIds = { 0 }, -- Kid Notes: add your userId here to unlock /reseed, /rebuild, /stage
+  DevCommandsEnabled = true,
+  SaveCheckpoints = false, -- Kid Notes: flip to true when testing DataStore saves
+  UseDataStore = false, -- keep off in Studio to avoid errors
+  DataStoreName = "ObbyOfLegends_Checkpoints",
+  -- Cycle through these until one preloads; swap in your own IDs if they error.
+  MusicIds = {
+    "rbxassetid://1843521234",
+    "rbxassetid://1837468655",
+    "rbxassetid://6065479763",
+  },
+  MaxPlayersPerServer = 12,
+  ProgressRemote = "ObbyProgress",
+  KeyRemote = "KeyProgress",
+  FinaleRemote = "FinaleSpotlight",
+  KeySpawnChance = 0.6,
+}
+
+return GameConfig
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="3">
+        <Properties>
+          <string name="Name">ObstacleConfig</string>
+          <string name="Source"><![CDATA[local ObstacleConfig = {
+  -- Kid Notes: tweak these speeds to make the obby wilder or calmer.
+  MovingPlatformSpeed = 10,
+  RotatorSpeed = math.rad(45),
+  TimedTileInterval = 2.5,
+  ConveyorSpeed = 18,
+  BouncePower = 65,
+  LavaRiseSpeed = 6,
+  WindForce = 40,
+  LaserCycleTime = 3,
+}
+
+return ObstacleConfig
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="4">
+        <Properties>
+          <string name="Name">WorldGenConfig</string>
+          <string name="Source"><![CDATA[local WorldGenConfig = {
+  StageTypes = {
+    "Warmup",
+    "BouncyClouds",
+    "ToadHallGate",
+    "ToadLibrary",
+    "CaravanChase",
+    "PubChaos",
+    "JailBreak",
+    "RiverBarge",
+    "TrainTunnel",
+    "SeesawGate",
+    "CourtroomChaos",
+    "MotorMadness",
+    "WildWoods",
+    "Warmup",
+    "LaserGrid",
+    "FinaleRing",
+  },
+  StageLengthMin = 40,
+  StageLengthMax = 60,
+  PlatformSize = Vector3.new(10, 1, 10),
+  PathWidth = 22,
+  CheckpointSize = Vector3.new(6, 1, 6),
+  LaneLightSpacing = 12,
+}
+
+return WorldGenConfig
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="5">
+        <Properties>
+          <string name="Name">ZoneConfig</string>
+          <string name="Source"><![CDATA[local ZoneConfig = {
+  {
+    Name = "Toad Hall Grounds",
+    ThemeColor = Color3.fromRGB(120, 210, 150), -- emerald + gold
+    FogColor = Color3.fromRGB(250, 255, 245),
+    Ambient = Color3.fromRGB(80, 120, 85),
+    SkyColor = Color3.fromRGB(255, 250, 235),
+    FogEnd = 340,
+    ClockTime = 14,
+    AmbientSoundId = "rbxassetid://1846220524", -- gentle courtyard birds
+  },
+  {
+    Name = "Wild Woods",
+    ThemeColor = Color3.fromRGB(120, 190, 255), -- sky/teal
+    FogColor = Color3.fromRGB(225, 240, 255),
+    Ambient = Color3.fromRGB(70, 105, 150),
+    SkyColor = Color3.fromRGB(240, 248, 255),
+    FogEnd = 340,
+    ClockTime = 11,
+    AmbientSoundId = "rbxassetid://1837635151", -- light wind
+  },
+  {
+    Name = "Motor Mayhem",
+    ThemeColor = Color3.fromRGB(255, 170, 120), -- warm sunset
+    FogColor = Color3.fromRGB(255, 240, 225),
+    Ambient = Color3.fromRGB(140, 90, 60),
+    SkyColor = Color3.fromRGB(255, 245, 235),
+    FogEnd = 350,
+    ClockTime = 17,
+    AmbientSoundId = "rbxassetid://1837483576", -- distant engines
+  },
+}
+
+return ZoneConfig
+]]></string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="ModuleScript" referent="6">
+      <Properties>
+        <string name="Name">Message</string>
+        <string name="Source"><![CDATA[local Message = {}
+
+function Message.greet(name)
+  return string.format("Hello, %s!", name)
+end
+
+return Message
+]]></string>
+      </Properties>
+    </Item>
+    <Item class="Folder" referent="7">
+      <Properties>
+        <string name="Name">Util</string>
+      </Properties>
+      <Item class="ModuleScript" referent="8">
+        <Properties>
+          <string name="Name">Build</string>
+          <string name="Source"><![CDATA[local CollectionService = game:GetService("CollectionService")
+
+local Build = {}
+
+local function applyAttributes(instance, attributes)
+  if not attributes then
+    return
+  end
+  for key, value in pairs(attributes) do
+    instance:SetAttribute(key, value)
+  end
+end
+
+function Build.tag(instance, tags)
+  if tags then
+    for _, tag in ipairs(tags) do
+      CollectionService:AddTag(instance, tag)
+    end
+  end
+end
+
+function Build.part(props)
+  local part = Instance.new("Part")
+  part.Anchored = props.Anchored ~= false
+  part.Size = props.Size or Vector3.new(10, 1, 10)
+  part.CFrame = props.CFrame or CFrame.new()
+  part.Color = props.Color or Color3.fromRGB(255, 255, 255)
+  part.TopSurface = Enum.SurfaceType.Smooth
+  part.BottomSurface = Enum.SurfaceType.Smooth
+  part.Material = props.Material or Enum.Material.Plastic
+  part.Name = props.Name or "Part"
+  part.Parent = props.Parent
+  applyAttributes(part, props.Attributes)
+  Build.tag(part, props.Tags)
+  return part
+end
+
+function Build.model(name, parent)
+  local model = Instance.new("Model")
+  model.Name = name
+  model.Parent = parent
+  return model
+end
+
+function Build.checkpoint(name, cframe, size, parent)
+  local cp = Build.part({
+    Name = name,
+    CFrame = cframe,
+    Size = size,
+    Color = Color3.fromRGB(255, 255, 0),
+    Parent = parent,
+    Material = Enum.Material.Neon,
+    Tags = { "Checkpoint" },
+  })
+
+  local glow = Instance.new("PointLight")
+  glow.Range = 22
+  glow.Brightness = 3.8
+  glow.Color = Color3.fromRGB(255, 230, 150)
+  glow.Parent = cp
+
+  local ring = Build.part({
+    Name = "CheckpointRing",
+    Parent = cp,
+    CFrame = cframe * CFrame.new(0, 0.6, 0),
+    Size = Vector3.new(size.X * 1.1, 0.3, size.Z * 1.1),
+    Color = Color3.fromRGB(255, 220, 140),
+    Material = Enum.Material.Neon,
+  })
+  ring.Anchored = true
+  ring.CanCollide = false
+
+  local gui = Instance.new("BillboardGui")
+  gui.Size = UDim2.fromOffset(120, 40)
+  gui.AlwaysOnTop = true
+  gui.Adornee = cp
+  gui.Parent = cp
+
+  local text = Instance.new("TextLabel")
+  text.BackgroundTransparency = 1
+  text.Text = cp.Name
+  text.Font = Enum.Font.GothamBold
+  text.TextScaled = true
+  text.TextColor3 = Color3.new(1, 1, 1)
+  text.Parent = gui
+
+  local sound = Instance.new("Sound")
+  sound.SoundId = "rbxassetid://12222152"
+  sound.Volume = 0.4
+  sound.Parent = cp
+
+  local burst = Instance.new("ParticleEmitter")
+  burst.Name = "CheckpointBurst"
+  burst.Texture = "rbxassetid://241594419"
+  burst.Lifetime = NumberRange.new(0.6, 0.9)
+  burst.Speed = NumberRange.new(8, 12)
+  burst.Rate = 0
+  burst.Parent = cp
+
+  return cp
+end
+
+function Build.collectibleKey(cframe, parent)
+  local key = Build.part({
+    Name = "GoldenKey",
+    Parent = parent,
+    CFrame = cframe,
+    Size = Vector3.new(1.5, 3, 0.5),
+    Color = Color3.fromRGB(255, 215, 0),
+    Material = Enum.Material.Neon,
+    Tags = { "KeyCollectible", "Beacon" },
+    Anchored = true,
+  })
+  local spark = Instance.new("ParticleEmitter")
+  spark.Texture = "rbxassetid://241594419"
+  spark.Lifetime = NumberRange.new(0.6, 1)
+  spark.Speed = NumberRange.new(4, 7)
+  spark.Rate = 18
+  spark.Parent = key
+
+  local sound = Instance.new("Sound")
+  sound.SoundId = "rbxassetid://12222058"
+  sound.Volume = 0.6
+  sound.Parent = key
+
+  return key
+end
+
+function Build.cart(cframe, parent)
+  local model = Build.model("ToadCart", parent)
+  local base = Build.part({
+    Name = "CartBase",
+    Parent = model,
+    Size = Vector3.new(6, 1, 8),
+    CFrame = cframe,
+    Color = Color3.fromRGB(80, 60, 40),
+    Material = Enum.Material.Wood,
+    Anchored = false,
+    Tags = { "Cart" },
+  })
+  local seat = Instance.new("Seat")
+  seat.Name = "Seat"
+  seat.Size = Vector3.new(2, 1, 2)
+  seat.CFrame = cframe * CFrame.new(0, 1.25, 0)
+  seat.Anchored = false
+  seat.Parent = model
+
+  local weld = Instance.new("WeldConstraint")
+  weld.Part0 = base
+  weld.Part1 = seat
+  weld.Parent = model
+
+  local attachment = Instance.new("Attachment")
+  attachment.Parent = base
+
+  local vel = Instance.new("LinearVelocity")
+  vel.MaxForce = 4000
+  vel.VectorVelocity = Vector3.new(40, 0, 0)
+  vel.Attachment0 = attachment
+  vel.Parent = base
+
+  local gyro = Instance.new("AlignOrientation")
+  gyro.MaxTorque = 5000
+  gyro.Responsiveness = 20
+  gyro.Mode = Enum.OrientationAlignmentMode.OneAttachment
+  gyro.Attachment0 = attachment
+  gyro.Parent = base
+
+  model:MoveTo(cframe.Position)
+  return model
+end
+
+return Build
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="9">
+        <Properties>
+          <string name="Name">Maid</string>
+          <string name="Source"><![CDATA[local Maid = {}
+Maid.__index = Maid
+
+function Maid.new()
+  local self = setmetatable({}, Maid)
+  self.tasks = {}
+  return self
+end
+
+function Maid:Give(task)
+  table.insert(self.tasks, task)
+  return task
+end
+
+function Maid:DoCleaning()
+  for i = #self.tasks, 1, -1 do
+    local task = self.tasks[i]
+    if typeof(task) == "RBXScriptConnection" then
+      task:Disconnect()
+    elseif typeof(task) == "function" then
+      task()
+    elseif typeof(task) == "Instance" then
+      task:Destroy()
+    end
+    self.tasks[i] = nil
+  end
+end
+
+return Maid
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="10">
+        <Properties>
+          <string name="Name">Math</string>
+          <string name="Source"><![CDATA[local Math = {}
+
+function Math.lerp(a, b, t)
+  return a + (b - a) * t
+end
+
+function Math.clamp(x, min, max)
+  if x < min then
+    return min
+  end
+  if x > max then
+    return max
+  end
+  return x
+end
+
+return Math
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="11">
+        <Properties>
+          <string name="Name">Random</string>
+          <string name="Source"><![CDATA[local RandomUtil = {}
+RandomUtil.__index = RandomUtil
+
+function RandomUtil.new(seed)
+  local self = setmetatable({}, RandomUtil)
+  self.random = Random.new(seed or tick())
+  return self
+end
+
+function RandomUtil:NextNumber(min, max)
+  return self.random:NextNumber(min or 0, max or 1)
+end
+
+function RandomUtil:NextInteger(min, max)
+  return self.random:NextInteger(min or 1, max or 1)
+end
+
+function RandomUtil:Choice(list)
+  return list[self:NextInteger(1, #list)]
+end
+
+function RandomUtil:Shuffle(list)
+  for i = #list, 2, -1 do
+    local j = self:NextInteger(1, i)
+    list[i], list[j] = list[j], list[i]
+  end
+  return list
+end
+
+return RandomUtil
+]]></string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="ServerScriptService" referent="12">
+    <Properties>
+      <string name="Name">ServerScriptService</string>
+    </Properties>
+    <Item class="Script" referent="13">
+      <Properties>
+        <string name="Name">ServerMain</string>
+        <token name="RunContext">0</token>
+        <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
+local SoundService = game:GetService("SoundService")
+local ContentProvider = game:GetService("ContentProvider")
+
+local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
+local ObbyService = require(ServerScriptService:WaitForChild("Services"):WaitForChild("ObbyService"))
+
+local function playFirstWorkingMusic(ids)
+  for _, id in ipairs(ids) do
+    local sound = Instance.new("Sound")
+    sound.Name = "ObbyMusic"
+    sound.SoundId = id
+    sound.Looped = true
+    sound.Volume = 0.45
+    sound.Parent = SoundService
+    local ok = pcall(function()
+      ContentProvider:PreloadAsync({ sound })
+    end)
+    if ok then
+      sound:Play()
+      return sound
+    end
+    sound:Destroy()
+  end
+  warn("[Music] All candidate MusicIds failed to preload; no music will play.")
+  return nil
+end
+
+playFirstWorkingMusic(GameConfig.MusicIds)
+
+ObbyService.new()
+]]></string>
+      </Properties>
+    </Item>
+    <Item class="Folder" referent="14">
+      <Properties>
+        <string name="Name">Services</string>
+      </Properties>
+      <Item class="ModuleScript" referent="15">
+        <Properties>
+          <string name="Name">CheckpointService</string>
+          <string name="Source"><![CDATA[local Players = game:GetService("Players")
+local Debris = game:GetService("Debris")
+local GameConfig = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("GameConfig"))
+local Maid = require(game:GetService("ReplicatedStorage"):WaitForChild("Util"):WaitForChild("Maid"))
+local DataStoreWrapper = require(script.Parent.DataStoreServiceWrapper)
+
+local CheckpointService = {}
+CheckpointService.__index = CheckpointService
+
+function CheckpointService.new(stages, progressEvent)
+  local self = setmetatable({}, CheckpointService)
+  self.stages = stages
+  self.maid = Maid.new()
+  self.progressEvent = progressEvent
+  self.store = DataStoreWrapper.new(GameConfig.DataStoreName)
+  self:hookPlayers()
+  return self
+end
+
+function CheckpointService:hookPlayers()
+  self.maid:Give(Players.PlayerAdded:Connect(function(player)
+    self:loadCheckpoint(player)
+    self.maid:Give(player.CharacterAdded:Connect(function()
+      self:teleportToSavedCheckpoint(player)
+    end))
+  end))
+
+  self.maid:Give(Players.PlayerRemoving:Connect(function(player)
+    self:saveCheckpoint(player)
+  end))
+end
+
+function CheckpointService:loadCheckpoint(player)
+  local saved = self.store:GetAsync(player.UserId)
+  if saved and saved.checkpoint then
+    player:SetAttribute("Checkpoint", saved.checkpoint)
+  end
+end
+
+function CheckpointService:saveCheckpoint(player)
+  if not GameConfig.SaveCheckpoints then
+    return
+  end
+  local checkpointIndex = player:GetAttribute("Checkpoint")
+  if checkpointIndex then
+    self.store:SetAsync(player.UserId, {
+      checkpoint = checkpointIndex,
+    })
+  end
+end
+
+function CheckpointService:bindCheckpoints()
+  for _, stage in ipairs(self.stages) do
+    local cp = stage.checkpoint
+    if cp then
+      self.maid:Give(cp.Touched:Connect(function(hit)
+        self:onCheckpointTouched(stage.stageIndex, cp, hit)
+      end))
+    end
+  end
+end
+
+function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
+  local player = Players:GetPlayerFromCharacter(hit.Parent)
+  if not player then
+    return
+  end
+  local humanoidRoot = hit.Parent:FindFirstChild("HumanoidRootPart")
+  if humanoidRoot then
+    player:SetAttribute("Checkpoint", stageIndex)
+    local sound = checkpoint:FindFirstChildOfClass("Sound")
+    if sound then
+      sound:Play()
+    end
+    local burst = checkpoint:FindFirstChild("CheckpointBurst")
+    if burst then
+      burst:Emit(24)
+    end
+    if self.progressEvent then
+      self.progressEvent:FireClient(player, { stage = stageIndex, total = #self.stages })
+    end
+    if stageIndex == #self.stages then
+      local celebrator = Instance.new("ParticleEmitter")
+      celebrator.Texture = "rbxassetid://258128463"
+      celebrator.Lifetime = NumberRange.new(1, 1.4)
+      celebrator.Speed = NumberRange.new(28, 36)
+      celebrator.Rate = 80
+      celebrator.Parent = checkpoint
+      celebrator:Emit(80)
+      Debris:AddItem(celebrator, 2)
+      local finale = game:GetService("ReplicatedStorage"):FindFirstChild("SharedEvents")
+      local evt = finale and finale:FindFirstChild(GameConfig.FinaleRemote)
+      if evt then
+        evt:FireAllClients()
+      end
+    end
+  end
+end
+
+function CheckpointService:teleportToStage(player, targetStage)
+  for _, stage in ipairs(self.stages) do
+    if stage.stageIndex == targetStage then
+      local cp = stage.checkpoint
+      if cp and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        player.Character.HumanoidRootPart.CFrame = cp.CFrame + Vector3.new(0, 5, 0)
+      end
+      return true
+    end
+  end
+  return false
+end
+
+function CheckpointService:teleportToSavedCheckpoint(player)
+  local target = player:GetAttribute("Checkpoint")
+  if not target then
+    return
+  end
+  self:teleportToStage(player, target)
+end
+
+function CheckpointService:destroy()
+  self.maid:DoCleaning()
+end
+
+return CheckpointService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="16">
+        <Properties>
+          <string name="Name">DataStoreServiceWrapper</string>
+          <string name="Source"><![CDATA[local DataStoreService = game:GetService("DataStoreService")
+local RunService = game:GetService("RunService")
+local GameConfig = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("GameConfig"))
+
+local Wrapper = {}
+Wrapper.__index = Wrapper
+
+function Wrapper.new(name)
+  local self = setmetatable({}, Wrapper)
+  self.enabled = GameConfig.UseDataStore and not RunService:IsStudio()
+  self.store = self.enabled and DataStoreService:GetDataStore(name or GameConfig.DataStoreName) or nil
+  return self
+end
+
+function Wrapper:GetAsync(key)
+  if not self.enabled then
+    return nil
+  end
+  local ok, result = pcall(function()
+    return self.store:GetAsync(key)
+  end)
+  if ok then
+    return result
+  else
+    warn("DataStore get failed", result)
+  end
+  return nil
+end
+
+function Wrapper:SetAsync(key, value)
+  if not self.enabled then
+    return
+  end
+  local ok, err = pcall(function()
+    self.store:SetAsync(key, value)
+  end)
+  if not ok then
+    warn("DataStore set failed", err)
+  end
+end
+
+return Wrapper
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="17">
+        <Properties>
+          <string name="Name">ObbyService</string>
+          <string name="Source"><![CDATA[local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local CollectionService = game:GetService("CollectionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
+local ObstacleConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("ObstacleConfig"))
+local WorldBuilder = require(script.Parent.Parent.WorldGen.WorldBuilder)
+local CheckpointService = require(script.Parent.CheckpointService)
+local Maid = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Maid"))
+
+local ObbyService = {}
+ObbyService.__index = ObbyService
+
+function ObbyService.new()
+  if ObbyService._instance then
+    return ObbyService._instance
+  end
+  local self = setmetatable({}, ObbyService)
+  self.maid = Maid.new()
+  self.behaviors = {}
+  self.world = WorldBuilder.buildWorld(GameConfig.Seed)
+  self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent)
+  self.checkpoints:bindCheckpoints()
+  self.keyProgress = {}
+  self.totalKeys = 0
+  self:scanBehaviors()
+  self:hookCommands()
+  self:startHeartbeat()
+  ObbyService._instance = self
+  workspace:SetAttribute("ObbyServiceReady", true)
+  return self
+end
+
+function ObbyService:hookCommands()
+  local function isAllowed(player)
+    if RunService:IsStudio() then
+      return true
+    end
+    for _, id in ipairs(GameConfig.AllowlistUserIds) do
+      if id == player.UserId then
+        return true
+      end
+    end
+    return false
+  end
+
+  self.maid:Give(Players.PlayerAdded:Connect(function(player)
+    self.maid:Give(player.Chatted:Connect(function(msg)
+      if not GameConfig.DevCommandsEnabled or not isAllowed(player) then
+        return
+      end
+      local command, arg = string.match(msg, "/(%w+)%s*(.*)")
+      if command == "rebuild" then
+        self:rebuild(self.world.seed)
+      elseif command == "reseed" then
+        local newSeed = tonumber(arg) or os.time()
+        self:rebuild(newSeed)
+      elseif command == "stage" then
+        local target = tonumber(arg)
+        if target then
+          self.checkpoints:teleportToStage(player, target)
+        end
+      end
+    end))
+  end))
+end
+
+function ObbyService:registerKey(part)
+  self.totalKeys = self.totalKeys + 1
+  self.maid:Give(part.Touched:Connect(function(hit)
+    local player = Players:GetPlayerFromCharacter(hit.Parent)
+    if not player then
+      return
+    end
+    self.keyProgress[player] = (self.keyProgress[player] or 0) + 1
+    local sound = part:FindFirstChildOfClass("Sound")
+    if sound then
+      sound:Play()
+    end
+    part:Destroy()
+    if self.world.keyEvent then
+      self.world.keyEvent:FireClient(player, { found = self.keyProgress[player], total = self.totalKeys })
+    end
+  end))
+end
+
+function ObbyService:scanBehaviors()
+  self.behaviors = {
+    movingPlatforms = {},
+    rotators = {},
+    timedTiles = {},
+    conveyors = {},
+    bouncePads = {},
+    windZones = {},
+    lasers = {},
+    lava = {},
+    beacons = {},
+    carts = {},
+    pads = {},
+    gates = {},
+    bossGavels = {},
+  }
+  self.gateTimers = {}
+
+  local function add(tag, handler)
+    for _, inst in ipairs(CollectionService:GetTagged(tag)) do
+      handler(inst)
+    end
+  end
+
+  add("MovingPlatform", function(part)
+    table.insert(self.behaviors.movingPlatforms, {
+      part = part,
+      origin = part.CFrame,
+      amplitude = part:GetAttribute("Amplitude") or 10,
+      speed = part:GetAttribute("Speed") or ObstacleConfig.MovingPlatformSpeed,
+    })
+  end)
+
+  add("Rotator", function(part)
+    table.insert(self.behaviors.rotators, {
+      part = part,
+      speed = part:GetAttribute("RotSpeed") or ObstacleConfig.RotatorSpeed,
+    })
+  end)
+
+  add("BossGavel", function(part)
+    table.insert(self.behaviors.bossGavels, {
+      part = part,
+      origin = part.CFrame,
+      speed = part:GetAttribute("SlamSpeed") or 2.5,
+      angle = part:GetAttribute("SlamAngle") or math.rad(65),
+    })
+  end)
+
+  add("TimedTile", function(part)
+    table.insert(self.behaviors.timedTiles, {
+      part = part,
+      cycle = part:GetAttribute("Cycle") or ObstacleConfig.TimedTileInterval,
+      t = 0,
+    })
+  end)
+
+  add("Conveyor", function(part)
+    table.insert(self.behaviors.conveyors, {
+      part = part,
+      speed = part:GetAttribute("Speed") or ObstacleConfig.ConveyorSpeed,
+    })
+    self.maid:Give(part.Touched:Connect(function(hit)
+      local humanoidRoot = hit.Parent and hit.Parent:FindFirstChild("HumanoidRootPart")
+      if humanoidRoot then
+        local vel = humanoidRoot.AssemblyLinearVelocity
+        humanoidRoot.AssemblyLinearVelocity = Vector3.new(part.CFrame.LookVector.X, vel.Y, part.CFrame.LookVector.Z)
+          * (part:GetAttribute("Speed") or ObstacleConfig.ConveyorSpeed)
+      end
+    end))
+  end)
+
+  add("BouncePad", function(part)
+    local power = part:GetAttribute("Power") or ObstacleConfig.BouncePower
+    self.maid:Give(part.Touched:Connect(function(hit)
+      local humanoidRoot = hit.Parent and hit.Parent:FindFirstChild("HumanoidRootPart")
+      if humanoidRoot then
+        humanoidRoot.AssemblyLinearVelocity =
+          Vector3.new(humanoidRoot.AssemblyLinearVelocity.X, power, humanoidRoot.AssemblyLinearVelocity.Z)
+      end
+    end))
+    table.insert(self.behaviors.bouncePads, part)
+  end)
+
+  add("WindZone", function(part)
+    table.insert(self.behaviors.windZones, {
+      part = part,
+      force = part:GetAttribute("Force") or ObstacleConfig.WindForce,
+    })
+  end)
+
+  add("Laser", function(part)
+    table.insert(self.behaviors.lasers, {
+      part = part,
+      cycle = part:GetAttribute("Cycle") or ObstacleConfig.LaserCycleTime,
+      phase = part:GetAttribute("Phase") or 1,
+    })
+  end)
+
+  add("Lava", function(part)
+    table.insert(self.behaviors.lava, {
+      part = part,
+      speed = part:GetAttribute("RiseSpeed") or ObstacleConfig.LavaRiseSpeed,
+      floorY = part:GetAttribute("FloorY") or part.Position.Y,
+    })
+  end)
+
+  add("Beacon", function(part)
+    table.insert(self.behaviors.beacons, {
+      part = part,
+      origin = part.CFrame,
+    })
+  end)
+
+  add("Cart", function(part)
+    table.insert(self.behaviors.carts, {
+      base = part,
+      seat = part.Parent:FindFirstChild("Seat"),
+      force = part:FindFirstChildOfClass("LinearVelocity"),
+    })
+  end)
+
+  add("Gate", function(part)
+    local id = part:GetAttribute("GateId") or part:GetFullName()
+    self.behaviors.gates[id] = part
+    self.gateTimers[id] = 0
+  end)
+
+  add("PressurePad", function(part)
+    table.insert(self.behaviors.pads, {
+      part = part,
+      gateId = part:GetAttribute("GateId"),
+      active = false,
+    })
+  end)
+
+  add("KeyCollectible", function(part)
+    self:registerKey(part)
+  end)
+
+  add("KillBrick", function(part)
+    self.maid:Give(part.Touched:Connect(function(hit)
+      local humanoid = hit.Parent and hit.Parent:FindFirstChildOfClass("Humanoid")
+      if humanoid then
+        humanoid.Health = 0
+      end
+    end))
+  end)
+
+  self.totalKeys = #CollectionService:GetTagged("KeyCollectible")
+end
+
+function ObbyService:startHeartbeat()
+  self.maid:Give(RunService.Heartbeat:Connect(function(dt)
+    local tickNow = tick()
+    for _, item in ipairs(self.behaviors.movingPlatforms) do
+      local offset = math.sin(tickNow * item.speed) * item.amplitude
+      local cf = item.origin * CFrame.new(0, 0, offset) * CFrame.Angles(0, 0, math.sin(tickNow * item.speed) * 0.03)
+      item.part.CFrame = cf
+    end
+
+    for _, item in ipairs(self.behaviors.rotators) do
+      item.part.CFrame = item.part.CFrame * CFrame.Angles(0, item.speed * dt, 0)
+    end
+
+    for _, item in ipairs(self.behaviors.bossGavels) do
+      local t = math.sin(tickNow * item.speed)
+      local pitch = t * item.angle
+      item.part.CFrame = item.origin * CFrame.Angles(pitch, 0, 0)
+    end
+
+    for _, item in ipairs(self.behaviors.timedTiles) do
+      item.t = item.t + dt
+      local on = (item.t % item.cycle) > (item.cycle / 2)
+      item.part.Transparency = on and 0 or 0.8
+      item.part.CanCollide = on
+    end
+
+    for _, item in ipairs(self.behaviors.windZones) do
+      for _, touch in ipairs(item.part:GetTouchingParts()) do
+        local hrp = touch.Parent and touch.Parent:FindFirstChild("HumanoidRootPart")
+        if hrp then
+          hrp.AssemblyLinearVelocity = hrp.AssemblyLinearVelocity + item.part.CFrame.RightVector * item.force * dt
+        end
+      end
+    end
+
+    for _, item in ipairs(self.behaviors.lasers) do
+      local active = (tickNow + item.phase) % item.cycle < (item.cycle / 2)
+      item.part.Transparency = active and 0 or 1
+      item.part.CanTouch = active
+      item.part.CanCollide = active
+      local emitter = item.part:FindFirstChildOfClass("ParticleEmitter")
+      if emitter then
+        emitter.Enabled = active
+      end
+    end
+
+    for _, item in ipairs(self.behaviors.lava) do
+      local pos = item.part.Position
+      local y = item.floorY - 8 + math.abs(math.sin(tickNow * (item.speed / 6))) * 12
+      item.part.Position = Vector3.new(pos.X, y, pos.Z)
+    end
+
+    for _, item in ipairs(self.behaviors.beacons) do
+      local bob = math.sin(tickNow * 1.5) * 0.5
+      item.part.CFrame = item.origin * CFrame.new(0, bob, 0) * CFrame.Angles(0, dt * 1.2, 0)
+    end
+
+    for _, item in ipairs(self.behaviors.carts) do
+      if item.force then
+        item.force.VectorVelocity = item.base.CFrame.LookVector * 40
+      end
+    end
+
+    local gateActiveCount = {}
+    for _, pad in ipairs(self.behaviors.pads) do
+      local touching = pad.part:GetTouchingParts()
+      pad.active = false
+      for _, p in ipairs(touching) do
+        local hrp = p.Parent and p.Parent:FindFirstChild("HumanoidRootPart")
+        if hrp then
+          pad.active = true
+          break
+        end
+      end
+      if pad.active and pad.gateId then
+        gateActiveCount[pad.gateId] = (gateActiveCount[pad.gateId] or 0) + 1
+      end
+    end
+    local playerCount = #Players:GetPlayers()
+    for gateId, gate in pairs(self.behaviors.gates) do
+      local hits = gateActiveCount[gateId] or 0
+      -- Co-op: 2 pads needed; solo fallback after dwell time
+      if hits >= 2 then
+        self.gateTimers[gateId] = 0
+        gate.Transparency = 0.9
+        gate.CanCollide = false
+        gate.Color = Color3.fromRGB(120, 255, 120)
+      else
+        if hits >= 1 and playerCount <= 1 then
+          self.gateTimers[gateId] = (self.gateTimers[gateId] or 0) + dt
+        else
+          self.gateTimers[gateId] = 0
+        end
+        local soloOpen = (self.gateTimers[gateId] or 0) >= 6
+        gate.Transparency = soloOpen and 0.9 or 0
+        gate.CanCollide = not soloOpen
+        gate.Color = soloOpen and Color3.fromRGB(200, 255, 200) or Color3.fromRGB(255, 120, 120)
+      end
+    end
+  end))
+end
+
+function ObbyService:rebuild(seed)
+  self.maid:DoCleaning()
+  if self.world and self.world.model then
+    self.world.model:Destroy()
+  end
+  self.world = WorldBuilder.buildWorld(seed)
+  self.checkpoints:destroy()
+  self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent)
+  self.checkpoints:bindCheckpoints()
+  self.keyProgress = {}
+  self.totalKeys = 0
+  self:scanBehaviors()
+  self:hookCommands()
+  self:startHeartbeat()
+end
+
+return ObbyService
+]]></string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="Folder" referent="18">
+      <Properties>
+        <string name="Name">WorldGen</string>
+      </Properties>
+      <Item class="ModuleScript" referent="19">
+        <Properties>
+          <string name="Name">DecorBuilder</string>
+          <string name="Source"><![CDATA[local Lighting = game:GetService("Lighting")
+local SoundService = game:GetService("SoundService")
+
+local DecorBuilder = {}
+
+local function ensureSound(name, soundId)
+  local sound = SoundService:FindFirstChild(name) or Instance.new("Sound")
+  sound.Name = name
+  sound.SoundId = soundId or ""
+  sound.Looped = true
+  sound.Volume = 0.4
+  sound.Parent = SoundService
+  if soundId and soundId ~= "" then
+    sound:Play()
+  end
+  return sound
+end
+
+function DecorBuilder.applyLighting(zoneConfig)
+  Lighting.Ambient = zoneConfig.Ambient
+  Lighting.OutdoorAmbient = zoneConfig.Ambient
+  Lighting.FogColor = zoneConfig.FogColor
+  Lighting.FogEnd = zoneConfig.FogEnd or 340
+  Lighting.ClockTime = zoneConfig.ClockTime or 14
+  Lighting.Brightness = 3.5
+  Lighting.ExposureCompensation = 0.45
+  Lighting.ColorShift_Bottom = Color3.fromRGB(220, 230, 245)
+  Lighting.ColorShift_Top = Color3.fromRGB(255, 255, 255)
+
+  local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere")
+  atmosphere.Parent = Lighting
+  atmosphere.Color = zoneConfig.SkyColor
+  atmosphere.Decay = zoneConfig.FogColor
+  atmosphere.Density = 0.12
+  atmosphere.Glare = 0.28
+
+  local bloom = Lighting:FindFirstChildOfClass("BloomEffect") or Instance.new("BloomEffect")
+  bloom.Parent = Lighting
+  bloom.Intensity = 1.7
+  bloom.Size = 36
+
+  local cc = Lighting:FindFirstChildOfClass("ColorCorrectionEffect") or Instance.new("ColorCorrectionEffect")
+  cc.Parent = Lighting
+  cc.Brightness = 0.25
+  cc.Saturation = 0.45
+  cc.TintColor = zoneConfig.ThemeColor
+
+  local sun = Lighting:FindFirstChildOfClass("SunRaysEffect") or Instance.new("SunRaysEffect")
+  sun.Parent = Lighting
+  sun.Intensity = 0.22
+  sun.Spread = 0.95
+
+  ensureSound("ZoneAmbience", zoneConfig.AmbientSoundId)
+end
+
+function DecorBuilder.decorateZone(zoneModel, zoneConfig)
+  for _, stageModel in ipairs(zoneModel:GetChildren()) do
+    if stageModel:IsA("Model") then
+      for _, child in ipairs(stageModel:GetDescendants()) do
+        if child:IsA("BasePart") then
+          child.Color = zoneConfig.ThemeColor:Lerp(child.Color, 0.25)
+        end
+      end
+    end
+  end
+
+  -- Floating confetti emitter high above the zone for motion and brightness
+  local confetti = Instance.new("Part")
+  confetti.Name = "SkyConfetti"
+  confetti.Anchored = true
+  confetti.CanCollide = false
+  confetti.Transparency = 1
+  confetti.Size = Vector3.new(4, 1, 4)
+  confetti.CFrame = CFrame.new(0, 90, 0)
+  confetti.Parent = zoneModel
+
+  local emitter = Instance.new("ParticleEmitter")
+  emitter.Texture = "rbxassetid://241594419"
+  emitter.Rate = 80
+  emitter.Lifetime = NumberRange.new(4, 7)
+  emitter.Speed = NumberRange.new(6, 10)
+  emitter.SpreadAngle = Vector2.new(360, 360)
+  emitter.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.35), NumberSequenceKeypoint.new(1, 0.6) })
+  emitter.Color = ColorSequence.new(zoneConfig.ThemeColor, Color3.new(1, 1, 1))
+  emitter.Parent = confetti
+
+  -- Gentle fireflies near ground for added sparkle
+  for i = 1, 4 do
+    local firefly = Instance.new("ParticleEmitter")
+    firefly.Texture = "rbxassetid://260430117"
+    firefly.Rate = 6
+    firefly.Lifetime = NumberRange.new(2, 3.2)
+    firefly.Speed = NumberRange.new(0.5, 1.5)
+    firefly.SpreadAngle = Vector2.new(180, 180)
+    firefly.Size = NumberSequence.new(0.35)
+    firefly.Color = ColorSequence.new(zoneConfig.ThemeColor:lerp(Color3.new(1, 1, 1), 0.4))
+    firefly.Parent = zoneModel
+  end
+end
+
+return DecorBuilder
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="20">
+        <Properties>
+          <string name="Name">StageBuilder</string>
+          <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StageTemplates = require(script.Parent:WaitForChild("Templates"):WaitForChild("StageTemplates"))
+local Build = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Build"))
+local WorldGenConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("WorldGenConfig"))
+local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
+
+local StageBuilder = {}
+
+function StageBuilder.buildStage(args)
+  local stageType = args.stageType
+  local template = StageTemplates[stageType]
+  if not template then
+    warn("Missing template for", stageType, "using Warmup")
+    template = StageTemplates.Warmup
+  end
+
+  local model = Instance.new("Model")
+  model.Name = string.format("Stage_%02d_%s", args.stageIndex, stageType)
+  model.Parent = args.parent
+
+  local totalStages = GameConfig.Zones * GameConfig.StagesPerZone
+  local difficulty = math.clamp(args.stageIndex / math.max(1, totalStages), 0, 1)
+
+  local builtModel, endCFrame = template({
+    parent = model,
+    origin = args.origin,
+    color = args.zoneColor,
+    difficulty = difficulty,
+    stageIndex = args.stageIndex,
+    random = args.random,
+  })
+
+  if builtModel and builtModel ~= model then
+    builtModel.Parent = model
+  end
+
+  local checkpointCFrame = endCFrame * CFrame.new(0, WorldGenConfig.PlatformSize.Y + 2, 0)
+  local cp =
+    Build.checkpoint(string.format("CP_%03d", args.stageIndex), checkpointCFrame, WorldGenConfig.CheckpointSize, model)
+
+  -- Floating stage banner visible from afar
+  local banner = Instance.new("BillboardGui")
+  banner.Size = UDim2.fromOffset(280, 120)
+  banner.StudsOffset = Vector3.new(0, 14, 0)
+  banner.AlwaysOnTop = true
+  banner.Adornee = cp
+  banner.Parent = model
+
+  local bannerText = Instance.new("TextLabel")
+  bannerText.BackgroundTransparency = 0.15
+  bannerText.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
+  bannerText.BorderSizePixel = 0
+  bannerText.Text = string.format("Stage %d / %d", args.stageIndex, totalStages)
+  bannerText.Font = Enum.Font.GothamBlack
+  bannerText.TextScaled = true
+  bannerText.TextColor3 = Color3.fromRGB(255, 230, 180)
+  bannerText.Parent = banner
+
+  -- Directional arrow to keep players moving forward
+  local arrow = Instance.new("BillboardGui")
+  arrow.Size = UDim2.fromOffset(200, 80)
+  arrow.StudsOffset = Vector3.new(0, 8, 0)
+  arrow.AlwaysOnTop = true
+  arrow.Adornee = cp
+  arrow.Parent = model
+  local arrowLabel = Instance.new("TextLabel")
+  arrowLabel.BackgroundTransparency = 1
+  arrowLabel.Text = "→ KEEP GOING →"
+  arrowLabel.Font = Enum.Font.GothamBlack
+  arrowLabel.TextScaled = true
+  arrowLabel.TextColor3 = Color3.fromRGB(255, 255, 200)
+  arrowLabel.Parent = arrow
+
+  -- Optional key spawn
+  if args.random:NextNumber() < GameConfig.KeySpawnChance then
+    local keyOffset = args.random:NextNumber(-6, 6)
+    local key = Build.collectibleKey(args.origin * CFrame.new(10, 6, keyOffset), model)
+    key:SetAttribute("StageIndex", args.stageIndex)
+  end
+
+  -- Optional cart at start of some stages
+  if args.stageIndex % 3 == 0 then
+    Build.cart(args.origin * CFrame.new(-4, 1.5, 0), model)
+  end
+
+  return model, endCFrame, cp
+end
+
+return StageBuilder
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="Folder" referent="21">
+        <Properties>
+          <string name="Name">Templates</string>
+        </Properties>
+        <Item class="ModuleScript" referent="22">
+          <Properties>
+            <string name="Name">ObstacleTemplates</string>
+            <string name="Source"><![CDATA[-- This file holds small builders for obstacle pieces that StageTemplates can reuse later.
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Build = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Build"))
+
+local ObstacleTemplates = {}
+
+function ObstacleTemplates.killBrick(parent, cframe, size)
+  return Build.part({
+    Name = "KillBrick",
+    Parent = parent,
+    CFrame = cframe,
+    Size = size or Vector3.new(8, 1, 8),
+    Color = Color3.fromRGB(255, 60, 60),
+    Material = Enum.Material.Neon,
+    Tags = { "KillBrick" },
+  })
+end
+
+function ObstacleTemplates.movingPlatform(parent, cframe, amplitude, speed)
+  local part = Build.part({
+    Name = "MovingPlatform",
+    Parent = parent,
+    CFrame = cframe,
+    Size = Vector3.new(10, 1, 10),
+    Color = Color3.fromRGB(255, 200, 80),
+    Tags = { "MovingPlatform" },
+    Attributes = { Amplitude = amplitude, Speed = speed },
+  })
+  return part
+end
+
+return ObstacleTemplates
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="23">
+          <Properties>
+            <string name="Name">StageTemplates</string>
+            <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Build = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Build"))
+local ObstacleConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("ObstacleConfig"))
+local WorldGenConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("WorldGenConfig"))
+
+local StageTemplates = {}
+
+local function difficultyFactor(ctx, minFactor, maxFactor)
+  local diff = ctx.difficulty or 0.5
+  return (minFactor or 1) + ((maxFactor or 1) - (minFactor or 1)) * diff
+end
+
+local function scaleSpeed(ctx, base, minFactor, maxFactor)
+  return base * difficultyFactor(ctx, minFactor, maxFactor)
+end
+
+local function basePlatform(parent, cframe, color, size)
+  local part = Build.part({
+    Name = "Platform",
+    Parent = parent,
+    CFrame = cframe,
+    Size = size or WorldGenConfig.PlatformSize,
+    Color = color,
+    Material = Enum.Material.Concrete,
+  })
+  return part
+end
+
+local function addSign(parent, cframe, text)
+  local sign = Build.part({
+    Name = "Sign",
+    Parent = parent,
+    CFrame = cframe,
+    Size = Vector3.new(4, 5, 1),
+    Color = Color3.fromRGB(60, 40, 20),
+    Material = Enum.Material.WoodPlanks,
+  })
+  local billboard = Instance.new("BillboardGui")
+  billboard.Size = UDim2.fromOffset(160, 60)
+  billboard.StudsOffset = Vector3.new(0, 2.5, 0)
+  billboard.AlwaysOnTop = true
+  billboard.Adornee = sign
+  billboard.Parent = sign
+
+  local label = Instance.new("TextLabel")
+  label.BackgroundTransparency = 1
+  label.Text = text
+  label.Font = Enum.Font.GothamBold
+  label.TextScaled = true
+  label.TextColor3 = Color3.new(1, 1, 1)
+  label.Parent = billboard
+  Build.tag(sign, { "Beacon" })
+  return sign
+end
+
+local function addBillboard(parent, target, text, color)
+  local billboard = Instance.new("BillboardGui")
+  billboard.Size = UDim2.fromOffset(220, 100)
+  billboard.AlwaysOnTop = true
+  billboard.StudsOffset = Vector3.new(0, 4, 0)
+  billboard.Adornee = target
+  billboard.Parent = parent
+
+  local label = Instance.new("TextLabel")
+  label.BackgroundTransparency = 0.15
+  label.BackgroundColor3 = color or Color3.fromRGB(255, 240, 200)
+  label.BorderSizePixel = 0
+  label.Text = text
+  label.Font = Enum.Font.GothamBold
+  label.TextScaled = true
+  label.TextColor3 = Color3.fromRGB(35, 25, 20)
+  label.Parent = billboard
+  return billboard
+end
+
+-- Classic warmup keeps things approachable
+function StageTemplates.Warmup(ctx)
+  local model = Build.model("Stage_Warmup", ctx.parent)
+  local step = WorldGenConfig.PlatformSize.X + 4
+  for i = 0, 4 do
+    basePlatform(model, ctx.origin * CFrame.new(step * i, 0, 0), ctx.color)
+  end
+  addSign(model, ctx.origin * CFrame.new(step * 2, 3, -6), "Welcome to Toad Hall!")
+  addSign(model, ctx.origin * CFrame.new(step * 3, 6, 6), "Sprint + space to long-jump!")
+  -- lane lights
+  for i = 0, 4 do
+    local light = Build.part({
+      Name = "LaneLight",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(step * i, 2, -WorldGenConfig.PathWidth * 0.4),
+      Size = Vector3.new(0.6, 0.6, 0.6),
+      Color = Color3.fromRGB(255, 255, 120),
+      Material = Enum.Material.Neon,
+      Anchored = true,
+      Tags = { "Beacon" },
+    })
+    light.CanCollide = false
+
+    local sparkle = Instance.new("ParticleEmitter")
+    sparkle.Texture = "rbxassetid://260430117"
+    sparkle.Rate = 12
+    sparkle.Speed = NumberRange.new(2, 4)
+    sparkle.Lifetime = NumberRange.new(0.4, 0.8)
+    sparkle.Parent = light
+  end
+
+  -- floating neon balloons
+  for i = 0, 3 do
+    local balloon = Build.part({
+      Name = "Balloon",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(step * i, 10, (i % 2 == 0) and 6 or -6),
+      Size = Vector3.new(3, 4, 3),
+      Color = Color3.fromRGB(255, 190, 140),
+      Material = Enum.Material.Neon,
+    })
+    balloon.Anchored = true
+    balloon.Transparency = 0.2
+    addBillboard(model, balloon, "Toad's Wild Welcome", Color3.fromRGB(255, 230, 200))
+  end
+  return model, ctx.origin * CFrame.new(step * 5, 0, 0)
+end
+
+-- Stage: Bouncy Clouds — playful early hook with soft visuals
+function StageTemplates.BouncyClouds(ctx)
+  local model = Build.model("Stage_BouncyClouds", ctx.parent)
+  local span = WorldGenConfig.StageLengthMin
+
+  local function cloud(cf, size, power)
+    local cloudPart = Build.part({
+      Name = "Cloud",
+      Parent = model,
+      CFrame = cf,
+      Size = size,
+      Color = Color3.fromRGB(245, 245, 255),
+      Material = Enum.Material.ForceField,
+      Tags = { "BouncePad", "Beacon" },
+      Attributes = { Power = power or ObstacleConfig.BouncePower * 1.4 },
+    })
+    cloudPart.Transparency = 0.25
+    local puff = Instance.new("ParticleEmitter")
+    puff.Texture = "rbxassetid://241594419"
+    puff.Lifetime = NumberRange.new(0.8, 1.2)
+    puff.Speed = NumberRange.new(2, 4)
+    puff.Rate = 12
+    puff.Parent = cloudPart
+    return cloudPart
+  end
+
+  local step = span / 6
+  for i = 0, 6 do
+    local offsetY = (i % 2 == 0) and 3 or 7
+    cloud(ctx.origin * CFrame.new(step * i, offsetY, (i % 3 - 1) * 4), Vector3.new(10, 1.4, 10), 80 + i * 4)
+  end
+
+  -- drifting glow orbs overhead
+  for i = 0, 5 do
+    local orb = Build.part({
+      Name = "GlowOrb",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(step * i, 12 + i, 0),
+      Size = Vector3.new(1.2, 1.2, 1.2),
+      Color = Color3.fromRGB(255, 220, 140),
+      Material = Enum.Material.Neon,
+    })
+    orb.Anchored = true
+    local pl = Instance.new("PointLight")
+    pl.Range = 16
+    pl.Brightness = 3
+    pl.Color = Color3.fromRGB(255, 220, 160)
+    pl.Parent = orb
+  end
+
+  local banner = Build.part({
+    Name = "FloatBanner",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(span * 0.4, 9, -6),
+    Size = Vector3.new(6, 4, 1),
+    Color = Color3.fromRGB(255, 200, 120),
+    Material = Enum.Material.Neon,
+  })
+  banner.CanCollide = false
+  local billboard = Instance.new("BillboardGui")
+  billboard.Size = UDim2.fromOffset(200, 80)
+  billboard.AlwaysOnTop = true
+  billboard.StudsOffset = Vector3.new(0, 1, 0)
+  billboard.Adornee = banner
+  billboard.Parent = banner
+  local label = Instance.new("TextLabel")
+  label.BackgroundTransparency = 1
+  label.Text = "Toad says: BOING!"
+  label.Font = Enum.Font.GothamBold
+  label.TextScaled = true
+  label.TextColor3 = Color3.fromRGB(45, 30, 10)
+  label.Parent = billboard
+
+  return model, ctx.origin * CFrame.new(span + 10, 0, 0)
+end
+
+-- Stage: Toad Library crash — swinging armor + popping books
+function StageTemplates.ToadLibrary(ctx)
+  local model = Build.model("Stage_ToadLibrary", ctx.parent)
+  local length = WorldGenConfig.StageLengthMin
+  basePlatform(model, ctx.origin, ctx.color, Vector3.new(length, 1, WorldGenConfig.PathWidth))
+
+  for i = 0, 3 do
+    local armor = Build.part({
+      Name = "Armor",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 4) * i + 6, 5, (i % 2 == 0) and -6 or 6),
+      Size = Vector3.new(2, 8, 1),
+      Color = Color3.fromRGB(160, 150, 120),
+      Material = Enum.Material.Metal,
+      Tags = { "Rotator", "KillBrick" },
+      Attributes = { RotSpeed = ObstacleConfig.RotatorSpeed * 1.6 },
+    })
+    armor.CanCollide = false
+  end
+
+  for i = 1, 4 do
+    local shelf = Build.part({
+      Name = "BookBurst",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 5) * i, 1.2, (i % 2 == 0) and 4 or -4),
+      Size = Vector3.new(4, 0.6, 4),
+      Color = Color3.fromRGB(200, 180, 120),
+      Material = Enum.Material.WoodPlanks,
+      Tags = { "TimedTile" },
+      Attributes = { Cycle = ObstacleConfig.TimedTileInterval * 0.8 },
+    })
+    shelf.CanCollide = true
+  end
+
+  local banner = Build.part({
+    Name = "ManiaSign",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(length * 0.45, 7, -WorldGenConfig.PathWidth * 0.45),
+    Size = Vector3.new(6, 4, 1),
+    Color = Color3.fromRGB(255, 220, 140),
+    Material = Enum.Material.Neon,
+  })
+  banner.CanCollide = false
+  addBillboard(model, banner, "Toad's Reading Room ->", Color3.fromRGB(255, 240, 200))
+
+  return model, ctx.origin * CFrame.new(length + 10, 0, 0)
+end
+
+-- Stage 1: Toad Hall Gate with a rotating sweeper
+function StageTemplates.ToadHallGate(ctx)
+  local model = Build.model("Stage_ToadHallGate", ctx.parent)
+  local width = 20
+  basePlatform(model, ctx.origin, ctx.color, Vector3.new(width, 1, WorldGenConfig.PathWidth))
+  addSign(model, ctx.origin * CFrame.new(width * 0.25, 4, -WorldGenConfig.PathWidth * 0.3), "TOAD HALL")
+  local arch = Build.part({
+    Name = "Arch",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(width * 0.5, 6, 0),
+    Size = Vector3.new(2, 12, WorldGenConfig.PathWidth - 2),
+    Color = Color3.fromRGB(90, 70, 40),
+    Material = Enum.Material.Wood,
+  })
+  arch.CanCollide = false
+  Build.tag(arch, { "Beacon" })
+
+  Build.part({
+    Name = "Sweeper",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(width * 0.5, 2, 0),
+    Size = Vector3.new(WorldGenConfig.PathWidth, 1, 1),
+    Color = Color3.fromRGB(255, 180, 60),
+    Tags = { "Rotator", "KillBrick" },
+    Attributes = { RotSpeed = scaleSpeed(ctx, ObstacleConfig.RotatorSpeed * 1.2, 0.55, 1.25) },
+  })
+  -- portrait board
+  local portrait = Build.part({
+    Name = "ToadPortrait",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(width * 0.7, 6, WorldGenConfig.PathWidth * 0.55),
+    Size = Vector3.new(6, 6, 1),
+    Color = Color3.fromRGB(255, 240, 200),
+    Material = Enum.Material.Neon,
+  })
+  portrait.CanCollide = false
+  local decal = Instance.new("Decal")
+  decal.Texture = "rbxassetid://148274626" -- kid-safe frog decal
+  decal.Face = Enum.NormalId.Front
+  decal.Parent = portrait
+  return model, ctx.origin * CFrame.new(width + 12, 0, 0)
+end
+
+-- Stage 2: Caravan Chase with conveyors and hops
+function StageTemplates.CaravanChase(ctx)
+  local model = Build.model("Stage_CaravanChase", ctx.parent)
+  local span = WorldGenConfig.StageLengthMin
+  local conveyor = basePlatform(
+    model,
+    ctx.origin * CFrame.new(span * 0.5, 0, 0),
+    ctx.color,
+    Vector3.new(span, 1, WorldGenConfig.PathWidth)
+  )
+  conveyor:SetAttribute("Speed", scaleSpeed(ctx, ObstacleConfig.ConveyorSpeed * 1.2, 0.6, 1.4))
+  Build.tag(conveyor, { "Conveyor" })
+
+  for i = 0, math.floor(span / WorldGenConfig.LaneLightSpacing) do
+    local light = Build.part({
+      Name = "LaneLight",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(WorldGenConfig.LaneLightSpacing * i, 2, -WorldGenConfig.PathWidth * 0.45),
+      Size = Vector3.new(0.6, 0.6, 0.6),
+      Color = Color3.fromRGB(255, 255, 140),
+      Material = Enum.Material.Neon,
+      Anchored = true,
+      Tags = { "Beacon" },
+    })
+    light.CanCollide = false
+  end
+
+  for i = 1, 3 do
+    local gap = Build.part({
+      Name = "GapMarker",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((span / 4) * i, 3, 0),
+      Size = Vector3.new(6, 0.5, WorldGenConfig.PathWidth - 6),
+      Transparency = 0.3,
+      Color = Color3.fromRGB(255, 230, 120),
+      Material = Enum.Material.Neon,
+    })
+    gap.CanCollide = false
+  end
+
+  local wheel = Build.part({
+    Name = "RunawayWheel",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(span * 0.3, 2, -WorldGenConfig.PathWidth * 0.4),
+    Size = Vector3.new(2, 2, 2),
+    Shape = Enum.PartType.Ball,
+    Color = Color3.fromRGB(80, 80, 80),
+    Tags = { "Rotator", "KillBrick" },
+    Attributes = { RotSpeed = scaleSpeed(ctx, ObstacleConfig.RotatorSpeed * 2, 0.6, 1.6) },
+  })
+  wheel.Anchored = true
+
+  return model, ctx.origin * CFrame.new(span + 10, 0, 0)
+end
+
+-- Stage 3: Jail Break with timed bars
+function StageTemplates.JailBreak(ctx)
+  local model = Build.model("Stage_JailBreak", ctx.parent)
+  local length = WorldGenConfig.StageLengthMin
+  basePlatform(model, ctx.origin, ctx.color, Vector3.new(length, 1, WorldGenConfig.PathWidth - 4))
+  for i = 1, 4 do
+    local bar = Build.part({
+      Name = "CellBar",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 5) * i, 4, 0),
+      Size = Vector3.new(1, 8, WorldGenConfig.PathWidth - 6),
+      Color = Color3.fromRGB(200, 200, 220),
+      Material = Enum.Material.Metal,
+      Tags = { "TimedTile", "KillBrick" },
+      Attributes = {
+        Cycle = ObstacleConfig.TimedTileInterval * (1 - 0.5 * difficultyFactor(ctx, 0, 1)),
+      },
+    })
+    bar.CanCollide = true
+  end
+  for i = 0, math.floor(length / WorldGenConfig.LaneLightSpacing) do
+    local light = Build.part({
+      Name = "LaneLight",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(WorldGenConfig.LaneLightSpacing * i, 2, WorldGenConfig.PathWidth * 0.45),
+      Size = Vector3.new(0.6, 0.6, 0.6),
+      Color = Color3.fromRGB(180, 220, 255),
+      Material = Enum.Material.Neon,
+      Anchored = true,
+      Tags = { "Beacon" },
+    })
+    light.CanCollide = false
+  end
+  return model, ctx.origin * CFrame.new(length + 8, 0, 0)
+end
+
+-- Stage 4: River Barge boats over toxic water
+function StageTemplates.RiverBarge(ctx)
+  local model = Build.model("Stage_RiverBarge", ctx.parent)
+  local span = WorldGenConfig.StageLengthMax
+  local water = Build.part({
+    Name = "Water",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(span * 0.5, -3, 0),
+    Size = Vector3.new(span, 6, WorldGenConfig.PathWidth + 10),
+    Color = Color3.fromRGB(40, 90, 170),
+    Material = Enum.Material.Water,
+    Tags = { "KillBrick" },
+  })
+  water.Transparency = 0.3
+  local bubbles = Instance.new("ParticleEmitter")
+  bubbles.Texture = "rbxassetid://241594419"
+  bubbles.Rate = 12
+  bubbles.Lifetime = NumberRange.new(0.6, 1)
+  bubbles.Speed = NumberRange.new(3, 6)
+  bubbles.Rotation = NumberRange.new(-180, 180)
+  bubbles.Parent = water
+
+  for i = 1, 4 do
+    local cframe = ctx.origin * CFrame.new((span / 5) * i, 0, (i % 2 == 0) and 6 or -6)
+    local boat = basePlatform(model, cframe, Color3.fromRGB(180, 140, 90), Vector3.new(12, 1, 6))
+    boat:SetAttribute("Amplitude", 8)
+    boat:SetAttribute("Speed", scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.6, 0.6, 1.4))
+    Build.tag(boat, { "MovingPlatform" })
+  end
+
+  -- Safety stepping stones down the center so no dead-ends
+  for i = 0, 5 do
+    Build.part({
+      Name = "Stone",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((span / 5) * i, 0.6, 0),
+      Size = Vector3.new(4, 1, 4),
+      Color = Color3.fromRGB(220, 220, 240),
+      Material = Enum.Material.SmoothPlastic,
+    })
+  end
+
+  for i = 0, math.floor(span / WorldGenConfig.LaneLightSpacing) do
+    local light = Build.part({
+      Name = "LaneLight",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(WorldGenConfig.LaneLightSpacing * i, 2, -WorldGenConfig.PathWidth * 0.45),
+      Size = Vector3.new(0.6, 0.6, 0.6),
+      Color = Color3.fromRGB(120, 200, 255),
+      Material = Enum.Material.Neon,
+      Anchored = true,
+      Tags = { "Beacon" },
+    })
+    light.CanCollide = false
+  end
+  return model, ctx.origin * CFrame.new(span + 10, 0, 0)
+end
+
+-- Stage: Pub Chaos — barrels, spinning mugs, neon sign
+function StageTemplates.PubChaos(ctx)
+  local model = Build.model("Stage_PubChaos", ctx.parent)
+  local length = WorldGenConfig.StageLengthMin
+  basePlatform(model, ctx.origin, ctx.color, Vector3.new(length, 1, WorldGenConfig.PathWidth))
+
+  for i = 1, 5 do
+    local barrel = Build.part({
+      Name = "Barrel",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 6) * i, 1.4, (i % 2 == 0) and 4 or -4),
+      Size = Vector3.new(3, 3, 3),
+      Color = Color3.fromRGB(130, 90, 60),
+      Material = Enum.Material.Wood,
+      Tags = { "Conveyor", "KillBrick" },
+      Attributes = {
+        Speed = scaleSpeed(
+          ctx,
+          (i % 2 == 0) and ObstacleConfig.ConveyorSpeed or -ObstacleConfig.ConveyorSpeed,
+          0.6,
+          1.5
+        ),
+      },
+    })
+  end
+
+  for i = 0, 3 do
+    local mug = Build.part({
+      Name = "SpinMug",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 4) * i + 6, 6, 0),
+      Size = Vector3.new(2, 2, 2),
+      Color = Color3.fromRGB(255, 255, 200),
+      Material = Enum.Material.Neon,
+      Tags = { "Rotator", "KillBrick" },
+      Attributes = { RotSpeed = scaleSpeed(ctx, ObstacleConfig.RotatorSpeed * 2.2, 0.6, 1.8) },
+    })
+    mug.Shape = Enum.PartType.Cylinder
+    mug.CanCollide = false
+  end
+
+  local sign = Build.part({
+    Name = "NeonSign",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(length * 0.6, 8, -WorldGenConfig.PathWidth * 0.5),
+    Size = Vector3.new(10, 4, 1),
+    Color = Color3.fromRGB(255, 120, 160),
+    Material = Enum.Material.Neon,
+  })
+  sign.CanCollide = false
+  addBillboard(model, sign, "Toad's Tavern", Color3.fromRGB(255, 120, 180))
+
+  return model, ctx.origin * CFrame.new(length + 12, 0, 0)
+end
+
+-- Stage: Train Tunnel — rolling spotlight train dodge
+function StageTemplates.TrainTunnel(ctx)
+  local model = Build.model("Stage_TrainTunnel", ctx.parent)
+  local length = WorldGenConfig.StageLengthMax
+
+  local tunnel = Build.part({
+    Name = "Tunnel",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(length * 0.5, 5, 0),
+    Size = Vector3.new(length, 12, WorldGenConfig.PathWidth + 6),
+    Color = Color3.fromRGB(40, 40, 50),
+    Material = Enum.Material.Slate,
+  })
+  tunnel.Transparency = 0.6
+  tunnel.CanCollide = false
+
+  local tracks = Build.part({
+    Name = "Tracks",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(length * 0.5, 0.2, 0),
+    Size = Vector3.new(length, 0.4, 4),
+    Color = Color3.fromRGB(120, 80, 60),
+    Material = Enum.Material.Wood,
+  })
+
+  local train = Build.part({
+    Name = "Train",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(-8, 2, 0),
+    Size = Vector3.new(10, 4, 4),
+    Color = Color3.fromRGB(255, 80, 80),
+    Material = Enum.Material.Metal,
+    Tags = { "MovingPlatform", "KillBrick" },
+    Attributes = {
+      Amplitude = length + 16,
+      Speed = scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.4, 0.6, 1.5),
+    },
+  })
+  local headlight = Instance.new("PointLight")
+  headlight.Range = 40
+  headlight.Brightness = 6
+  headlight.Color = Color3.fromRGB(255, 255, 200)
+  headlight.Parent = train
+
+  for i = 0, math.floor(length / WorldGenConfig.LaneLightSpacing) do
+    local lantern = Build.part({
+      Name = "Lantern",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(WorldGenConfig.LaneLightSpacing * i, 7, -WorldGenConfig.PathWidth * 0.45),
+      Size = Vector3.new(0.6, 0.6, 0.6),
+      Color = Color3.fromRGB(255, 230, 150),
+      Material = Enum.Material.Neon,
+      Anchored = true,
+      Tags = { "Beacon" },
+    })
+    lantern.CanCollide = false
+  end
+
+  return model, ctx.origin * CFrame.new(length + 14, 0, 0)
+end
+
+-- Stage: SeesawGate (co-op pads open gate)
+function StageTemplates.SeesawGate(ctx)
+  local model = Build.model("Stage_SeesawGate", ctx.parent)
+  local length = WorldGenConfig.StageLengthMin
+  basePlatform(model, ctx.origin, ctx.color, Vector3.new(length, 1, WorldGenConfig.PathWidth))
+
+  local gateId = string.format("Gate_%03d", ctx.stageIndex or ctx.random:NextInteger(1000, 9999))
+
+  local gate = Build.part({
+    Name = "Gate",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(length * 0.6, 3, 0),
+    Size = Vector3.new(2, 8, WorldGenConfig.PathWidth - 4),
+    Color = Color3.fromRGB(255, 120, 120),
+    Material = Enum.Material.Neon,
+    Anchored = true,
+    Tags = { "Gate" },
+    Attributes = { GateId = gateId },
+  })
+
+  local padA = Build.part({
+    Name = "PadA",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(length * 0.25, 0.5, WorldGenConfig.PathWidth * 0.35),
+    Size = Vector3.new(6, 1, 6),
+    Color = Color3.fromRGB(120, 200, 255),
+    Material = Enum.Material.SmoothPlastic,
+    Tags = { "PressurePad" },
+    Attributes = { PadId = "A", GateId = gateId },
+  })
+  padA.Anchored = true
+
+  local padB = Build.part({
+    Name = "PadB",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(length * 0.4, 0.5, -WorldGenConfig.PathWidth * 0.35),
+    Size = Vector3.new(6, 1, 6),
+    Color = Color3.fromRGB(120, 200, 255),
+    Material = Enum.Material.SmoothPlastic,
+    Tags = { "PressurePad" },
+    Attributes = { PadId = "B", GateId = gateId },
+  })
+  padB.Anchored = true
+
+  return model, ctx.origin * CFrame.new(length + 10, 0, 0)
+end
+
+-- Stage 5: Courtroom Chaos with a giant gavel and lasers
+function StageTemplates.CourtroomChaos(ctx)
+  local model = Build.model("Stage_CourtroomChaos", ctx.parent)
+  basePlatform(model, ctx.origin, ctx.color, Vector3.new(WorldGenConfig.StageLengthMin, 1, WorldGenConfig.PathWidth))
+  Build.part({
+    Name = "Gavel",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(WorldGenConfig.StageLengthMin * 0.5, 3, 0),
+    Size = Vector3.new(WorldGenConfig.PathWidth, 1, 2),
+    Color = Color3.fromRGB(120, 70, 40),
+    Tags = { "Rotator", "KillBrick" },
+    Attributes = { RotSpeed = ObstacleConfig.RotatorSpeed * 1.5 },
+  })
+
+  for i = 1, 3 do
+    local beam = Build.part({
+      Name = "Laser",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((WorldGenConfig.StageLengthMin / 4) * i, 2, 0),
+      Size = Vector3.new(1, 1, WorldGenConfig.PathWidth),
+      Color = Color3.fromRGB(255, 40, 40),
+      Material = Enum.Material.Neon,
+      Tags = { "Laser", "KillBrick" },
+      Attributes = { Cycle = ObstacleConfig.LaserCycleTime * 0.8, Phase = i },
+    })
+    beam.CanCollide = false
+    local sparks = Instance.new("ParticleEmitter")
+    sparks.Texture = "rbxassetid://260430117"
+    sparks.Lifetime = NumberRange.new(0.3, 0.5)
+    sparks.Speed = NumberRange.new(4, 8)
+    sparks.Rate = 16
+    sparks.Enabled = false
+    sparks.Parent = beam
+  end
+
+  return model, ctx.origin * CFrame.new(WorldGenConfig.StageLengthMin + 12, 0, 0)
+end
+
+-- Stage 6: Motor Madness speed strip
+function StageTemplates.MotorMadness(ctx)
+  local model = Build.model("Stage_MotorMadness", ctx.parent)
+  local span = WorldGenConfig.StageLengthMin
+  local road = basePlatform(
+    model,
+    ctx.origin * CFrame.new(span * 0.5, 0, 0),
+    ctx.color,
+    Vector3.new(span, 1, WorldGenConfig.PathWidth)
+  )
+  road.Material = Enum.Material.Asphalt
+  road:SetAttribute("Speed", scaleSpeed(ctx, ObstacleConfig.ConveyorSpeed * 1.6, 0.6, 1.6))
+  Build.tag(road, { "Conveyor" })
+
+  -- Narrow sidewalk on the side for a safe (slower) path
+  local sidewalk = basePlatform(
+    model,
+    ctx.origin * CFrame.new(span * 0.5, 0.4, WorldGenConfig.PathWidth * 0.5),
+    Color3.fromRGB(240, 240, 240),
+    Vector3.new(span, 0.4, 4)
+  )
+  sidewalk.Material = Enum.Material.SmoothPlastic
+  sidewalk.CanCollide = true
+
+  Build.part({
+    Name = "StreetSign",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(span * 0.7, 5, 0),
+    Size = Vector3.new(1, 10, 1),
+    Color = Color3.fromRGB(40, 120, 40),
+    Tags = { "Rotator", "KillBrick", "Beacon" },
+    Attributes = { RotSpeed = ObstacleConfig.RotatorSpeed },
+  })
+
+  return model, ctx.origin * CFrame.new(span + 10, 0, 0)
+end
+
+-- Stage 7: Wild Woods wind tunnel
+function StageTemplates.WildWoods(ctx)
+  local model = Build.model("Stage_WildWoods", ctx.parent)
+  local length = WorldGenConfig.StageLengthMin
+  basePlatform(model, ctx.origin, ctx.color)
+  local wind = Build.part({
+    Name = "WindZone",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(length * 0.5, 6, 0),
+    Size = Vector3.new(length, 12, WorldGenConfig.PathWidth),
+    Transparency = 0.7,
+    Color = Color3.fromRGB(180, 255, 220),
+    Material = Enum.Material.Glass,
+    Tags = { "WindZone" },
+    Attributes = { Force = ObstacleConfig.WindForce * 1.2 },
+  })
+  wind.Anchored = true
+  wind.CanCollide = false
+  local leaves = Instance.new("ParticleEmitter")
+  leaves.Texture = "rbxassetid://484084159"
+  leaves.Rate = 18
+  leaves.Lifetime = NumberRange.new(1, 1.4)
+  leaves.Speed = NumberRange.new(6, 10)
+  leaves.Rotation = NumberRange.new(-180, 180)
+  leaves.Parent = wind
+
+  for i = 1, 3 do
+    local tree = Build.part({
+      Name = "Tree",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 3) * i, 6, WorldGenConfig.PathWidth * 0.5),
+      Size = Vector3.new(2, 12, 2),
+      Color = Color3.fromRGB(90, 60, 30),
+      Material = Enum.Material.Wood,
+    })
+    tree.CanCollide = false
+    local crown = Build.part({
+      Name = "TreeCrown",
+      Parent = model,
+      CFrame = tree.CFrame * CFrame.new(0, 7, 0),
+      Size = Vector3.new(8, 4, 8),
+      Color = Color3.fromRGB(120, 200, 255),
+      Material = Enum.Material.Neon,
+    })
+    crown.Anchored = true
+    crown.CanCollide = false
+  end
+
+  return model, ctx.origin * CFrame.new(length + 8, 0, 0)
+end
+
+-- Finale ring kept for celebration
+function StageTemplates.FinaleRing(ctx)
+  local model = Build.model("Stage_FinaleRing", ctx.parent)
+  local radius = 20
+  local steps = 12
+  for i = 1, steps do
+    local angle = (math.pi * 2 / steps) * i
+    local x = radius * math.cos(angle)
+    local z = radius * math.sin(angle)
+    basePlatform(model, ctx.origin * CFrame.new(x, 0, z), ctx.color)
+  end
+  local emitter = Instance.new("ParticleEmitter")
+  emitter.Texture = "rbxassetid://258128463"
+  emitter.Rate = 24
+  emitter.Lifetime = NumberRange.new(1, 1.5)
+  emitter.Speed = NumberRange.new(25, 35)
+  emitter.Parent = model
+
+  local confetti = Instance.new("ParticleEmitter")
+  confetti.Texture = "rbxassetid://12824333"
+  confetti.Rate = 40
+  confetti.Lifetime = NumberRange.new(1, 1.2)
+  confetti.Speed = NumberRange.new(12, 16)
+  confetti.Rotation = NumberRange.new(-180, 180)
+  confetti.Parent = model
+  return model, ctx.origin * CFrame.new(radius * 2 + 20, 0, 0)
+end
+
+return StageTemplates
+]]></string>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="ModuleScript" referent="24">
+        <Properties>
+          <string name="Name">WorldBuilder</string>
+          <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ZoneConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("ZoneConfig"))
+local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
+local RandomUtil = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Random"))
+local ZoneBuilder = require(script.Parent.ZoneBuilder)
+local DecorBuilder = require(script.Parent.DecorBuilder)
+
+local WorldBuilder = {}
+
+local function clearExisting()
+  local existing = workspace:FindFirstChild("Obby")
+  if existing then
+    existing:Destroy()
+  end
+  local weather = workspace:FindFirstChild("Weather")
+  if weather then
+    weather:Destroy()
+  end
+end
+
+local function ensureFolders()
+  local folder = ReplicatedStorage:FindFirstChild("SharedEvents")
+  if not folder then
+    folder = Instance.new("Folder")
+    folder.Name = "SharedEvents"
+    folder.Parent = ReplicatedStorage
+  end
+  local events = { GameConfig.ProgressRemote, GameConfig.KeyRemote, GameConfig.FinaleRemote }
+  for _, name in ipairs(events) do
+    if not folder:FindFirstChild(name) then
+      local evt = Instance.new("RemoteEvent")
+      evt.Name = name
+      evt.Parent = folder
+    end
+  end
+  return folder:FindFirstChild(GameConfig.ProgressRemote),
+    folder:FindFirstChild(GameConfig.KeyRemote),
+    folder:FindFirstChild(GameConfig.FinaleRemote)
+end
+
+function WorldBuilder.buildWorld(seed)
+  seed = seed or GameConfig.Seed
+  clearExisting()
+  local progressEvent, keyEvent, finaleEvent = ensureFolders()
+
+  local obbyModel = Instance.new("Model")
+  obbyModel.Name = "Obby"
+  obbyModel.Parent = workspace
+
+  -- Spawn pad for clean starting flow
+  local spawnPad = Instance.new("SpawnLocation")
+  spawnPad.Name = "SpawnPad"
+  spawnPad.Size = Vector3.new(16, 1, 16)
+  spawnPad.Position = Vector3.new(0, 4.5, -20)
+  spawnPad.Anchored = true
+  spawnPad.Transparency = 0.2
+  spawnPad.BrickColor = BrickColor.new("Bright green")
+  spawnPad.Duration = 0
+  spawnPad.Parent = obbyModel
+
+  local rng = RandomUtil.new(seed)
+  local totalStages = GameConfig.Zones * GameConfig.StagesPerZone
+  local lastCFrame = CFrame.new(0, 5, 0)
+  local allStages = {}
+
+  for zoneIndex = 1, GameConfig.Zones do
+    local zoneCfg = ZoneConfig[((zoneIndex - 1) % #ZoneConfig) + 1]
+    local zoneModel, stages, endCFrame = ZoneBuilder.buildZone({
+      parent = obbyModel,
+      origin = lastCFrame,
+      zoneIndex = zoneIndex,
+      stagesPerZone = GameConfig.StagesPerZone,
+      zoneConfig = zoneCfg,
+      random = rng,
+      elevationStep = GameConfig.ElevationPerZone / GameConfig.StagesPerZone,
+    })
+    DecorBuilder.decorateZone(zoneModel, zoneCfg)
+    DecorBuilder.applyLighting(zoneCfg)
+    for _, s in ipairs(stages) do
+      table.insert(allStages, s)
+    end
+    lastCFrame = endCFrame * CFrame.new(GameConfig.StageSpacing.X, GameConfig.ElevationPerZone, 0)
+  end
+
+  print(string.format("[Obby] Built %d zones, %d stages, seed=%s", GameConfig.Zones, totalStages, tostring(seed)))
+  progressEvent:FireAllClients({ total = totalStages, stage = 0 })
+
+  return {
+    model = obbyModel,
+    stages = allStages,
+    seed = seed,
+    totalStages = totalStages,
+    progressEvent = progressEvent,
+    keyEvent = keyEvent,
+    finaleEvent = finaleEvent,
+  }
+end
+
+return WorldBuilder
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="25">
+        <Properties>
+          <string name="Name">ZoneBuilder</string>
+          <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StageBuilder = require(script.Parent.StageBuilder)
+local WorldGenConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("WorldGenConfig"))
+local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
+
+local ZoneBuilder = {}
+
+function ZoneBuilder.buildZone(args)
+  local zoneModel = Instance.new("Model")
+  zoneModel.Name = string.format("Zone_%02d_%s", args.zoneIndex, args.zoneConfig.Name)
+  zoneModel.Parent = args.parent
+
+  local stages = {}
+  local currentCFrame = args.origin
+  for i = 1, args.stagesPerZone do
+    local stageIndex = ((args.zoneIndex - 1) * args.stagesPerZone) + i
+    local stageType = WorldGenConfig.StageTypes[((stageIndex - 1) % #WorldGenConfig.StageTypes) + 1]
+    local stageModel, endCFrame, checkpoint = StageBuilder.buildStage({
+      parent = zoneModel,
+      origin = currentCFrame,
+      stageIndex = stageIndex,
+      stageType = stageType,
+      zoneColor = args.zoneConfig.ThemeColor,
+      random = args.random,
+    })
+    table.insert(stages, {
+      model = stageModel,
+      checkpoint = checkpoint,
+      stageIndex = stageIndex,
+      stageType = stageType,
+    })
+    currentCFrame = endCFrame * CFrame.new(GameConfig.StageSpacing.X, args.elevationStep, 0)
+  end
+
+  return zoneModel, stages, currentCFrame
+end
+
+return ZoneBuilder
+]]></string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="StarterPlayer" referent="26">
+    <Properties>
+      <string name="Name">StarterPlayer</string>
+    </Properties>
+    <Item class="StarterPlayerScripts" referent="27">
+      <Properties>
+        <string name="Name">StarterPlayerScripts</string>
+      </Properties>
+      <Item class="LocalScript" referent="28">
+        <Properties>
+          <string name="Name">ClientMain</string>
+          <string name="Source"><![CDATA[local controllers = script.Parent:WaitForChild("Controllers")
+local UIController = require(controllers:WaitForChild("UIController"))
+local EffectsController = require(controllers:WaitForChild("EffectsController"))
+
+UIController.new()
+EffectsController.new()
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="Folder" referent="29">
+        <Properties>
+          <string name="Name">Controllers</string>
+        </Properties>
+        <Item class="ModuleScript" referent="30">
+          <Properties>
+            <string name="Name">EffectsController</string>
+            <string name="Source"><![CDATA[local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+local Lighting = game:GetService("Lighting")
+local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
+
+local EffectsController = {}
+EffectsController.__index = EffectsController
+
+function EffectsController.new()
+  local self = setmetatable({}, EffectsController)
+  self.player = Players.LocalPlayer
+  local events = ReplicatedStorage:WaitForChild("SharedEvents")
+  self.progressEvent = events:WaitForChild(GameConfig.ProgressRemote)
+  self.finaleEvent = events:WaitForChild(GameConfig.FinaleRemote)
+  self:bind()
+  return self
+end
+
+function EffectsController:bind()
+  self.progressEvent.OnClientEvent:Connect(function()
+    self:flash()
+  end)
+  self.finaleEvent.OnClientEvent:Connect(function()
+    self:finale()
+  end)
+end
+
+function EffectsController:flash()
+  local gui = Instance.new("Frame")
+  gui.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+  gui.Size = UDim2.fromScale(1, 1)
+  gui.BackgroundTransparency = 0.4
+  gui.BorderSizePixel = 0
+  gui.Parent = self.player:WaitForChild("PlayerGui")
+  TweenService
+    :Create(gui, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { BackgroundTransparency = 1 })
+    :Play()
+  game.Debris:AddItem(gui, 0.5)
+end
+
+function EffectsController:finale()
+  local blur = Instance.new("BlurEffect")
+  blur.Size = 0
+  blur.Parent = Lighting
+  TweenService:Create(blur, TweenInfo.new(1.6, Enum.EasingStyle.Quad), { Size = 10 }):Play()
+  game.Debris:AddItem(blur, 2.5)
+
+  local spot = Instance.new("SpotLight")
+  spot.Brightness = 4
+  spot.Angle = 90
+  spot.Range = 40
+  spot.Parent = workspace.CurrentCamera
+  TweenService:Create(spot, TweenInfo.new(2, Enum.EasingStyle.Quad), { Brightness = 0 }):Play()
+  game.Debris:AddItem(spot, 3)
+
+  local shake = Instance.new("ColorCorrectionEffect")
+  shake.TintColor = Color3.fromRGB(255, 240, 210)
+  shake.Parent = Lighting
+  TweenService:Create(shake, TweenInfo.new(0.8, Enum.EasingStyle.Quad), { Brightness = 0.25, Saturation = 0.3 }):Play()
+  game.Debris:AddItem(shake, 2)
+
+  -- Fireworks at the player
+  local char = self.player.Character
+  local root = char and char:FindFirstChild("HumanoidRootPart")
+  if root then
+    for i = 1, 3 do
+      local boom = Instance.new("ParticleEmitter")
+      boom.Texture = "rbxassetid://258128463"
+      boom.Lifetime = NumberRange.new(1, 1.6)
+      boom.Speed = NumberRange.new(32, 38)
+      boom.Rate = 200
+      boom.SpreadAngle = Vector2.new(360, 360)
+      boom.Parent = root
+      boom:Emit(200)
+      game.Debris:AddItem(boom, 2)
+    end
+    local s = Instance.new("Sound")
+    s.SoundId = "rbxassetid://138186576"
+    s.Volume = 1
+    s.Parent = root
+    s:Play()
+    game.Debris:AddItem(s, 3)
+  end
+end
+
+return EffectsController
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="31">
+          <Properties>
+            <string name="Name">UIController</string>
+            <string name="Source"><![CDATA[local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
+
+local UIController = {}
+UIController.__index = UIController
+
+function UIController.new()
+  local self = setmetatable({}, UIController)
+  self.player = Players.LocalPlayer
+  self.gui = self:createGui()
+  self.progressEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.ProgressRemote)
+  self.keyEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.KeyRemote)
+  self:bind()
+  return self
+end
+
+function UIController:createGui()
+  local gui = Instance.new("ScreenGui")
+  gui.Name = "ObbyHUD"
+  gui.ResetOnSpawn = false
+  gui.Parent = self.player:WaitForChild("PlayerGui")
+
+  local bar = Instance.new("Frame")
+  bar.Name = "ProgressBar"
+  bar.Size = UDim2.fromScale(0.4, 0.05)
+  bar.Position = UDim2.fromScale(0.3, 0.05)
+  bar.BackgroundColor3 = Color3.fromRGB(35, 60, 95)
+  bar.BorderSizePixel = 0
+  bar.Parent = gui
+
+  local fill = Instance.new("Frame")
+  fill.Name = "Fill"
+  fill.Size = UDim2.fromScale(0, 1)
+  fill.BackgroundColor3 = Color3.fromRGB(120, 235, 195)
+  fill.BorderSizePixel = 0
+  fill.Parent = bar
+
+  local label = Instance.new("TextLabel")
+  label.Name = "Label"
+  label.Size = UDim2.fromScale(1, 1)
+  label.BackgroundTransparency = 1
+  label.Text = "Stage 0/0"
+  label.Font = Enum.Font.GothamBold
+  label.TextScaled = true
+  label.TextColor3 = Color3.new(1, 1, 1)
+  label.Parent = bar
+
+  local reset = Instance.new("TextButton")
+  reset.Name = "ResetButton"
+  reset.Size = UDim2.fromOffset(120, 40)
+  reset.Position = UDim2.fromScale(0.02, 0.12)
+  reset.BackgroundColor3 = Color3.fromRGB(240, 150, 110)
+  reset.TextColor3 = Color3.new(1, 1, 1)
+  reset.Font = Enum.Font.GothamBold
+  reset.TextScaled = true
+  reset.Text = "Reset"
+  reset.Parent = gui
+
+  local skip = Instance.new("TextButton")
+  skip.Name = "SkipButton"
+  skip.Size = UDim2.fromOffset(120, 40)
+  skip.Position = UDim2.fromScale(0.16, 0.12)
+  skip.BackgroundColor3 = Color3.fromRGB(110, 130, 170)
+  skip.TextColor3 = Color3.new(1, 1, 1)
+  skip.Font = Enum.Font.GothamBold
+  skip.TextScaled = true
+  skip.Text = "Skip (off)"
+  skip.Active = false
+  skip.AutoButtonColor = false
+  skip.Parent = gui
+
+  local keyHud = Instance.new("TextLabel")
+  keyHud.Name = "KeyCounter"
+  keyHud.Size = UDim2.fromScale(0.18, 0.05)
+  keyHud.Position = UDim2.fromScale(0.8, 0.05)
+  keyHud.BackgroundTransparency = 0.1
+  keyHud.BackgroundColor3 = Color3.fromRGB(140, 170, 240)
+  keyHud.TextColor3 = Color3.fromRGB(20, 35, 60)
+  keyHud.Font = Enum.Font.GothamBold
+  keyHud.TextScaled = true
+  keyHud.Text = "Keys 0/0"
+  keyHud.Parent = gui
+
+  return gui
+end
+
+function UIController:bind()
+  local reset = self.gui:FindFirstChild("ResetButton")
+  reset.MouseButton1Click:Connect(function()
+    local character = self.player.Character or self.player.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+      humanoid.Health = 0
+    end
+  end)
+
+  self.progressEvent.OnClientEvent:Connect(function(payload)
+    local stage = payload.stage or 0
+    local total = payload.total or 1
+    self:updateProgress(stage, total)
+    self:guideToStage(stage + 1)
+    self:flashMilestone(stage, total)
+  end)
+
+  self.keyEvent.OnClientEvent:Connect(function(payload)
+    self:updateKeys(payload.found or 0, payload.total or 0)
+  end)
+end
+
+function UIController:updateProgress(stage, total)
+  local bar = self.gui:FindFirstChild("ProgressBar")
+  if not bar then
+    return
+  end
+  local fill = bar:FindFirstChild("Fill")
+  local label = bar:FindFirstChild("Label")
+  local pct = total > 0 and stage / total or 0
+  fill:TweenSize(UDim2.fromScale(pct, 1), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true)
+  label.Text = string.format("Stage %d/%d", stage, total)
+end
+
+function UIController:updateKeys(found, total)
+  local keyHud = self.gui:FindFirstChild("KeyCounter")
+  if not keyHud then
+    return
+  end
+  keyHud.Text = string.format("Keys %d/%d", found, total)
+end
+
+function UIController:guideToStage(nextStage)
+  local obby = workspace:FindFirstChild("Obby")
+  if not obby then
+    return
+  end
+  local label = self.gui:FindFirstChild("ArrowHint")
+  if label then
+    label:Destroy()
+  end
+  local nextName = string.format("CP_%03d", nextStage)
+  local target = obby:FindFirstChild(nextName, true)
+  if target and target:IsA("BasePart") then
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "ArrowHint"
+    billboard.Adornee = target
+    billboard.Size = UDim2.fromOffset(80, 80)
+    billboard.StudsOffset = Vector3.new(0, 6, 0)
+    billboard.AlwaysOnTop = true
+    billboard.Parent = self.gui
+
+    local arrow = Instance.new("TextLabel")
+    arrow.BackgroundTransparency = 1
+    arrow.Text = "⬆"
+    arrow.TextScaled = true
+    arrow.Font = Enum.Font.GothamBold
+    arrow.TextColor3 = Color3.fromRGB(255, 255, 0)
+    arrow.Parent = billboard
+  end
+end
+
+function UIController:flashMilestone(stage, total)
+  if stage == 0 then
+    return
+  end
+  local gui = Instance.new("TextLabel")
+  gui.Size = UDim2.fromScale(1, 0.08)
+  gui.Position = UDim2.fromScale(0, 0.14)
+  gui.BackgroundTransparency = 0.1
+  gui.BackgroundColor3 = Color3.fromRGB(40, 60, 90)
+  gui.TextColor3 = Color3.fromRGB(255, 230, 180)
+  gui.Font = Enum.Font.GothamBlack
+  gui.TextScaled = true
+  gui.Text = string.format("Stage %d / %d — keep charging forward!", stage, total)
+  gui.Parent = self.gui
+  game:GetService("Debris"):AddItem(gui, 1.2)
+end
+
+return UIController
+]]></string>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="Workspace" referent="32">
+    <Properties>
+      <string name="Name">Workspace</string>
+      <bool name="NeedsPivotMigration">false</bool>
+    </Properties>
+    <Item class="Script" referent="33">
+      <Properties>
+        <string name="Name">Bootstrap</string>
+        <token name="RunContext">0</token>
+        <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
+
+local function startObbyService()
+  local ok, err = pcall(function()
+    local ObbyService = require(ServerScriptService:WaitForChild("Services"):WaitForChild("ObbyService"))
+    ObbyService.new()
+  end)
+  if not ok then
+    warn("[Bootstrap] Failed to start ObbyService", err)
+  end
+end
+
+-- If the main server script already ran, this becomes a no-op due to the singleton guard.
+if not workspace:GetAttribute("ObbyServiceReady") then
+  startObbyService()
+end
+]]></string>
+      </Properties>
+    </Item>
+  </Item>
+</roblox>
