@@ -15,6 +15,8 @@ grep -q 'previousExit = args.previousExit' "$ROOT_DIR/src/server/WorldGen/ZoneBu
 grep -q 'previousExit = previousZoneExit' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "world builder does not pass prior zone exit"
 grep -q 'local zones = {}' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "world zone manifest missing"
 grep -q 'zones = zones' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "world zone manifest is not returned"
+grep -q 'validate(allStages, totalStages, zones, obbyModel)' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "zone manifest is not validated"
+grep -q 'function validateZones' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "zone validator missing"
 grep -q 'center = zoneCFrame.Position' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "zone center is not exposed"
 grep -q 'zoneIndex = args.zoneIndex' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage zone ownership missing"
 grep -q 'local modelIsModel = typeof(stageModel) == "Instance"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator model guard missing"

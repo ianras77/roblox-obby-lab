@@ -26,8 +26,60 @@ local function stageLabel(stage)
   return tostring(stage and stage.stageIndex or "?")
 end
 
-function WorldValidator.validate(stages: { any }, totalStages: number): ({ string }, number)
+local function validateZones(zones, totalZones, root)
   local errors = {}
+  if type(zones) ~= "table" or #zones ~= totalZones then
+    table.insert(
+      errors,
+      string.format("expected %s zones, found %s", tostring(totalZones), tostring(zones and #zones or 0))
+    )
+    return errors
+  end
+  local previousExit = nil
+  for expectedIndex, zone in ipairs(zones) do
+    local modelIsModel = typeof(zone.model) == "Instance" and zone.model:IsA("Model")
+    if zone.zoneIndex ~= expectedIndex then
+      table.insert(errors, string.format("zone order gap or duplicate near %s", tostring(zone.zoneIndex)))
+    end
+    if not modelIsModel or zone.model.Parent ~= root then
+      table.insert(errors, string.format("zone %s is not owned by generated root", tostring(zone.zoneIndex)))
+    end
+    if typeof(zone.entrance) ~= "CFrame" or typeof(zone.exit) ~= "CFrame" then
+      table.insert(errors, string.format("zone %s has invalid entrance or exit", tostring(zone.zoneIndex)))
+    end
+    if
+      typeof(zone.bounds) ~= "Vector3"
+      or not finiteVector(zone.bounds)
+      or zone.bounds.X <= 0
+      or zone.bounds.Y <= 0
+      or zone.bounds.Z <= 0
+    then
+      table.insert(errors, string.format("zone %s has invalid bounds", tostring(zone.zoneIndex)))
+    end
+    if previousExit and typeof(zone.entrance) == "CFrame" then
+      if (zone.entrance.Position - previousExit.Position).Magnitude > GameConfig.StageSpacing.X then
+        table.insert(errors, string.format("zone %s entrance transition is too long", tostring(zone.zoneIndex)))
+      end
+    end
+    if typeof(zone.exit) == "CFrame" then
+      previousExit = zone.exit
+    end
+  end
+  return errors
+end
+
+function WorldValidator.validate(
+  stages: { any },
+  totalStages: number,
+  zones: { any }?,
+  root: Instance?
+): ({ string }, number)
+  local errors = {}
+  if zones then
+    for _, zoneError in ipairs(validateZones(zones, GameConfig.Zones, root)) do
+      table.insert(errors, zoneError)
+    end
+  end
   local ids = {}
   local checkpoints = {}
   local indexes = {}

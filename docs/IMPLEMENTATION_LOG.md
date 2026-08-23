@@ -1075,6 +1075,15 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: live attribute mutation remains a Studio-only test.
 
+## 2026-08-23 — Validate the structured zone manifest
+
+- Completed: world generation now validates zone count/order, generated-root
+  ownership, entrance/exit CFrames, finite positive bounds, and transition
+  lengths before accepting the zone manifest.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live zone mutation and traversal remain Studio-only checks.
+
 ## 2026-08-23 — Fail closed on collectible identity types
 
 - Completed: world validation now requires non-empty bounded string `KeyId`

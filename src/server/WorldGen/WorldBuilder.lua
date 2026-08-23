@@ -128,7 +128,7 @@ function WorldBuilder.buildWorld(seed)
     lastCFrame = endCFrame * CFrame.new(0, GameConfig.ElevationPerZone, 0)
   end
 
-  local validationErrors = WorldValidator.validate(allStages, totalStages)
+  local validationErrors = WorldValidator.validate(allStages, totalStages, zones, obbyModel)
   for _, err in ipairs(validationErrors) do
     warn("[WorldValidator] " .. err)
   end
