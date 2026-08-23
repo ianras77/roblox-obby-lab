@@ -18,6 +18,9 @@ Reduced Motion must preserve the completion cue and results flow while omitting
 finale fireworks and spotlight animation; verify this in Studio alongside the
 normal celebration path.
 
+Flash reduction must additionally suppress finale blur, color correction,
+spotlight, and local firework bursts while retaining audio and results.
+
 Replay controls now expose Adventure, Time Trial, and Practice from the HUD;
 verify mode reset timing, checkpoint semantics, completion results, and that a
 Practice run never qualifies for a leaderboard or personal best.

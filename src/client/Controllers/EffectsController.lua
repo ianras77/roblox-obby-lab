@@ -54,19 +54,22 @@ end
 
 function EffectsController:finale()
   local reducedMotion = self.player:GetAttribute("Accessibility_reducedMotion")
+  local reduceFlashes = self.player:GetAttribute("Accessibility_reduceFlashes")
   local char = self.player.Character
   local root = char and char:FindFirstChild("HumanoidRootPart")
-  local blur = Instance.new("BlurEffect")
-  blur.Size = 0
-  blur.Parent = Lighting
-  TweenService:Create(
-    blur,
-    TweenInfo.new(reducedMotion and 0.1 or 1.6, Enum.EasingStyle.Quad),
-    { Size = reducedMotion and 0 or 10 }
-  ):Play()
-  game.Debris:AddItem(blur, 2.5)
+  if not reduceFlashes then
+    local blur = Instance.new("BlurEffect")
+    blur.Size = 0
+    blur.Parent = Lighting
+    TweenService:Create(
+      blur,
+      TweenInfo.new(reducedMotion and 0.1 or 1.6, Enum.EasingStyle.Quad),
+      { Size = reducedMotion and 0 or 10 }
+    ):Play()
+    game.Debris:AddItem(blur, 2.5)
+  end
 
-  if not reducedMotion then
+  if not reducedMotion and not reduceFlashes then
     local spot = Instance.new("SpotLight")
     spot.Brightness = 4
     spot.Angle = 90
@@ -76,18 +79,20 @@ function EffectsController:finale()
     game.Debris:AddItem(spot, 3)
   end
 
-  local shake = Instance.new("ColorCorrectionEffect")
-  shake.TintColor = Color3.fromRGB(255, 240, 210)
-  shake.Parent = Lighting
-  TweenService:Create(
-    shake,
-    TweenInfo.new(reducedMotion and 0.1 or 0.8, Enum.EasingStyle.Quad),
-    { Brightness = 0.25, Saturation = 0.3 }
-  ):Play()
-  game.Debris:AddItem(shake, 2)
+  if not reduceFlashes then
+    local color = Instance.new("ColorCorrectionEffect")
+    color.TintColor = Color3.fromRGB(255, 240, 210)
+    color.Parent = Lighting
+    TweenService:Create(
+      color,
+      TweenInfo.new(reducedMotion and 0.1 or 0.8, Enum.EasingStyle.Quad),
+      { Brightness = 0.25, Saturation = 0.3 }
+    ):Play()
+    game.Debris:AddItem(color, 2)
+  end
 
   -- Fireworks at the player
-  if root and not reducedMotion then
+  if root and not reducedMotion and not reduceFlashes then
     for _ = 1, 3 do
       local boom = Instance.new("ParticleEmitter")
       boom.Texture = AssetRegistry.getApprovedId("finale_firework")

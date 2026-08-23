@@ -1486,3 +1486,11 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; live mechanic activation and load remain
   Studio-unverified.
+
+## 2026-08-23 — Honor flash reduction in finale presentation
+
+- Completed: the finale now suppresses blur, color correction, spotlight, and
+  local firework bursts when the persistent `reduceFlashes` setting is enabled.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; device-level accessibility behavior remains
+  Studio-unverified.
