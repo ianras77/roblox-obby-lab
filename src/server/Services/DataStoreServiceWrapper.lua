@@ -69,16 +69,25 @@ function Wrapper:SetAsync(key, value)
         merged.highestChapter = math.max(tonumber(current.highestChapter) or 0, value.highestChapter or 0)
         merged.totalDeaths = math.max(tonumber(current.totalDeaths) or 0, value.totalDeaths or 0)
         merged.completionCount = math.max(tonumber(current.completionCount) or 0, value.completionCount or 0)
-        if type(current.collectedKeys) == "table" then
-          merged.collectedKeys = table.clone(value.collectedKeys or {})
-          local keyCount = 0
-          for keyId, collected in pairs(current.collectedKeys) do
-            if collected == true and keyCount < 100 then
-              merged.collectedKeys[keyId] = true
+        local mergedKeys = {}
+        local keyCount = 0
+        local function mergeKeys(source)
+          if type(source) ~= "table" then
+            return
+          end
+          for keyId, collected in pairs(source) do
+            if keyCount >= 100 then
+              return
+            end
+            if type(keyId) == "string" and #keyId <= 100 and collected == true and not mergedKeys[keyId] then
+              mergedKeys[keyId] = true
               keyCount += 1
             end
           end
         end
+        mergeKeys(value.collectedKeys)
+        mergeKeys(current.collectedKeys)
+        merged.collectedKeys = mergedKeys
         local currentBest = tonumber(current.bestRunMs)
         if currentBest and currentBest > 0 and (not merged.bestRunMs or currentBest < merged.bestRunMs) then
           merged.bestRunMs = currentBest

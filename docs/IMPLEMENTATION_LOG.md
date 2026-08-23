@@ -374,6 +374,16 @@
 - Unverified: concurrent live DataStore conflict behavior requires a staging
   Roblox environment.
 
+## 2026-08-23 — Bound merged collectible records
+
+- Completed: concurrent profile merging now rebuilds the key set from both
+  records with type, length, and 100-key bounds, instead of copying an
+  unbounded table and only limiting one side.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live DataStore conflict and migration behavior still require
+  staging Roblox validation.
+
 ## 2026-08-23 — Bounded rider contact queries
 
 - Completed: moving-platform contact detection now samples `GetTouchingParts()`
