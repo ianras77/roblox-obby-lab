@@ -150,6 +150,7 @@ grep -q 'ensureSoundGroup("Ambience"' "$ROOT_DIR/src/server/ServerMain.server.lu
 grep -q 'ensureSoundGroup("SFX"' "$ROOT_DIR/src/server/ServerMain.server.lua" || fail "SFX SoundGroup is missing"
 grep -q 'sound.SoundGroup = SoundService:FindFirstChild("Music")' "$ROOT_DIR/src/server/ServerMain.server.lua" || fail "music is not routed through Music group"
 grep -q 'sound.SoundGroup = SoundService:FindFirstChild("Ambience")' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "ambience is not routed through Ambience group"
+grep -q 'sound.SoundGroup = SoundService:FindFirstChild("SFX")' "$ROOT_DIR/src/shared/Util/Build.lua" || fail "gameplay feedback is not routed through SFX group"
 grep -q 'addLandmark(zoneModel, zoneConfig, zoneCFrame.Position, zoneSize)' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "zone-relative landmark layer is missing"
 grep -q 'CanQuery = false' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "landmark collision/query budget is not disabled"
 grep -q 'hasNearbyPlayer(item.part.Position, 180)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "non-critical proximity activation is missing"

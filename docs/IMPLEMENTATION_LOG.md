@@ -950,3 +950,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: Results Replay positioning and persistence preservation require
   Studio playtesting.
+
+## 2026-08-23 — Route checkpoint and key sounds through SFX
+
+- Completed: generated checkpoint and Golden Key feedback now use the shared
+  SFX SoundGroup alongside finale feedback; no sound path bypasses the common
+  mix buses.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: approved asset playback and final mix balance require Creator Hub
+  and Studio verification.

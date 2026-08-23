@@ -35,7 +35,8 @@ zone palette, but does not repeatedly overwrite global Lighting while building.
 
 `ServerMain` owns shared `Music`, `Ambience`, `SFX`, and `UI` SoundGroup buses.
 Approved music, zone ambience, and client finale feedback route through those
-buses so future volume controls do not require rewriting individual sounds.
+buses, as do checkpoint and Golden Key feedback sounds, so future volume
+controls do not require rewriting individual sounds.
 
 World construction does not broadcast a fake Stage 0 state. A client requests
 its authoritative restored state through `GetObbyState`, then receives later
