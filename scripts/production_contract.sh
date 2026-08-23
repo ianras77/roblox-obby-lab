@@ -30,6 +30,7 @@ grep -q 'SetRunMode' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail 
 grep -q 'completionCount < 1' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "time trial unlock guard missing"
 grep -q 'MinimumTimeTrialSeconds' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "time trial plausibility threshold missing"
 grep -q 'elapsed < self.minimumTimeTrialSeconds' "$ROOT_DIR/src/server/Services/RunStateService.lua" || fail "implausibly fast trials are not rejected"
+grep -q 'player:SetAttribute("RunCompleted", false)' "$ROOT_DIR/src/server/Services/RunStateService.lua" || fail "run completion state is not reset"
 grep -q 'RunStartGate' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "time trial start gate missing"
 grep -q 'startAtGate' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "server time trial gate handling missing"
 grep -q 'resetForTimeTrial' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "time trial checkpoint reset missing"

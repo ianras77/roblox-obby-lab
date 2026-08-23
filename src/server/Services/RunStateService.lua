@@ -48,6 +48,7 @@ function RunStateService:initialize(player: Player)
   }
   player:SetAttribute("RunMode", "Adventure")
   player:SetAttribute("RunStarted", true)
+  player:SetAttribute("RunCompleted", false)
 end
 
 function RunStateService:get(player: Player): RunState
@@ -70,6 +71,7 @@ function RunStateService:setMode(player: Player, mode: string): boolean
   state.chapterSplits = {}
   player:SetAttribute("RunMode", mode)
   player:SetAttribute("RunStarted", state.running)
+  player:SetAttribute("RunCompleted", false)
   return true
 end
 

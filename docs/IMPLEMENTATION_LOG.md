@@ -424,6 +424,15 @@
 - Unverified: join/load timing under live DataStore latency requires Studio or
   staging validation.
 
+## 2026-08-23 — Reset run completion state
+
+- Completed: server run initialization and mode changes now clear the previous
+  `RunCompleted` attribute before a new run begins, preventing stale completion
+  state from leaking into replay or future reward logic.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: full replay attribute behavior requires Studio playtesting.
+
 ## 2026-08-23 — Guard invalid checkpoint instances
 
 - Completed: the world validator now inspects checkpoint geometry only after
