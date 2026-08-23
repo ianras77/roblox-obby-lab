@@ -39,6 +39,9 @@ Accessibility settings use the validated `SetAccessibilitySettings` contract;
 only five boolean keys are accepted and writes are rate-limited before entering
 the profile.
 
+Fresh profiles initialize all five supported accessibility booleans; legacy
+profiles preserve only validated boolean values and a bounded UI scale.
+
 Profile sanitization migrates the original `checkpoint` field into
 `highestChapter` and rejects implausible timing values rather than silently
 wiping valid legacy progress.

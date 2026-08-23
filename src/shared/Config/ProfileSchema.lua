@@ -23,7 +23,14 @@ function ProfileSchema.default(): PlayerProfile
     bestChapterMs = {},
     totalDeaths = 0,
     completionCount = 0,
-    settings = { reducedMotion = false, highContrast = false, uiScale = 1 },
+    settings = {
+      reducedMotion = false,
+      reduceFlashes = false,
+      highContrast = false,
+      largeText = false,
+      lowParticles = false,
+      uiScale = 1,
+    },
   }
 end
 
@@ -64,6 +71,17 @@ function ProfileSchema.sanitize(raw: any): PlayerProfile
       if type(key) == "string" and value == true and #key <= 80 then
         profile.collectedKeys[key] = true
       end
+    end
+  end
+  if type(raw.settings) == "table" then
+    for key, defaultValue in pairs(profile.settings) do
+      if type(defaultValue) == "boolean" and type(raw.settings[key]) == "boolean" then
+        profile.settings[key] = raw.settings[key]
+      end
+    end
+    local uiScale = tonumber(raw.settings.uiScale)
+    if uiScale and uiScale >= 0.8 and uiScale <= 1.5 then
+      profile.settings.uiScale = uiScale
     end
   end
   return profile
