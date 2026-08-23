@@ -20,6 +20,8 @@ grep -q 'if stage.checkpoint and stage.checkpoint:IsA("BasePart")' "$ROOT_DIR/sr
 grep -q 'typeof(stage.entrance) == "CFrame"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator CFrame type guards missing"
 grep -q 'finiteVector(stage.bounds)' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator finite geometry guard missing"
 grep -q 'incorrect zone ownership' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator zone ownership check missing"
+grep -q 'model is outside its expected zone' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator model zone check missing"
+grep -q 'SetAttribute("ZoneIndex", args.zoneIndex)' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage model zone marker missing"
 grep -q 'not measured correctly' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator connector measurement check missing"
 grep -q 'typeof(stageModel) == "Instance"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator instance type guards missing"
 grep -q 'local owned = false' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator collectible ownership scope missing"

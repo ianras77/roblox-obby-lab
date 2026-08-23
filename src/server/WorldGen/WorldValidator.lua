@@ -71,6 +71,9 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     if stage.zoneIndex ~= expectedZone then
       table.insert(errors, string.format("stage %d has incorrect zone ownership", stage.stageIndex or -1))
     end
+    if modelIsModel and stageModel:GetAttribute("ZoneIndex") ~= expectedZone then
+      table.insert(errors, string.format("stage %d model is outside its expected zone", stage.stageIndex or -1))
+    end
     if
       stage.bounds
       and (not finiteVector(stage.bounds) or stage.bounds.X <= 0 or stage.bounds.Y <= 0 or stage.bounds.Z <= 0)

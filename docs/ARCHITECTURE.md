@@ -12,7 +12,9 @@ it connects exits and entrances, so templates do not hide travel spacing.
 `WorldBuilder` carries the previous zone exit into the next zone, including the
 intentional elevation transition.
 `WorldValidator` checks those measurements and ownership before the world is
-considered valid.
+considered valid; each generated stage model also carries a matching
+`ZoneIndex` marker so the manifest cannot claim ownership the instance does
+not have.
 
 The current obstacle runtime remains centralized for compatibility, but the
 new contracts make a later component split safe. Studio playtesting is required

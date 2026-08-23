@@ -24,6 +24,7 @@ function ZoneBuilder.buildZone(args)
       random = args.random,
     })
     local connectorLength = previousExit and (result.entrance.Position - previousExit.Position).Magnitude or 0
+    result.model:SetAttribute("ZoneIndex", args.zoneIndex)
     table.insert(stages, {
       model = result.model,
       checkpoint = result.checkpoint,

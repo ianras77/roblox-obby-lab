@@ -1018,3 +1018,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: cross-zone traversal remains a Studio geometry/playtest check.
+
+## 2026-08-23 — Bind zone ownership to generated models
+
+- Completed: each generated stage model now carries its `ZoneIndex`, and the
+  validator compares that marker with the stage manifest and expected route
+  zone before accepting the world.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live Studio inspection of generated hierarchy remains pending.
