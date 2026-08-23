@@ -16,13 +16,14 @@ manual Studio comparison before either is treated as authoritative.
 - Deterministic seeded generation, CollectionService obstacle tags, a central
   `ObbyService`, checkpoint service, DataStore wrapper, HUD, and effects.
 - Development chat commands for rebuild, reseed, and stage teleport.
-- CI installs pinned Stylua/Selene and runs the storyboard contract.
+- CI installs pinned Stylua/Selene/Rojo tools and runs the full contract gate
+  before building a place artifact.
 
 ## Baseline findings and current status
 
-- `ZoneBuilder` and `WorldBuilder` both add spacing after stage/zone exits.
-- Template output is only an end CFrame; no explicit entrance, exit, bounds,
-  safe spawn, mechanics, or validator contract exists.
+- Stage spacing is now owned by the higher-level builder; templates return an
+  explicit build result with entrance, exit, bounds, safe spawn, and mechanic
+  metadata.
 - Workspace cleanup is now restricted to an owned `GeneratedObby` root; an
   unknown root causes rebuild to fail closed.
 - Checkpoint progress is now monotonic and state synchronization has an
