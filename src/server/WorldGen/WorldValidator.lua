@@ -16,10 +16,16 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
   local errors = {}
   local ids = {}
   local checkpoints = {}
+  local indexes = {}
   local previousExit = nil
-  for _, stage in ipairs(stages) do
-    if stage.stageIndex ~= #checkpoints + 1 then
+  for expectedIndex, stage in ipairs(stages) do
+    if stage.stageIndex ~= expectedIndex then
       table.insert(errors, string.format("stage order gap or duplicate near %d", stage.stageIndex or -1))
+    end
+    if type(stage.stageIndex) ~= "number" or indexes[stage.stageIndex] then
+      table.insert(errors, string.format("duplicate or invalid stage index near %s", tostring(stage.stageIndex)))
+    else
+      indexes[stage.stageIndex] = true
     end
     if not stage.stageId then
       table.insert(errors, "stage missing stable stageId")
@@ -84,7 +90,13 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
       table.insert(errors, string.format("stage %d missing presentation metadata", stage.stageIndex or -1))
     end
   end
+  if #stages ~= totalStages then
+    table.insert(errors, string.format("expected %d stages, found %d", totalStages, #stages))
+  end
   for index = 1, totalStages do
+    if not indexes[index] then
+      table.insert(errors, "missing stage index " .. index)
+    end
     if not checkpoints[index] then
       table.insert(errors, "missing checkpoint for stage " .. index)
     end

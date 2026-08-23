@@ -228,3 +228,13 @@
 - Tests: configuration, storyboard, production, Stylua, and whitespace checks
   pass locally.
 - Unverified: device layout and multiplayer UI behavior remain pending Studio.
+
+## 2026-08-23 — Explicit stage manifest cardinality
+
+- Completed: WorldValidator now checks stage order and index uniqueness
+  independently of sparse checkpoint arrays, verifies the configured total
+  stage count, and reports missing stage indices separately from missing
+  checkpoints.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: live generated geometry traversal remains pending Studio.
