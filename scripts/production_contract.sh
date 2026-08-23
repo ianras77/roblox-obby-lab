@@ -32,6 +32,7 @@ grep -q 'startAtGate' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "s
 grep -q 'resetForTimeTrial' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "time trial checkpoint reset missing"
 grep -q 'resetForTimeTrial(player)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "time trial gate does not reset progress"
 grep -q 'SetPracticeStage' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "practice stage contract missing"
+grep -q 'bestChapterMs: table' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "finale payload contract is incomplete"
 grep -q 'profile.highestChapter < stage' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "practice stage progression guard missing"
 grep -q 'lowParticles = false' "$ROOT_DIR/src/shared/Config/ProfileSchema.lua" || fail "complete accessibility profile defaults missing"
 grep -q 'AnalyticsService' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "analytics service wiring missing"

@@ -375,6 +375,15 @@
 - Unverified: Roblox API access and sandbox request budgets require Studio
   verification.
 
+## 2026-08-23 — Explicit completion payload contract
+
+- Completed: RemoteContracts now documents the chapter metadata and completion
+  metrics actually sent by the server, including timing, deaths, keys, and
+  chapter splits.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: runtime payload observation requires Studio client testing.
+
 ## 2026-08-23 — Scrollable settings panel
 
 - Completed: the settings/mode panel now uses automatic vertical canvas sizing

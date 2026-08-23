@@ -5,7 +5,7 @@ local RemoteContracts = {
   Progress = {
     name = "ObbyProgress",
     direction = "server_to_client",
-    payload = "{ stage: number, total: number, initialized: boolean? }",
+    payload = "{ stage: number, total: number, mode: string, chapterName: string?, mechanic: string?, flavor: string?, initialized: boolean? }",
   },
   Keys = {
     name = "KeyProgress",
@@ -15,7 +15,7 @@ local RemoteContracts = {
   Finale = {
     name = "FinaleSpotlight",
     direction = "server_to_client",
-    payload = "{ stage: number }",
+    payload = "{ stage: number, mode: string, elapsedMs: number?, bestRunMs: number?, deaths: number, keys: number, totalKeys: number?, bestChapterMs: table }",
   },
   SetSettings = {
     name = "SetAccessibilitySettings",
