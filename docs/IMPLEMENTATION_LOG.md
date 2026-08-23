@@ -1166,3 +1166,11 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: live streamed-zone presentation still requires Roblox Studio
   testing.
+
+## 2026-08-23 — Cross-check checkpoint identity
+
+- Completed: world validation now requires each checkpoint's stable `StageId` to
+  match its stage manifest.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live checkpoint touch behavior still requires Roblox Studio.

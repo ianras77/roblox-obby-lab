@@ -128,6 +128,9 @@ function WorldValidator.validate(
       if stage.checkpoint:GetAttribute("StageIndex") ~= stage.stageIndex then
         table.insert(errors, string.format("checkpoint %d has wrong stage index", stage.stageIndex))
       end
+      if stage.checkpoint:GetAttribute("StageId") ~= stage.stageId then
+        table.insert(errors, string.format("checkpoint %d has wrong stable stage ID", stage.stageIndex))
+      end
     end
     local validEntrance = typeof(stage.entrance) == "CFrame"
     local validExit = typeof(stage.exit) == "CFrame"
