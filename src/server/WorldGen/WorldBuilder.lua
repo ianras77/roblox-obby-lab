@@ -1,4 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local CollectionService = game:GetService("CollectionService")
 local ZoneConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("ZoneConfig"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
 local RandomUtil = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Random"))
@@ -71,6 +72,17 @@ function WorldBuilder.buildWorld(seed)
   spawnPad.BrickColor = BrickColor.new("Bright green")
   spawnPad.Duration = 0
   spawnPad.Parent = obbyModel
+
+  local startGate = Instance.new("Part")
+  startGate.Name = "TimeTrialStartGate"
+  startGate.Size = Vector3.new(2, 8, 20)
+  startGate.CFrame = CFrame.new(-8, 8, 0)
+  startGate.Anchored = true
+  startGate.CanCollide = false
+  startGate.Transparency = 0.35
+  startGate.Color = Color3.fromRGB(255, 220, 120)
+  CollectionService:AddTag(startGate, "RunStartGate")
+  startGate.Parent = obbyModel
 
   local rng = RandomUtil.new(seed)
   local totalStages = GameConfig.Zones * GameConfig.StagesPerZone

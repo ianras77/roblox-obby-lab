@@ -8,7 +8,8 @@ RunStateService.__index = RunStateService
 
 export type RunState = {
   mode: string,
-  startedAt: number,
+  startedAt: number?,
+  running: boolean,
   completedAt: number?,
   chapterStartedAt: { [number]: number },
   chapterSplits: { [number]: number },
@@ -40,6 +41,7 @@ function RunStateService:initialize(player: Player)
   self.states[player] = {
     mode = "Adventure",
     startedAt = os.clock(),
+    running = true,
     chapterStartedAt = {},
     chapterSplits = {},
   }
@@ -60,17 +62,37 @@ function RunStateService:setMode(player: Player, mode: string): boolean
   end
   local state = self:get(player)
   state.mode = mode
-  state.startedAt = os.clock()
+  state.startedAt = mode == "TimeTrial" and nil or os.clock()
+  state.running = mode ~= "TimeTrial"
   state.completedAt = nil
   state.chapterStartedAt = {}
   state.chapterSplits = {}
   player:SetAttribute("RunMode", mode)
+  player:SetAttribute("RunStarted", state.running)
+  return true
+end
+
+function RunStateService:startAtGate(player: Player, gate: BasePart): boolean
+  local state = self:get(player)
+  if state.mode ~= "TimeTrial" or state.running then
+    return false
+  end
+  local character = player.Character
+  local root = character and character:FindFirstChild("HumanoidRootPart")
+  if not root or (root.Position - gate.Position).Magnitude > 12 then
+    return false
+  end
+  state.startedAt = os.clock()
+  state.running = true
   player:SetAttribute("RunStarted", true)
   return true
 end
 
 function RunStateService:onChapterReached(player: Player, stageIndex: number): (number?, boolean)
   local state = self:get(player)
+  if not state.running or not state.startedAt then
+    return nil, false
+  end
   if not state.chapterStartedAt[stageIndex] then
     state.chapterStartedAt[stageIndex] = os.clock()
   end
@@ -90,6 +112,9 @@ end
 
 function RunStateService:getElapsed(player: Player): number
   local state = self:get(player)
+  if not state.startedAt then
+    return 0
+  end
   return (state.completedAt or os.clock()) - state.startedAt
 end
 

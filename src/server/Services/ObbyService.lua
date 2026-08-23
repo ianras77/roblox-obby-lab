@@ -384,6 +384,20 @@ function ObbyService:scanBehaviors()
     self:registerKey(part)
   end)
 
+  add("RunStartGate", function(part)
+    self.maid:Give(part.Touched:Connect(function(hit)
+      local player = Players:GetPlayerFromCharacter(hit.Parent)
+      if player and self.runState:startAtGate(player, part) then
+        self.world.progressEvent:FireClient(player, {
+          stage = player:GetAttribute("Checkpoint") or 0,
+          total = self.world.totalStages,
+          mode = "TimeTrial",
+          runStarted = true,
+        })
+      end
+    end))
+  end)
+
   add("KillBrick", function(part)
     local lastHit = {}
     self.maid:Give(part.Touched:Connect(function(hit)

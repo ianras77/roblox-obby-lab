@@ -167,3 +167,13 @@
   pass locally.
 - Unverified: live DataStore latency and Studio multi-client collection remain
   pending.
+
+## 2026-08-23 — Explicit Time Trial start gate
+
+- Completed: Time Trial runs now arm on mode selection and start only when the
+  player crosses a server-owned start gate within a validated distance. The
+  Adventure and Practice clocks retain their immediate-start behavior.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: timing feel, reset behavior, and multiplayer gate crossings still
+  require Studio playtesting.
