@@ -433,6 +433,16 @@
   whitespace checks pass locally.
 - Unverified: full replay attribute behavior requires Studio playtesting.
 
+## 2026-08-23 — Tear down services before rebuild
+
+- Completed: developer rebuilds now destroy the old checkpoint/run services and
+  reset runtime clocks before constructing the replacement world, preventing
+  stale touch handlers and timing state from overlapping a rebuild.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: repeated Studio rebuilds and active-player behavior require
+  Studio testing.
+
 ## 2026-08-23 — Guard invalid checkpoint instances
 
 - Completed: the world validator now inspects checkpoint geometry only after

@@ -706,14 +706,20 @@ end
 
 function ObbyService:rebuild(seed)
   self.maid:DoCleaning()
-  if self.world and self.world.model then
-    self.world.model:Destroy()
+  if self.checkpoints then
+    self.checkpoints:destroy()
   end
   if self.runState then
     self.runState:destroy()
   end
-  self.world = WorldBuilder.buildWorld(seed)
+  if self.world and self.world.model then
+    self.world.model:Destroy()
+  end
+  self.clock = 0
+  self.cosmeticClock = 0
+  self.queryClock = 0
   self.riderQueryClock = 0
+  self.world = WorldBuilder.buildWorld(seed)
   self.world.stateFunction.OnServerInvoke = function(player)
     local run = self.runState and self.runState:get(player)
     return {
@@ -728,7 +734,6 @@ function ObbyService:rebuild(seed)
       elapsedMs = self.runState and math.floor(self.runState:getElapsed(player) * 1000) or 0,
     }
   end
-  self.checkpoints:destroy()
   self.runState = RunStateService.new(self.world.totalStages, GameConfig.MinimumTimeTrialSeconds)
   self.checkpoints = CheckpointService.new(
     self.world.stages,
