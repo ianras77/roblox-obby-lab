@@ -462,6 +462,16 @@
 - Unverified: live client compatibility and multiplayer pickup presentation
   require Studio testing.
 
+## 2026-08-23 — Bound concurrent chapter split merges
+
+- Completed: `UpdateAsync` now accepts existing chapter splits only for integer
+  chapters 1–18 and finite positive times below the profile timing ceiling,
+  preventing malformed legacy fields from being reintroduced during saves.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live malformed-record migration requires staging DataStore
+  testing.
+
 ## 2026-08-23 — Guard invalid checkpoint instances
 
 - Completed: the world validator now inspects checkpoint geometry only after

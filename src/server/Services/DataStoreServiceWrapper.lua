@@ -95,9 +95,19 @@ function Wrapper:SetAsync(key, value)
         if type(current.bestChapterMs) == "table" then
           merged.bestChapterMs = table.clone(value.bestChapterMs or {})
           for chapter, timeMs in pairs(current.bestChapterMs) do
+            local chapterNumber = tonumber(chapter)
             local oldTime = tonumber(timeMs)
             local newTime = tonumber(merged.bestChapterMs[chapter])
-            if oldTime and oldTime > 0 and (not newTime or oldTime < newTime) then
+            if
+              chapterNumber
+              and chapterNumber % 1 == 0
+              and chapterNumber >= 1
+              and chapterNumber <= 18
+              and oldTime
+              and oldTime > 0
+              and oldTime < 86400000
+              and (not newTime or newTime < 1 or oldTime < newTime)
+            then
               merged.bestChapterMs[chapter] = math.floor(oldTime)
             end
           end

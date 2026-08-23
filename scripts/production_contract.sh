@@ -50,6 +50,7 @@ grep -q 'merged.collectedKeys' "$ROOT_DIR/src/server/Services/DataStoreServiceWr
 grep -q 'mergeKeys(value.collectedKeys)' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "bounded value key merge missing"
 grep -q 'mergeKeys(current.collectedKeys)' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "bounded current key merge missing"
 grep -q 'merged.bestChapterMs' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent chapter split merge missing"
+grep -q 'chapterNumber <= 18' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "chapter split merge is not bounded"
 grep -q 'merged.settings' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent settings merge missing"
 grep -q 'showResults' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results presentation missing"
 grep -q 'TimeTrialButton' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results replay actions missing"
