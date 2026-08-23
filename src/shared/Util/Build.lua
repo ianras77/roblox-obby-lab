@@ -1,7 +1,7 @@
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local SoundService = game:GetService("SoundService")
 local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
+local SoundGroups = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("SoundGroups"))
 
 local Build = {}
 
@@ -90,7 +90,7 @@ function Build.checkpoint(name, cframe, size, parent)
   local sound = Instance.new("Sound")
   sound.SoundId = AssetRegistry.getApprovedId("checkpoint_feedback")
   sound.Volume = 0.4
-  sound.SoundGroup = SoundService:FindFirstChild("SFX")
+  sound.SoundGroup = SoundGroups.ensure("SFX", 0.8)
   sound.Parent = cp
 
   local burst = Instance.new("ParticleEmitter")
@@ -125,7 +125,7 @@ function Build.collectibleKey(cframe, parent)
   local sound = Instance.new("Sound")
   sound.SoundId = AssetRegistry.getApprovedId("key_pickup")
   sound.Volume = 0.6
-  sound.SoundGroup = SoundService:FindFirstChild("SFX")
+  sound.SoundGroup = SoundGroups.ensure("SFX", 0.8)
   sound.Parent = key
 
   return key

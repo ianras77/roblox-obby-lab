@@ -4,6 +4,7 @@ local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
 local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
+local SoundGroups = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("SoundGroups"))
 
 local EffectsController = {}
 EffectsController.__index = EffectsController
@@ -101,7 +102,7 @@ function EffectsController:finale()
     local s = Instance.new("Sound")
     s.SoundId = AssetRegistry.getApprovedId("finale_chime")
     s.Volume = 1
-    s.SoundGroup = game:GetService("SoundService"):FindFirstChild("SFX")
+    s.SoundGroup = SoundGroups.ensure("SFX", 0.8)
     s.Parent = root
     s:Play()
     game.Debris:AddItem(s, 3)

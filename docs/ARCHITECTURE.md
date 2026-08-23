@@ -33,7 +33,9 @@ are server-to-client only; the client cannot award progression.
 Lighting from chapter progress. The server still builds geometry and stores the
 zone palette, but does not repeatedly overwrite global Lighting while building.
 
-`ServerMain` owns shared `Music`, `Ambience`, `SFX`, and `UI` SoundGroup buses.
+`SoundGroups` idempotently owns shared `Music`, `Ambience`, `SFX`, and `UI`
+SoundGroup buses, so startup order cannot leave an early-created sound
+unassigned.
 Approved music, zone ambience, and client finale feedback route through those
 buses, as do checkpoint and Golden Key feedback sounds, so future volume
 controls do not require rewriting individual sounds.

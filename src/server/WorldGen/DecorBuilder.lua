@@ -3,6 +3,7 @@ local SoundService = game:GetService("SoundService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
 local Build = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Build"))
+local SoundGroups = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("SoundGroups"))
 
 local DecorBuilder = {}
 
@@ -120,7 +121,7 @@ local function ensureSound(name, soundId)
   sound.SoundId = soundId or ""
   sound.Looped = true
   sound.Volume = 0.4
-  sound.SoundGroup = SoundService:FindFirstChild("Ambience")
+  sound.SoundGroup = SoundGroups.ensure("Ambience", 0.35)
   sound.Parent = SoundService
   if soundId and soundId ~= "" then
     sound:Play()

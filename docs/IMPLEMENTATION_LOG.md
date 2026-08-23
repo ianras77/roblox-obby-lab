@@ -960,3 +960,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: approved asset playback and final mix balance require Creator Hub
   and Studio verification.
+
+## 2026-08-23 — Make SoundGroup setup startup-order safe
+
+- Completed: shared `SoundGroups.ensure` now idempotently creates and assigns
+  the Music, Ambience, SFX, and UI buses from every sound creation path, even
+  if the compatibility bootstrap starts before `ServerMain`.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: Studio script scheduling and final device mix still require
+  Roblox testing.
