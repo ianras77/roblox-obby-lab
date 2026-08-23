@@ -1045,3 +1045,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: malformed live instances still require Studio mutation tests.
+
+## 2026-08-23 — Harden malformed stage diagnostics
+
+- Completed: `WorldValidator` now requires bounded string stage IDs and finite
+  integer stage indices, and uses safe labels while formatting errors so bad
+  manifest values produce validation errors instead of formatter crashes.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: malformed live instance injection remains a Studio-only test.
