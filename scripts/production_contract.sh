@@ -24,6 +24,8 @@ grep -q 'SetRunMode' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail 
 grep -q 'completionCount < 1' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "time trial unlock guard missing"
 grep -q 'RunStartGate' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "time trial start gate missing"
 grep -q 'startAtGate' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "server time trial gate handling missing"
+grep -q 'resetForTimeTrial' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "time trial checkpoint reset missing"
+grep -q 'resetForTimeTrial(player)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "time trial gate does not reset progress"
 grep -q 'SetPracticeStage' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "practice stage contract missing"
 grep -q 'profile.highestChapter < stage' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "practice stage progression guard missing"
 grep -q 'lowParticles = false' "$ROOT_DIR/src/shared/Config/ProfileSchema.lua" || fail "complete accessibility profile defaults missing"

@@ -248,3 +248,12 @@
   pass locally.
 - Unverified: live budget values and outage recovery require production-like
   Roblox testing.
+
+## 2026-08-23 — Canonical Time Trial start
+
+- Completed: crossing the validated Time Trial gate now clears the player's
+  saved checkpoint attributes before starting the clock, preventing late-game
+  checkpoint progress from producing an invalid shortened run.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: reset/spawn timing and full-run plausibility require Studio.

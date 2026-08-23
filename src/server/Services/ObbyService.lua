@@ -419,7 +419,15 @@ function ObbyService:scanBehaviors()
   add("RunStartGate", function(part)
     self.maid:Give(part.Touched:Connect(function(hit)
       local player = Players:GetPlayerFromCharacter(hit.Parent)
-      if player and self.runState:startAtGate(player, part) then
+      local state = player and self.runState:get(player)
+      if
+        player
+        and self.checkpoints:isLoaded(player)
+        and state.mode == "TimeTrial"
+        and not state.running
+        and self.runState:startAtGate(player, part)
+      then
+        self.checkpoints:resetForTimeTrial(player)
         self.world.progressEvent:FireClient(player, {
           stage = player:GetAttribute("Checkpoint") or 0,
           total = self.world.totalStages,

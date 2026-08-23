@@ -127,6 +127,15 @@ function CheckpointService:isLoaded(player): boolean
   return self.loaded[player] == true and self.profiles[player] ~= nil
 end
 
+function CheckpointService:resetForTimeTrial(player)
+  if not self:isLoaded(player) then
+    return false
+  end
+  player:SetAttribute("Checkpoint", 0)
+  player:SetAttribute("CheckpointId", nil)
+  return true
+end
+
 function CheckpointService:markKey(player, keyId: string): boolean
   local profile = self:getProfile(player)
   if profile.collectedKeys[keyId] then
