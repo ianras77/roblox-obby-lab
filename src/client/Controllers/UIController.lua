@@ -29,9 +29,10 @@ function UIController.new()
   self.originalHazardMaterials = {}
   self.collectedKeys = {}
   self.gui = self:createGui()
-  self.progressEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.ProgressRemote)
-  self.keyEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.KeyRemote)
-  self.stateFunction = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild("GetObbyState")
+  local events = ReplicatedStorage:WaitForChild("SharedEvents")
+  self.progressEvent = events:WaitForChild(RemoteContracts.Progress.name)
+  self.keyEvent = events:WaitForChild(RemoteContracts.Keys.name)
+  self.stateFunction = events:WaitForChild(RemoteContracts.State.name)
   self.settingsEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(RemoteContracts.SetSettings.name)
   self.modeEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(RemoteContracts.SetMode.name)
   self.practiceEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(RemoteContracts.PracticeStage.name)
@@ -495,7 +496,7 @@ function UIController:bind()
     end
   end)
 
-  local finaleEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.FinaleRemote)
+  local finaleEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(RemoteContracts.Finale.name)
   finaleEvent.OnClientEvent:Connect(function(payload)
     self:showResults(payload)
   end)

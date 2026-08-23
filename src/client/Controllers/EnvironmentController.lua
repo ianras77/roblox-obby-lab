@@ -7,6 +7,7 @@ local Players = game:GetService("Players")
 
 local ZoneConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("ZoneConfig"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
+local RemoteContracts = require(ReplicatedStorage:WaitForChild("Network"):WaitForChild("RemoteContracts"))
 
 local EnvironmentController = {}
 EnvironmentController.__index = EnvironmentController
@@ -14,8 +15,9 @@ EnvironmentController.__index = EnvironmentController
 function EnvironmentController.new()
   local self = setmetatable({}, EnvironmentController)
   self.player = Players.LocalPlayer
-  self.event = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.ProgressRemote)
-  self.stateFunction = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild("GetObbyState")
+  local events = ReplicatedStorage:WaitForChild("SharedEvents")
+  self.event = events:WaitForChild(RemoteContracts.Progress.name)
+  self.stateFunction = events:WaitForChild(RemoteContracts.State.name)
   self.atmosphere = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere")
   self.atmosphere.Parent = Lighting
   self.colorCorrection = Lighting:FindFirstChildOfClass("ColorCorrectionEffect")

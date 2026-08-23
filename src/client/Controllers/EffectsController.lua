@@ -2,9 +2,9 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
-local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
 local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
 local SoundGroups = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("SoundGroups"))
+local RemoteContracts = require(ReplicatedStorage:WaitForChild("Network"):WaitForChild("RemoteContracts"))
 
 local EffectsController = {}
 EffectsController.__index = EffectsController
@@ -13,8 +13,8 @@ function EffectsController.new()
   local self = setmetatable({}, EffectsController)
   self.player = Players.LocalPlayer
   local events = ReplicatedStorage:WaitForChild("SharedEvents")
-  self.progressEvent = events:WaitForChild(GameConfig.ProgressRemote)
-  self.finaleEvent = events:WaitForChild(GameConfig.FinaleRemote)
+  self.progressEvent = events:WaitForChild(RemoteContracts.Progress.name)
+  self.finaleEvent = events:WaitForChild(RemoteContracts.Finale.name)
   self:bind()
   return self
 end

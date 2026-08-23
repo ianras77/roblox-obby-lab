@@ -1503,6 +1503,15 @@
   whitespace checks pass locally; streamed-device behavior remains
   Studio-unverified.
 
+## 2026-08-23 — Use shared contracts in client controllers
+
+- Completed: HUD, environment, and effects controllers now resolve progress,
+  state, key, and finale remotes through `RemoteContracts` rather than
+  duplicate GameConfig names.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live client bootstrap remains
+  Studio-unverified.
+
 ## 2026-08-23 — Add original local vector art sources
 
 - Completed: added source-ready storybook railway-ticket branding and a Golden

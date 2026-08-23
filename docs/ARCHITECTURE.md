@@ -81,6 +81,8 @@ chapter context.
 World bootstrap validates that every shared event is actually a `RemoteEvent`
 and that `GetObbyState` is a `RemoteFunction`; a name collision with another
 instance class fails the build instead of being used ambiguously.
+Client controllers resolve the same remotes through `RemoteContracts`, keeping
+the client/server boundary from drifting through duplicate configuration names.
 
 Finale presentation is player-specific: the server sends only the completing
 player's finale event, while the client attaches local effects to that player's
