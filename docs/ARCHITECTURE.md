@@ -14,7 +14,8 @@ intentional elevation transition.
 `WorldValidator` checks those measurements and ownership before the world is
 considered valid; each generated stage model also carries a matching
 `ZoneIndex` marker so the manifest cannot claim ownership the instance does
-not have.
+not have; validation also checks that the stage is still parented to the
+recorded zone container.
 
 The current obstacle runtime remains centralized for compatibility, but the
 new contracts make a later component split safe. Studio playtesting is required

@@ -38,6 +38,7 @@ function ZoneBuilder.buildZone(args)
       mechanics = result.mechanics,
       connectorLength = connectorLength,
       zoneIndex = args.zoneIndex,
+      zoneModel = zoneModel,
     })
     previousExit = result.exit
     currentCFrame = result.exit * CFrame.new(0, args.elevationStep, 0)

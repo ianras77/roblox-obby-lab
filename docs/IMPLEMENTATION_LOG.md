@@ -1027,3 +1027,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: live Studio inspection of generated hierarchy remains pending.
+
+## 2026-08-23 — Validate stage zone hierarchy
+
+- Completed: manifests retain each stage's zone container reference, and the
+  validator rejects stages whose parent no longer matches that container even
+  when their `ZoneIndex` attribute is unchanged.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live hierarchy mutation behavior remains a Studio-only check.
