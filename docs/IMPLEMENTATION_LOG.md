@@ -1346,6 +1346,15 @@
   whitespace checks pass locally; hostile-client behavior remains
   Studio-unverified.
 
+## 2026-08-23 — Defend Practice authorization at service boundary
+
+- Completed: the checkpoint service independently verifies that a Practice
+  target is already unlocked, preventing future callers from bypassing the
+  selector's authorization guard.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; hostile-client behavior remains
+  Studio-unverified.
+
 ## 2026-08-23 — Bound hazard debounce lifetime
 
 - Completed: kill-brick debounce tables now use weak Humanoid keys, avoiding

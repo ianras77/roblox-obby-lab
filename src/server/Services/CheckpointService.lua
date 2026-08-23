@@ -234,6 +234,9 @@ function CheckpointService:setPracticeCheckpoint(player, targetStage): boolean
   if not self:isLoaded(player) or type(targetStage) ~= "number" or targetStage % 1 ~= 0 then
     return false
   end
+  if self:getProfile(player).highestChapter < targetStage then
+    return false
+  end
   local stage = self.stages[targetStage]
   if not stage or not stage.checkpoint then
     return false
