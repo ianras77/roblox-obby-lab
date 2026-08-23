@@ -1,5 +1,14 @@
 # Implementation log
 
+## 2026-08-23 — Bind developer commands across service lifecycle
+
+- Completed: allowlisted developer command handlers now bind both existing and
+  future players, so service startup and Studio rebuilds do not leave present
+  operators without `/rebuild`, `/reseed`, or `/stage` access.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live chat command behavior requires Studio testing.
+
 ## 2026-08-23 — Require a live character at the Time Trial gate
 
 - Completed: Time Trial gate admission now requires a live Humanoid in addition

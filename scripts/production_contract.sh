@@ -89,6 +89,7 @@ grep -q 'profile_contract.sh' "$ROOT_DIR/scripts/check.sh" || fail "profile cont
 grep -q 'GetRequestBudgetForRequestType' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "datastore request budget is not checked"
 grep -q 'storeName .. "_StudioSandbox"' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "studio sandbox shares production datastore"
 grep -q 'DevCommandCooldownSeconds' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "dev command rate limit missing"
+grep -q 'for _, player in ipairs(Players:GetPlayers()) do' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "existing players do not receive dev commands"
 grep -q 'math.min(GameConfig.MaxDevStage, #self.world.stages)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "dynamic stage command cap missing"
 grep -q 'approvedForRelease' "$ROOT_DIR/src/shared/Config/AssetRegistry.lua" || fail "asset approval registry missing"
 grep -q 'getApprovedId("checkpoint_feedback")' "$ROOT_DIR/src/shared/Util/Build.lua" || fail "checkpoint sound bypasses asset registry"

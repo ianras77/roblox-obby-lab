@@ -214,7 +214,7 @@ function ObbyService:hookCommands()
     return false
   end
 
-  self.maid:Give(Players.PlayerAdded:Connect(function(player)
+  local function bindPlayerCommands(player)
     local lastCommand = 0
     self.maid:Give(player.Chatted:Connect(function(msg)
       if not GameConfig.DevCommandsEnabled or not isAllowed(player) then
@@ -244,7 +244,11 @@ function ObbyService:hookCommands()
         end
       end
     end))
-  end))
+  end
+  self.maid:Give(Players.PlayerAdded:Connect(bindPlayerCommands))
+  for _, player in ipairs(Players:GetPlayers()) do
+    bindPlayerCommands(player)
+  end
   self.maid:Give(Players.PlayerRemoving:Connect(function(player)
     self.keyProgress[player] = nil
     self.collectedKeys[player] = nil
