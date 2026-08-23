@@ -163,7 +163,10 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
     if burst then
       burst:Emit(24)
     end
-    local elapsed, eligible = self.runState and self.runState:onChapterReached(player, stageIndex)
+    local elapsed, eligible
+    if self.runState then
+      elapsed, eligible = self.runState:onChapterReached(player, stageIndex)
+    end
     if elapsed and eligible then
       local profile = self:getProfile(player)
       profile.completionCount += 1

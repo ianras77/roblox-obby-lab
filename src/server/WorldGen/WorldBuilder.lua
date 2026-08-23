@@ -45,13 +45,14 @@ local function ensureFolders()
   end
   return folder:FindFirstChild(GameConfig.ProgressRemote),
     folder:FindFirstChild(GameConfig.KeyRemote),
-    folder:FindFirstChild(GameConfig.FinaleRemote)
+    folder:FindFirstChild(GameConfig.FinaleRemote),
+    folder:FindFirstChild("GetObbyState")
 end
 
 function WorldBuilder.buildWorld(seed)
   seed = seed or GameConfig.Seed
   clearExisting()
-  local progressEvent, keyEvent, finaleEvent = ensureFolders()
+  local progressEvent, keyEvent, finaleEvent, stateFunction = ensureFolders()
 
   local obbyModel = Instance.new("Model")
   obbyModel.Name = "GeneratedObby"
@@ -109,7 +110,7 @@ function WorldBuilder.buildWorld(seed)
     progressEvent = progressEvent,
     keyEvent = keyEvent,
     finaleEvent = finaleEvent,
-    stateFunction = folder:FindFirstChild("GetObbyState"),
+    stateFunction = stateFunction,
     validationErrors = validationErrors,
   }
 end

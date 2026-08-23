@@ -3,7 +3,6 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local SoundService = game:GetService("SoundService")
 local ContentProvider = game:GetService("ContentProvider")
 
-local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
 local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
 local ObbyService = require(ServerScriptService:WaitForChild("Services"):WaitForChild("ObbyService"))
 
