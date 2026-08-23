@@ -5,6 +5,13 @@ local GameConfig = require(game:GetService("ReplicatedStorage"):WaitForChild("Co
 local Wrapper = {}
 Wrapper.__index = Wrapper
 
+local function hasBudget(requestType)
+  local ok, budget = pcall(function()
+    return DataStoreService:GetRequestBudgetForRequestType(requestType)
+  end)
+  return ok and budget >= 1
+end
+
 function Wrapper.new(name)
   local self = setmetatable({}, Wrapper)
   self.enabled = GameConfig.UseDataStore
@@ -24,6 +31,10 @@ function Wrapper:GetAsync(key)
     return nil, true
   end
   for attempt = 1, self.maxAttempts do
+    if not hasBudget(Enum.DataStoreRequestType.GetAsync) then
+      warn("[DataStore] GetAsync budget exhausted; keeping session defaults")
+      return nil, false
+    end
     local ok, result = pcall(function()
       return self.store:GetAsync(key)
     end)
@@ -41,6 +52,10 @@ function Wrapper:SetAsync(key, value)
     return
   end
   for attempt = 1, self.maxAttempts do
+    if not hasBudget(Enum.DataStoreRequestType.UpdateAsync) then
+      warn("[DataStore] UpdateAsync budget exhausted; preserving unsaved session state")
+      return false
+    end
     local ok, err = pcall(function()
       self.store:UpdateAsync(key, function(current)
         if type(current) ~= "table" then

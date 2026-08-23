@@ -238,3 +238,13 @@
 - Tests: configuration, storyboard, production, Stylua, and whitespace checks
   pass locally.
 - Unverified: live generated geometry traversal remains pending Studio.
+
+## 2026-08-23 — DataStore budget gates
+
+- Completed: profile reads and writes now check Roblox request budget before
+  each attempt. Exhausted budgets fail safely, retaining session defaults or
+  unsaved in-memory progress rather than adding more pressure to the service.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: live budget values and outage recovery require production-like
+  Roblox testing.
