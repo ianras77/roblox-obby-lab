@@ -112,6 +112,7 @@ function CheckpointService:hookPlayers()
 end
 
 function CheckpointService:loadCheckpoint(player)
+  player:SetAttribute("ProfileLoadStatus", "Loading")
   player:SetAttribute("Checkpoint", 0)
   player:SetAttribute("CheckpointId", nil)
   local saved, loadSucceeded = self.store:GetAsync("player:" .. tostring(player.UserId))
@@ -122,9 +123,11 @@ function CheckpointService:loadCheckpoint(player)
   local profile = ProfileSchema.sanitize(saved)
   self.profiles[player] = profile
   if not self.loaded[player] then
+    player:SetAttribute("ProfileLoadStatus", "Failed")
     warn(string.format("[DataStore] Profile load failed for %s; writes are disabled", player.Name))
     return
   end
+  player:SetAttribute("ProfileLoadStatus", "Ready")
   profile.highestChapter = math.clamp(profile.highestChapter, 0, #self.stages)
   if profile.highestChapter > 0 then
     player:SetAttribute("Checkpoint", profile.highestChapter)
@@ -143,7 +146,12 @@ function CheckpointService:saveCheckpoint(player)
   profile.highestChapter = math.max(profile.highestChapter, player:GetAttribute("Checkpoint") or 0)
   self.profiles[player] = profile
   local snapshot = ProfileSchema.sanitize(profile)
-  self.store:SetAsync("player:" .. tostring(player.UserId), snapshot)
+  local saved = self.store:SetAsync("player:" .. tostring(player.UserId), snapshot)
+  local saveStatus = not self.store:isEnabled() and "Skipped" or (saved and "Saved" or "Failed")
+  player:SetAttribute("ProfileSaveStatus", saveStatus)
+  if saved then
+    player:SetAttribute("ProfileSavedAt", os.time())
+  end
 end
 
 function CheckpointService:getProfile(player)

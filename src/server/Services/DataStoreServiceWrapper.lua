@@ -31,6 +31,10 @@ function Wrapper.new(name)
   return self
 end
 
+function Wrapper:isEnabled(): boolean
+  return self.enabled
+end
+
 function Wrapper:GetAsync(key)
   if not self.enabled then
     return nil, true

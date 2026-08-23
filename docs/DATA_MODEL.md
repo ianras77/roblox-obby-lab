@@ -47,6 +47,12 @@ Keys are authored deterministically at chapter locations (one per chapter in
 the current configuration), and the client requests initial HUD state through
 `GetObbyState` instead of depending solely on a startup event.
 
+The server exposes non-authoritative diagnostics through player attributes:
+`ProfileLoadStatus` is `Loading`, `Ready`, or `Failed`; `ProfileSaveStatus` is
+`Saved`, `Skipped`, or `Failed`; and `ProfileSavedAt` records the last successful save's
+Unix timestamp. These attributes are for operator diagnostics, not client
+permission or progression decisions.
+
 Accessibility settings use the validated `SetAccessibilitySettings` contract;
 this includes `showTimer`, which only changes local timer presentation and
 never changes server-owned timing.

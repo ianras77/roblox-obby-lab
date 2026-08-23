@@ -1183,3 +1183,23 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: live checkpoint touch behavior still requires Roblox Studio.
+
+## 2026-08-23 — Expose profile save diagnostics
+
+- Completed: profile load and save outcomes are now visible as diagnostic
+  player attributes, including the last successful save timestamp, while
+  progression remains gated by the server's loaded-profile state.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live DataStore outage and shutdown-save behavior still require
+  Roblox Studio/private staging testing.
+
+## 2026-08-23 — Distinguish skipped persistence
+
+- Completed: diagnostic saves now distinguish an intentional environment
+  no-op (`Skipped`) from a failed write; production failures remain visible as
+  `Failed`.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live DataStore outage and shutdown-save behavior still require
+  Roblox Studio/private staging testing.
