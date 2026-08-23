@@ -1478,3 +1478,11 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; platform reactivation and server load remain
   Studio-unverified.
+
+## 2026-08-23 — Bound wind and pressure contact queries
+
+- Completed: wind zones and pressure pads now skip distant `GetTouchingParts`
+  scans while retaining server-authoritative behavior near active players.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live mechanic activation and load remain
+  Studio-unverified.

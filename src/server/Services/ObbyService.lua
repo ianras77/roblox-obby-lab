@@ -736,7 +736,7 @@ function ObbyService:startHeartbeat()
       local queryDt = self.queryClock
       self.queryClock = 0
       for _, item in ipairs(self.behaviors.windZones) do
-        if item.part and item.part.Parent then
+        if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, GameConfig.ActiveMechanicRadius) then
           for _, touch in ipairs(item.part:GetTouchingParts()) do
             local hrp = touch.Parent and touch.Parent:FindFirstChild("HumanoidRootPart")
             if hrp then
@@ -748,7 +748,7 @@ function ObbyService:startHeartbeat()
       end
       local gateActiveCount = {}
       for _, pad in ipairs(self.behaviors.pads) do
-        if pad.part and pad.part.Parent then
+        if pad.part and pad.part.Parent and hasNearbyPlayer(pad.part.Position, GameConfig.ActiveMechanicRadius) then
           pad.active = false
           for _, p in ipairs(pad.part:GetTouchingParts()) do
             if p.Parent and p.Parent:FindFirstChild("HumanoidRootPart") then

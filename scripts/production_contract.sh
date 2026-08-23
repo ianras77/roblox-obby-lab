@@ -103,6 +103,7 @@ grep -q 'environmentAllowsPersistence' "$ROOT_DIR/src/server/Services/DataStoreS
 grep -q 'isStudioSandbox' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "Studio sandbox persistence path missing"
 grep -q 'ActiveMechanicRadius' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "mechanic activation radius missing"
 grep -q 'hasNearbyPlayer(item.part.Position, GameConfig.ActiveMechanicRadius)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "moving-platform proximity activation missing"
+grep -q 'hasNearbyPlayer(pad.part.Position, GameConfig.ActiveMechanicRadius)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "pressure-pad proximity activation missing"
 grep -q 'merged.bestChapterMs' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent chapter split merge missing"
 grep -q 'chapterNumber <= ProfileSchema.MaxChapter' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "chapter split merge is not bounded"
 grep -q 'merged.settings' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent settings merge missing"

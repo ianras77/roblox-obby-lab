@@ -27,6 +27,11 @@ configured `GameConfig.ActiveMechanicRadius`; distant platforms retain their
 last transform until reactivated. This reduces idle server work without
 delegating movement authority to clients.
 
+Wind-zone and pressure-pad contact queries use the same activation radius, so
+distant environmental mechanics do not scan streamed gameplay parts every
+query tick. Gate state is retained until a nearby player reactivates the
+mechanic.
+
 The world validator also reports unanchored generated environment parts, while
 allowing intentional cart ride assemblies. Static scenery should remain
 anchored to avoid accidental server physics and replication cost.
