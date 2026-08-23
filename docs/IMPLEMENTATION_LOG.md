@@ -89,6 +89,13 @@
 - Tests: storyboard, production contracts, Stylua, Selene, and Rojo CI passed
   on the prior validated branch state; this update needs a fresh CI run.
 
+## 2026-08-23 — Vision and art-direction artifacts
+
+- Completed: added the required game-vision and art-direction source documents.
+- Scope: documents preserve the literary/public-domain identity and define the
+  implemented readability/accessibility direction without claiming uploaded
+  assets or Studio visual validation.
+
 ## 2026-08-23 — GitHub CI green
 
 - Completed: draft PR CI run `32657495468` passed Stylua, Selene, contract
