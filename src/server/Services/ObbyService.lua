@@ -52,6 +52,9 @@ local function bindSettings(self)
     return
   end
   local lastCall = {}
+  self.maid:Give(Players.PlayerRemoving:Connect(function(player)
+    lastCall[player] = nil
+  end))
   local allowed =
     { reducedMotion = true, reduceFlashes = true, highContrast = true, largeText = true, lowParticles = true }
   self.maid:Give(event.OnServerEvent:Connect(function(player, key, enabled)
@@ -75,6 +78,9 @@ local function bindRunModes(self)
     return
   end
   local lastCall = {}
+  self.maid:Give(Players.PlayerRemoving:Connect(function(player)
+    lastCall[player] = nil
+  end))
   self.maid:Give(event.OnServerEvent:Connect(function(player, mode)
     if type(mode) ~= "string" then
       return
@@ -106,6 +112,9 @@ local function bindPracticeStage(self)
     return
   end
   local lastCall = {}
+  self.maid:Give(Players.PlayerRemoving:Connect(function(player)
+    lastCall[player] = nil
+  end))
   self.maid:Give(event.OnServerEvent:Connect(function(player, stage)
     if type(stage) ~= "number" or stage % 1 ~= 0 or stage < 1 or stage > self.world.totalStages then
       return

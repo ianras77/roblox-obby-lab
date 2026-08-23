@@ -354,3 +354,12 @@
 - Tests: configuration, storyboard, production, Stylua, and whitespace checks
   pass locally.
 - Unverified: reset/spawn timing and full-run plausibility require Studio.
+
+## 2026-08-23 — Rate-limit lifecycle cleanup
+
+- Completed: settings, run-mode, and Practice remote rate-limit maps now remove
+  disconnected players, preventing stale player-keyed state from accumulating
+  across repeated joins.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: long-lived server memory behavior requires live server soak tests.
