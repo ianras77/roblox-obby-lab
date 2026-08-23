@@ -1,5 +1,7 @@
 local Lighting = game:GetService("Lighting")
 local SoundService = game:GetService("SoundService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
 
 local DecorBuilder = {}
 
@@ -77,7 +79,7 @@ function DecorBuilder.decorateZone(zoneModel, zoneConfig)
   confetti.Parent = zoneModel
 
   local emitter = Instance.new("ParticleEmitter")
-  emitter.Texture = "rbxassetid://241594419"
+  emitter.Texture = AssetRegistry.getApprovedId("soft_particle")
   emitter.Rate = 80
   emitter.Lifetime = NumberRange.new(4, 7)
   emitter.Speed = NumberRange.new(6, 10)
@@ -98,7 +100,7 @@ function DecorBuilder.decorateZone(zoneModel, zoneConfig)
   fireflyAnchor.Parent = zoneModel
   for _ = 1, 4 do
     local firefly = Instance.new("ParticleEmitter")
-    firefly.Texture = "rbxassetid://260430117"
+    firefly.Texture = AssetRegistry.getApprovedId("sparkle_particle")
     firefly.Rate = 6
     firefly.Lifetime = NumberRange.new(2, 3.2)
     firefly.Speed = NumberRange.new(0.5, 1.5)

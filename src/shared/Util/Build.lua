@@ -93,7 +93,7 @@ function Build.checkpoint(name, cframe, size, parent)
 
   local burst = Instance.new("ParticleEmitter")
   burst.Name = "CheckpointBurst"
-  burst.Texture = "rbxassetid://241594419"
+  burst.Texture = AssetRegistry.getApprovedId("soft_particle")
   burst.Lifetime = NumberRange.new(0.6, 0.9)
   burst.Speed = NumberRange.new(8, 12)
   burst.Rate = 0
@@ -114,7 +114,7 @@ function Build.collectibleKey(cframe, parent)
     Anchored = true,
   })
   local spark = Instance.new("ParticleEmitter")
-  spark.Texture = "rbxassetid://241594419"
+  spark.Texture = AssetRegistry.getApprovedId("soft_particle")
   spark.Lifetime = NumberRange.new(0.6, 1)
   spark.Speed = NumberRange.new(4, 7)
   spark.Rate = 18

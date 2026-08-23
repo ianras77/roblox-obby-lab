@@ -326,6 +326,16 @@
 - Unverified: visual timing and accessibility perception require Studio device
   testing.
 
+## 2026-08-23 — Generated visual asset gate
+
+- Completed: generated particle textures and the legacy chapter decal now
+  resolve through AssetRegistry; direct Roblox asset literals were removed
+  from builders and shared build utilities.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: ownership, moderation, and visual playback require Creator
+  Hub/Studio verification.
+
 ## 2026-08-23 — Scrollable settings panel
 
 - Completed: the settings/mode panel now uses automatic vertical canvas sizing

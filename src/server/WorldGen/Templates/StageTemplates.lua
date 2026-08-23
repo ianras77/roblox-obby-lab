@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Build = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Build"))
 local ObstacleConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("ObstacleConfig"))
 local WorldGenConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("WorldGenConfig"))
+local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
 
 local StageTemplates = {}
 
@@ -97,7 +98,7 @@ function StageTemplates.Warmup(ctx)
     light.CanCollide = false
 
     local sparkle = Instance.new("ParticleEmitter")
-    sparkle.Texture = "rbxassetid://260430117"
+    sparkle.Texture = AssetRegistry.getApprovedId("sparkle_particle")
     sparkle.Rate = 12
     sparkle.Speed = NumberRange.new(2, 4)
     sparkle.Lifetime = NumberRange.new(0.4, 0.8)
@@ -139,7 +140,7 @@ function StageTemplates.BouncyClouds(ctx)
     })
     cloudPart.Transparency = 0.25
     local puff = Instance.new("ParticleEmitter")
-    puff.Texture = "rbxassetid://241594419"
+    puff.Texture = AssetRegistry.getApprovedId("soft_particle")
     puff.Lifetime = NumberRange.new(0.8, 1.2)
     puff.Speed = NumberRange.new(2, 4)
     puff.Rate = 12
@@ -300,7 +301,7 @@ function StageTemplates.ToadHallGate(ctx)
   })
   portrait.CanCollide = false
   local decal = Instance.new("Decal")
-  decal.Texture = "rbxassetid://148274626" -- kid-safe frog decal
+  decal.Texture = AssetRegistry.getApprovedId("frog_decal") -- kid-safe frog decal
   decal.Face = Enum.NormalId.Front
   decal.Parent = portrait
   return model, ctx.origin * CFrame.new(width + 12, 0, 0)
@@ -412,7 +413,7 @@ function StageTemplates.RiverBarge(ctx)
   })
   water.Transparency = 0.3
   local bubbles = Instance.new("ParticleEmitter")
-  bubbles.Texture = "rbxassetid://241594419"
+  bubbles.Texture = AssetRegistry.getApprovedId("soft_particle")
   bubbles.Rate = 12
   bubbles.Lifetime = NumberRange.new(0.6, 1)
   bubbles.Speed = NumberRange.new(3, 6)
@@ -648,7 +649,7 @@ function StageTemplates.CourtroomChaos(ctx)
     })
     beam.CanCollide = false
     local sparks = Instance.new("ParticleEmitter")
-    sparks.Texture = "rbxassetid://260430117"
+    sparks.Texture = AssetRegistry.getApprovedId("sparkle_particle")
     sparks.Lifetime = NumberRange.new(0.3, 0.5)
     sparks.Speed = NumberRange.new(4, 8)
     sparks.Rate = 16
@@ -747,7 +748,7 @@ function StageTemplates.WildWoods(ctx)
   wind.Anchored = true
   wind.CanCollide = false
   local leaves = Instance.new("ParticleEmitter")
-  leaves.Texture = "rbxassetid://484084159"
+  leaves.Texture = AssetRegistry.getApprovedId("leaf_particle")
   leaves.Rate = 18
   leaves.Lifetime = NumberRange.new(1, 1.4)
   leaves.Speed = NumberRange.new(6, 10)
@@ -855,14 +856,14 @@ function StageTemplates.FinaleRing(ctx)
     basePlatform(model, ctx.origin * CFrame.new(x, 0, z), ctx.color)
   end
   local emitter = Instance.new("ParticleEmitter")
-  emitter.Texture = "rbxassetid://258128463"
+  emitter.Texture = AssetRegistry.getApprovedId("finale_firework")
   emitter.Rate = 24
   emitter.Lifetime = NumberRange.new(1, 1.5)
   emitter.Speed = NumberRange.new(25, 35)
   emitter.Parent = model
 
   local confetti = Instance.new("ParticleEmitter")
-  confetti.Texture = "rbxassetid://12824333"
+  confetti.Texture = AssetRegistry.getApprovedId("confetti_particle")
   confetti.Rate = 40
   confetti.Lifetime = NumberRange.new(1, 1.2)
   confetti.Speed = NumberRange.new(12, 16)
@@ -895,7 +896,7 @@ end
 
 local function addSparkles(part, color, rate)
   local sparkles = Instance.new("ParticleEmitter")
-  sparkles.Texture = "rbxassetid://241594419"
+  sparkles.Texture = AssetRegistry.getApprovedId("soft_particle")
   sparkles.Rate = rate or 10
   sparkles.Lifetime = NumberRange.new(0.6, 1.1)
   sparkles.Speed = NumberRange.new(2, 5)
@@ -1339,7 +1340,7 @@ function StageTemplates.ToadHallFireworks(ctx)
     })
     firework.CanCollide = false
     local burst = Instance.new("ParticleEmitter")
-    burst.Texture = "rbxassetid://258128463"
+    burst.Texture = AssetRegistry.getApprovedId("finale_firework")
     burst.Rate = 26
     burst.Lifetime = NumberRange.new(0.8, 1.4)
     burst.Speed = NumberRange.new(18, 28)
