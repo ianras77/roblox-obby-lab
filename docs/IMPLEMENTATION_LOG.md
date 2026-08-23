@@ -1,5 +1,14 @@
 # Implementation log
 
+## 2026-08-23 — Bound checkpoint root readiness
+
+- Completed: safe checkpoint teleports now wait up to five seconds for a
+  character `HumanoidRootPart` and verify its type, preventing slow character
+  assembly from silently skipping restored placement.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: real device spawn timing requires Studio testing.
+
 ## 2026-08-23 — Guard checkpoint binding at runtime
 
 - Completed: checkpoint event binding now requires a `BasePart` and warns on
