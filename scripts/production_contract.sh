@@ -24,6 +24,7 @@ if grep -q 'progressEvent:FireAllClients' "$ROOT_DIR/src/server/WorldGen/WorldBu
 if grep -q 'celebrator.Parent = checkpoint' "$ROOT_DIR/src/server/Services/CheckpointService.lua"; then fail "finale burst must not be shared"; fi
 grep -q 'SetAccessibilitySettings' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "settings contract missing"
 grep -q 'reducedMotion = true' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "settings allowlist missing"
+grep -q 'if not self.checkpoints:isLoaded(player) then' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "remote profile readiness guard missing"
 grep -q 'Magnitude <= 18' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint distance validation missing"
 grep -q 'Magnitude > 18' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "key distance validation missing"
 grep -q 'SetRunMode' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "run mode contract missing"

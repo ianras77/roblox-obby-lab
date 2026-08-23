@@ -61,6 +61,9 @@ local function bindSettings(self)
     if type(key) ~= "string" or not allowed[key] or type(enabled) ~= "boolean" then
       return
     end
+    if not self.checkpoints:isLoaded(player) then
+      return
+    end
     local now = os.clock()
     if now - (lastCall[player] or 0) < 0.2 then
       return
@@ -83,6 +86,9 @@ local function bindRunModes(self)
   end))
   self.maid:Give(event.OnServerEvent:Connect(function(player, mode)
     if type(mode) ~= "string" then
+      return
+    end
+    if not self.checkpoints:isLoaded(player) then
       return
     end
     if mode == "TimeTrial" and self.checkpoints:getProfile(player).completionCount < 1 then

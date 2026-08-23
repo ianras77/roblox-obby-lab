@@ -443,6 +443,16 @@
 - Unverified: repeated Studio rebuilds and active-player behavior require
   Studio testing.
 
+## 2026-08-23 — Gate settings and modes on profile readiness
+
+- Completed: accessibility-settings and run-mode remotes now reject requests
+  until the server has loaded the player's profile, preventing initialization
+  races from mutating or replacing session defaults.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: remote timing under live DataStore latency requires Studio or
+  staging validation.
+
 ## 2026-08-23 — Guard invalid checkpoint instances
 
 - Completed: the world validator now inspects checkpoint geometry only after
