@@ -22,8 +22,7 @@ function StageBuilder.buildStage(args)
   local stageType = args.stageType
   local template = StageTemplates[stageType]
   if not template then
-    warn("Missing template for", stageType, "using Warmup")
-    template = StageTemplates.Warmup
+    error(string.format("No stage template registered for %s", tostring(stageType)))
   end
 
   local model = Instance.new("Model")
@@ -43,15 +42,22 @@ function StageBuilder.buildStage(args)
     random = args.random,
   })
 
-  if builtModel and builtModel ~= model then
+  if not builtModel or not builtModel:IsA("Model") then
+    error(string.format("Stage template %s returned a non-model", stageType))
+  end
+  if builtModel ~= model then
     builtModel.Parent = model
   end
 
-  endCFrame = endCFrame or (args.origin * CFrame.new(WorldGenConfig.StageLengthMax, 0, 0))
+  if typeof(endCFrame) ~= "CFrame" then
+    error(string.format("Stage template %s did not return a valid exit CFrame", stageType))
+  end
   local definition = StageConfig.getByIndex(args.stageIndex)
   local stageId = definition and definition.id or string.format("stage_%03d", args.stageIndex)
   local presentation = ChapterConfig[stageType]
-    or { flavor = "Keep moving forward.", mechanic = "Obstacle course", tier = "Unknown" }
+  if not presentation then
+    error(string.format("No chapter presentation metadata registered for %s", stageType))
+  end
   model:SetAttribute("StageId", stageId)
   model:SetAttribute("StageIndex", args.stageIndex)
   model:SetAttribute("ChapterName", displayName)

@@ -38,6 +38,8 @@ grep -q 'approvedForRelease' "$ROOT_DIR/src/shared/Config/AssetRegistry.lua" || 
 grep -q 'playFirstApprovedMusic' "$ROOT_DIR/src/server/ServerMain.server.lua" || fail "asset approval gate missing"
 grep -q 'ChapterFlavor' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "chapter presentation metadata missing"
 grep -q 'StageBuildResult' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "explicit stage build result missing"
+grep -q 'No stage template registered' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "missing stage templates must fail closed"
+grep -q 'did not return a valid exit CFrame' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "invalid template exits must fail closed"
 grep -q 'duplicate collectible id' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "duplicate collectible validation missing"
 grep -q 'does not progress forward' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "forward geometry validation missing"
 grep -q 'unanchored environment part' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "anchored environment validation missing"

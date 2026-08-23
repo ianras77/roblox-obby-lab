@@ -138,3 +138,12 @@
   pass locally.
 - Unverified: moving-platform rider feel and networked physics still require
   multi-client Studio playtesting.
+
+## 2026-08-23 — Generator fail-closed behavior
+
+- Completed: StageBuilder no longer substitutes the warm-up chapter when a
+  template is missing, and now rejects invalid template models, exits, and
+  presentation metadata before creating progression objects.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: Studio-only geometry traversal remains pending.
