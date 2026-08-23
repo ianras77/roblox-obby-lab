@@ -52,6 +52,13 @@ function CheckpointService:initializePlayer(player)
   self:loadCheckpoint(player)
   self.maid:Give(player.CharacterAdded:Connect(function()
     self:teleportToSavedCheckpoint(player)
+    local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+      self.maid:Give(humanoid.Died:Connect(function()
+        local profile = self:getProfile(player)
+        profile.totalDeaths += 1
+      end))
+    end
   end))
   if self.progressEvent then
     self.progressEvent:FireClient(player, {
@@ -141,14 +148,23 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
     if burst then
       burst:Emit(24)
     end
+    local elapsed, eligible = self.runState and self.runState:onChapterReached(player, stageIndex)
+    if elapsed and eligible then
+      local profile = self:getProfile(player)
+      profile.completionCount += 1
+      if not profile.bestRunMs or elapsed * 1000 < profile.bestRunMs then
+        profile.bestRunMs = math.floor(elapsed * 1000)
+      end
+    end
     if self.progressEvent then
-      local elapsed, eligible = self.runState and self.runState:onChapterReached(player, stageIndex)
       self.progressEvent:FireClient(player, {
         stage = stageIndex,
         total = #self.stages,
         mode = player:GetAttribute("RunMode") or "Adventure",
         elapsedMs = elapsed and math.floor(elapsed * 1000) or nil,
         timeTrialEligible = eligible,
+        bestRunMs = self:getProfile(player).bestRunMs,
+        deaths = self:getProfile(player).totalDeaths,
       })
     end
     if stageIndex == #self.stages then

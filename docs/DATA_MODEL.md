@@ -23,6 +23,10 @@ Run state is server-owned and distinguishes `Adventure`, `TimeTrial`, and
 `Practice`. Practice completion is deliberately ineligible for a time-trial
 score. Timing and leaderboard submission still require Studio validation.
 
+Qualifying final-chapter completion updates `completionCount` and the smallest
+`bestRunMs` on the server. Character deaths increment `totalDeaths`; Practice
+completion never updates the personal best.
+
 Keys are authored deterministically at chapter locations (one per chapter in
 the current configuration), and the client requests initial HUD state through
 `GetObbyState` instead of depending solely on a startup event.

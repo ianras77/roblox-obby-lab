@@ -272,9 +272,11 @@ function UIController:showResults(payload)
   result.TextColor3 = Color3.fromRGB(255, 236, 182)
   result.Font = Enum.Font.GothamBlack
   result.TextScaled = true
+  local best = payload and payload.bestRunMs and string.format("\nPersonal best: %.2fs", payload.bestRunMs / 1000) or ""
   result.Text = string.format(
-    "Toad Hall reached!\n%s run complete — choose a mode in Settings to replay.",
-    self.player:GetAttribute("RunMode") or "Adventure"
+    "Toad Hall reached!\n%s run complete%s\nChoose a mode in Settings to replay.",
+    self.player:GetAttribute("RunMode") or "Adventure",
+    best
   )
   result.Parent = self.gui
   game:GetService("Debris"):AddItem(result, 8)

@@ -44,3 +44,11 @@
 - Completed: Practice remains explicitly ineligible in server run state.
 - Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
 - Unverified: device layout, actual timing flow, and Studio multiplayer behavior.
+
+## 2026-08-23 — Server-owned run results
+
+- Completed: qualifying completions update personal best and completion count;
+  deaths update profile totals; results show the personal best.
+- Completed: Practice completions remain excluded from personal-best updates.
+- Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
+- Unverified: real Studio timing, reset semantics, and leaderboard publication.
