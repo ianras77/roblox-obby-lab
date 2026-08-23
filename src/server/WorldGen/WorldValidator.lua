@@ -28,6 +28,8 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
   local previousExit = nil
   for expectedIndex, stage in ipairs(stages) do
     local stageModel = stage.model
+    local modelIsModel = typeof(stageModel) == "Instance" and stageModel:IsA("Model")
+    local checkpointIsPart = typeof(stage.checkpoint) == "Instance" and stage.checkpoint:IsA("BasePart")
     if stage.stageIndex ~= expectedIndex then
       table.insert(errors, string.format("stage order gap or duplicate near %d", stage.stageIndex or -1))
     end
@@ -43,7 +45,7 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     else
       ids[stage.stageId] = true
     end
-    if not stage.checkpoint or not stage.checkpoint:IsA("BasePart") then
+    if not checkpointIsPart then
       table.insert(errors, string.format("stage %d missing checkpoint", stage.stageIndex or -1))
     else
       checkpoints[stage.stageIndex] = true
@@ -88,7 +90,7 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
           table.insert(errors, string.format("stage %d safe spawn is not above checkpoint", stage.stageIndex or -1))
         end
       end
-      if stageModel and stageModel:IsA("Model") then
+      if modelIsModel then
         for _, hazard in ipairs(CollectionService:GetTagged("KillBrick")) do
           if hazard:IsDescendantOf(stageModel) and hazard:IsA("BasePart") and overlaps(stage.checkpoint, hazard) then
             table.insert(
@@ -112,7 +114,7 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
       end
       previousExit = stage.exit
     end
-    if not stageModel or not stageModel:IsA("Model") then
+    if not modelIsModel then
       table.insert(errors, string.format("stage %d missing model", stage.stageIndex or -1))
     elseif not stageModel:GetAttribute("PrimaryMechanic") then
       table.insert(errors, string.format("stage %d missing presentation metadata", stage.stageIndex or -1))
@@ -140,7 +142,7 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     end
   end
   for _, stage in ipairs(stages) do
-    if stage.model and stage.model:IsA("Model") then
+    if typeof(stage.model) == "Instance" and stage.model:IsA("Model") then
       for _, descendant in ipairs(stage.model:GetDescendants()) do
         if descendant:IsA("BasePart") and not descendant.Anchored then
           local intentionalRide = descendant:FindFirstAncestorWhichIsA("Model")

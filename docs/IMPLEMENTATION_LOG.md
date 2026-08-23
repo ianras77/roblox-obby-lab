@@ -1,5 +1,14 @@
 # Implementation log
 
+## 2026-08-23 — Make validator instance guards type-safe
+
+- Completed: model and checkpoint validation now checks Luau instance type
+  before calling Roblox `IsA`/descendant APIs, preventing malformed scalar
+  fields from crashing world validation.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: malformed live template output remains a Studio-only check.
+
 ## 2026-08-23 — Gate cart motion on riders
 
 - Completed: generated carts now remain stationary until their server-owned
