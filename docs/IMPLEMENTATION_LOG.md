@@ -1337,6 +1337,15 @@
   whitespace checks pass locally; multi-client collision behavior remains
   Studio-unverified.
 
+## 2026-08-23 — Require authorized Practice selection
+
+- Completed: the generic run-mode remote can no longer enter Practice directly;
+  Practice requires the server-validated completed-chapter selector and its
+  temporary respawn checkpoint.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; hostile-client behavior remains
+  Studio-unverified.
+
 ## 2026-08-23 — Bound hazard debounce lifetime
 
 - Completed: kill-brick debounce tables now use weak Humanoid keys, avoiding

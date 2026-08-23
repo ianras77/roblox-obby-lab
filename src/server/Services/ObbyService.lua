@@ -133,6 +133,11 @@ local function bindRunModes(self)
     if type(mode) ~= "string" then
       return
     end
+    -- Practice requires a separately authorized chapter selection below; it
+    -- must never be entered through the generic mode remote.
+    if mode == "Practice" then
+      return
+    end
     if not self.checkpoints:isLoaded(player) then
       return
     end
