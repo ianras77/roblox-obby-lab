@@ -1452,3 +1452,11 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; Studio API access and live DataStore behavior
   remain unverified.
+
+## 2026-08-23 — Validate shared remote instance classes
+
+- Completed: world bootstrap now rejects same-name non-remote instances and
+  creates/returns only the classes required by each network contract.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live DataModel collision behavior remains
+  Studio-unverified.

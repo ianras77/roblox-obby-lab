@@ -78,6 +78,10 @@ The initial `GetObbyState` response carries the same presentation bundle, which
 prevents restored players from waiting for a new checkpoint to populate HUD
 chapter context.
 
+World bootstrap validates that every shared event is actually a `RemoteEvent`
+and that `GetObbyState` is a `RemoteFunction`; a name collision with another
+instance class fails the build instead of being used ambiguously.
+
 Finale presentation is player-specific: the server sends only the completing
 player's finale event, while the client attaches local effects to that player's
 character. Shared checkpoint objects do not emit a finale burst for everyone.

@@ -11,6 +11,20 @@ local RemoteContracts = require(ReplicatedStorage:WaitForChild("Network"):WaitFo
 
 local WorldBuilder = {}
 
+local function ensureRemote(folder, name, className)
+  local existing = folder:FindFirstChild(name)
+  if existing then
+    if not existing:IsA(className) then
+      error(string.format("SharedEvents.%s must be a %s", name, className))
+    end
+    return existing
+  end
+  local remote = Instance.new(className)
+  remote.Name = name
+  remote.Parent = folder
+  return remote
+end
+
 local function clearExisting()
   local existing = workspace:FindFirstChild("GeneratedObby")
   if existing then
@@ -37,18 +51,9 @@ local function ensureFolders()
     RemoteContracts.PracticeStage.name,
   }
   for _, name in ipairs(events) do
-    if not folder:FindFirstChild(name) then
-      local evt = Instance.new("RemoteEvent")
-      evt.Name = name
-      evt.Parent = folder
-    end
+    ensureRemote(folder, name, "RemoteEvent")
   end
-  local stateFunction = folder:FindFirstChild(RemoteContracts.State.name)
-  if not stateFunction then
-    stateFunction = Instance.new("RemoteFunction")
-    stateFunction.Name = RemoteContracts.State.name
-    stateFunction.Parent = folder
-  end
+  local stateFunction = ensureRemote(folder, RemoteContracts.State.name, "RemoteFunction")
   return folder:FindFirstChild(RemoteContracts.Progress.name),
     folder:FindFirstChild(RemoteContracts.Keys.name),
     folder:FindFirstChild(RemoteContracts.Finale.name),
