@@ -24,6 +24,7 @@ grep -q 'model is outside its expected zone' "$ROOT_DIR/src/server/WorldGen/Worl
 grep -q 'SetAttribute("ZoneIndex", args.zoneIndex)' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage model zone marker missing"
 grep -q 'zoneModel = zoneModel' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage zone container reference missing"
 grep -q 'not parented to its zone model' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator zone hierarchy check missing"
+grep -q 'missing a valid zone model' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator missing-zone fail-closed check missing"
 grep -q 'not measured correctly' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator connector measurement check missing"
 grep -q 'typeof(stageModel) == "Instance"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator instance type guards missing"
 grep -q 'local owned = false' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator collectible ownership scope missing"

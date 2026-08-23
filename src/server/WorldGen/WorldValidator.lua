@@ -57,6 +57,7 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     local validExit = typeof(stage.exit) == "CFrame"
     local validSafeSpawn = typeof(stage.safeSpawn) == "CFrame"
     local validConnectorLength = type(stage.connectorLength) == "number" and finite(stage.connectorLength)
+    local validZoneModel = typeof(stage.zoneModel) == "Instance" and stage.zoneModel:IsA("Model")
     if not validEntrance or not validExit then
       table.insert(errors, string.format("stage %d missing entrance or exit", stage.stageIndex or -1))
     end
@@ -66,6 +67,9 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     if not validConnectorLength or stage.connectorLength < 0 then
       table.insert(errors, string.format("stage %d has invalid connector length", stage.stageIndex or -1))
     end
+    if not validZoneModel then
+      table.insert(errors, string.format("stage %d is missing a valid zone model", stage.stageIndex or -1))
+    end
     local expectedZone = type(stage.stageIndex) == "number" and math.ceil(stage.stageIndex / GameConfig.StagesPerZone)
       or nil
     if stage.zoneIndex ~= expectedZone then
@@ -74,7 +78,7 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     if modelIsModel and stageModel:GetAttribute("ZoneIndex") ~= expectedZone then
       table.insert(errors, string.format("stage %d model is outside its expected zone", stage.stageIndex or -1))
     end
-    if modelIsModel and typeof(stage.zoneModel) == "Instance" and stageModel.Parent ~= stage.zoneModel then
+    if modelIsModel and validZoneModel and stageModel.Parent ~= stage.zoneModel then
       table.insert(errors, string.format("stage %d is not parented to its zone model", stage.stageIndex or -1))
     end
     if

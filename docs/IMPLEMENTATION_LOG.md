@@ -1036,3 +1036,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: live hierarchy mutation behavior remains a Studio-only check.
+
+## 2026-08-23 — Fail closed on missing zone containers
+
+- Completed: `WorldValidator` now requires a typed zone-model reference before
+  evaluating parent identity, rejecting manifests that omit the container and
+  would otherwise bypass hierarchy validation.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: malformed live instances still require Studio mutation tests.
