@@ -237,6 +237,8 @@ grep -q 'highestChapter = self.checkpoints and self.checkpoints:getProfile(playe
 grep -q 'chapterId = stage.stageId' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "stable chapter ID is not synchronized"
 grep -q 'chapter = getChapterPresentation(self.world.stages, stage)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "initial chapter presentation is not synchronized"
 grep -q 'RemoteContracts.State.name' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "state function name is not contract-owned"
+grep -q 'folder:FindFirstChild(RemoteContracts.Progress.name)' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "progress remote lookup is not contract-owned"
+grep -q 'RemoteContracts.Finale.name' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "finale remote lookup is not contract-owned"
 grep -q 'ProfileSaveStatus' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile save status visibility missing"
 grep -q 'ephemeral profile' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "datastore failure playability path missing"
 grep -q 'persistenceAllowed' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "failed reads are not write-gated"

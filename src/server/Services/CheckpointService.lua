@@ -6,6 +6,8 @@ local DataStoreWrapper = require(script.Parent.DataStoreServiceWrapper)
 local ProfileSchema = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("ProfileSchema"))
 local ProgressionRules =
   require(game:GetService("ReplicatedStorage"):WaitForChild("Util"):WaitForChild("ProgressionRules"))
+local RemoteContracts =
+  require(game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("RemoteContracts"))
 
 local activeService = nil
 local shutdownBound = false
@@ -379,7 +381,7 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
       -- Finale presentation is sent to the completing player only. Shared
       -- checkpoints do not emit a replicated burst for everyone.
       local finale = game:GetService("ReplicatedStorage"):FindFirstChild("SharedEvents")
-      local evt = finale and finale:FindFirstChild(GameConfig.FinaleRemote)
+      local evt = finale and finale:FindFirstChild(RemoteContracts.Finale.name)
       if evt then
         local finaleProfile = self:getProfile(player)
         local foundKeys = 0

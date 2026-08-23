@@ -49,9 +49,9 @@ local function ensureFolders()
     stateFunction.Name = RemoteContracts.State.name
     stateFunction.Parent = folder
   end
-  return folder:FindFirstChild(GameConfig.ProgressRemote),
-    folder:FindFirstChild(GameConfig.KeyRemote),
-    folder:FindFirstChild(GameConfig.FinaleRemote),
+  return folder:FindFirstChild(RemoteContracts.Progress.name),
+    folder:FindFirstChild(RemoteContracts.Keys.name),
+    folder:FindFirstChild(RemoteContracts.Finale.name),
     folder:FindFirstChild(RemoteContracts.State.name)
 end
 

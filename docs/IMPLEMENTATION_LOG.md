@@ -1434,3 +1434,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; live concurrent DataStore behavior remains
   Studio-unverified.
+
+## 2026-08-23 — Keep server remote lookups contract-owned
+
+- Completed: generated remote lookup now uses the shared contract for progress,
+  keys, finale, and state-function names instead of duplicating configuration
+  aliases at the server boundary.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live remote construction remains
+  Studio-unverified.
