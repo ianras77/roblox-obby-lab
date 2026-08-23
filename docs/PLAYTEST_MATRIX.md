@@ -19,8 +19,8 @@ finale fireworks and spotlight animation; verify this in Studio alongside the
 normal celebration path.
 
 Replay controls now expose Adventure, Time Trial, and Practice from the HUD;
-verify mode reset timing, checkpoint semantics, completion results, and that no
-Practice run must never qualify for a leaderboard or personal best.
+verify mode reset timing, checkpoint semantics, completion results, and that a
+Practice run never qualifies for a leaderboard or personal best.
 
 Also verify that Adventure replay completion unlocks Time Trial but does not
 replace the stored Time Trial personal best.
