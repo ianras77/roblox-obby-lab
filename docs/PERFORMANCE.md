@@ -17,3 +17,7 @@ flags. No frame-rate claim is made here.
 The world validator also reports unanchored generated environment parts, while
 allowing intentional cart ride assemblies. Static scenery should remain
 anchored to avoid accidental server physics and replication cost.
+
+Cart behavior now has a 45-second timeout and below-course recovery reset;
+boarding, dismounting, multiplayer interaction, and high-latency behavior still
+require Studio playtesting before the cart is called production-ready.
