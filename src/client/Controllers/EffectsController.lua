@@ -64,7 +64,7 @@ function EffectsController:finale()
   local char = self.player.Character
   local root = char and char:FindFirstChild("HumanoidRootPart")
   if root then
-    for i = 1, 3 do
+    for _ = 1, 3 do
       local boom = Instance.new("ParticleEmitter")
       boom.Texture = "rbxassetid://258128463"
       boom.Lifetime = NumberRange.new(1, 1.6)

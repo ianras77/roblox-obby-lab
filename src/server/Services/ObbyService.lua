@@ -299,37 +299,34 @@ function ObbyService:carryRiders(platform, translation, dt)
   local velocity = translation / math.max(dt, 1 / 60)
   for _, part in ipairs(touching) do
     local character = part.Parent
-    if not character then
-      continue
-    end
-    local humanoid = character:FindFirstChildOfClass("Humanoid")
-    local hrp = character:FindFirstChild("HumanoidRootPart")
-    if humanoid and humanoid.Health > 0 and hrp then
-      hrp.CFrame = hrp.CFrame + translation
-      hrp.AssemblyLinearVelocity = hrp.AssemblyLinearVelocity + velocity
+    if character then
+      local humanoid = character:FindFirstChildOfClass("Humanoid")
+      local hrp = character:FindFirstChild("HumanoidRootPart")
+      if humanoid and humanoid.Health > 0 and hrp then
+        hrp.CFrame = hrp.CFrame + translation
+        hrp.AssemblyLinearVelocity = hrp.AssemblyLinearVelocity + velocity
+      end
     end
   end
 end
 
 function ObbyService:startHeartbeat()
   self.maid:Give(RunService.Heartbeat:Connect(function(dt)
-    self.clock += dt
+    self.clock = self.clock + dt
     local tickNow = self.clock
     for _, item in ipairs(self.behaviors.movingPlatforms) do
-      if not item.part or not item.part.Parent then
-        continue
-      end
+      if item.part and item.part.Parent then
+        local offsetScalar = math.sin(tickNow * item.speed + item.phase) * item.amplitude
+        local offset = item.direction * offsetScalar
+        local cf = item.origin * CFrame.new(offset)
+        local lastPos = item.lastPos or item.part.Position
+        item.part.CFrame = cf
+        item.lastPos = cf.Position
 
-      local offsetScalar = math.sin(tickNow * item.speed + item.phase) * item.amplitude
-      local offset = item.direction * offsetScalar
-      local cf = item.origin * CFrame.new(offset)
-      local lastPos = item.lastPos or item.part.Position
-      item.part.CFrame = cf
-      item.lastPos = cf.Position
-
-      local translation = item.lastPos - lastPos
-      if item.carryPlayers and translation.Magnitude > 0.01 then
-        self:carryRiders(item.part, translation, dt)
+        local translation = item.lastPos - lastPos
+        if item.carryPlayers and translation.Magnitude > 0.01 then
+          self:carryRiders(item.part, translation, dt)
+        end
       end
     end
 
@@ -389,25 +386,24 @@ function ObbyService:startHeartbeat()
 
     for _, item in ipairs(self.behaviors.fallingPlatforms) do
       local part = item.part
-      if not part or not part.Parent then
-        continue
-      end
-      if item.state == "arming" then
-        item.timer += dt
-        if item.timer >= item.dropDelay then
-          part.Anchored = false
-          item.state = "fallen"
-          item.timer = 0
-        end
-      elseif item.state == "fallen" then
-        item.timer += dt
-        if item.respawnTime > 0 and item.timer >= item.respawnTime then
-          part.AssemblyLinearVelocity = Vector3.new()
-          part.AssemblyAngularVelocity = Vector3.new()
-          part.CFrame = item.origin
-          part.Anchored = true
-          item.state = "ready"
-          item.timer = 0
+      if part and part.Parent then
+        if item.state == "arming" then
+          item.timer = item.timer + dt
+          if item.timer >= item.dropDelay then
+            part.Anchored = false
+            item.state = "fallen"
+            item.timer = 0
+          end
+        elseif item.state == "fallen" then
+          item.timer = item.timer + dt
+          if item.respawnTime > 0 and item.timer >= item.respawnTime then
+            part.AssemblyLinearVelocity = Vector3.new()
+            part.AssemblyAngularVelocity = Vector3.new()
+            part.CFrame = item.origin
+            part.Anchored = true
+            item.state = "ready"
+            item.timer = 0
+          end
         end
       end
     end

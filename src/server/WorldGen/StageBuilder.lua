@@ -19,6 +19,7 @@ function StageBuilder.buildStage(args)
   model.Parent = args.parent
 
   local totalStages = GameConfig.Zones * GameConfig.StagesPerZone
+  local displayName = WorldGenConfig.StageDisplayNames[stageType] or stageType
   local difficulty = math.clamp(args.stageIndex / math.max(1, totalStages), 0, 1)
 
   local builtModel, endCFrame = template({
@@ -50,7 +51,7 @@ function StageBuilder.buildStage(args)
   bannerText.BackgroundTransparency = 0.15
   bannerText.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
   bannerText.BorderSizePixel = 0
-  bannerText.Text = string.format("Stage %d / %d", args.stageIndex, totalStages)
+  bannerText.Text = string.format("Stage %d / %d: %s", args.stageIndex, totalStages, displayName)
   bannerText.Font = Enum.Font.GothamBlack
   bannerText.TextScaled = true
   bannerText.TextColor3 = Color3.fromRGB(255, 230, 180)
@@ -65,7 +66,7 @@ function StageBuilder.buildStage(args)
   arrow.Parent = model
   local arrowLabel = Instance.new("TextLabel")
   arrowLabel.BackgroundTransparency = 1
-  arrowLabel.Text = "→ KEEP GOING →"
+  arrowLabel.Text = ">> NEXT CHAPTER >>"
   arrowLabel.Font = Enum.Font.GothamBlack
   arrowLabel.TextScaled = true
   arrowLabel.TextColor3 = Color3.fromRGB(255, 255, 200)

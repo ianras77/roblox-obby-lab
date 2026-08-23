@@ -1,4 +1,7 @@
 local GameConfig = {
+  Title = "Toad's Great Escape",
+  Subtitle = "A wild storybook obby inspired by The Wind in the Willows",
+  StoryIntro = "Toad has one more brilliant idea. Sprint through the riverbank, hall, court, jail, woods, and home!",
   -- Kid Notes: change this seed to reshape the whole obby deterministically.
   Seed = 12345,
   Zones = 3,

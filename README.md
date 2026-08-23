@@ -1,6 +1,8 @@
-# Roblox Obby Lab
+# Toad's Great Escape Obby
 
-Procedural Roblox obby project with a Rojo-first workflow. This repo now lives inside the shared `/data/roblox` studio workspace, but it is also clean enough to stand on its own as a separate Git repo.
+A procedural Roblox obby inspired by the public-domain book world of **The Wind in the Willows**. Press Play and the server builds an 18-chapter storybook run through riverbank jumps, Toad Hall, runaway roads, courtroom trouble, jail escape, Wild Wood, and a fireworks homecoming.
+
+The goal is for kids to play it, laugh at the chaos, then open the configs and remix it.
 
 ## Quick start
 
@@ -26,6 +28,27 @@ If you are working directly inside this repo with local tools installed:
 3. In the Rojo plugin, connect to `http://<linux-host-ip>:34872`.
 4. Publish to your Roblox account manually from Studio when ready.
 
+## Storyboard
+
+1. Riverbank Welcome
+2. Mole's Burrow Bounce
+3. Ratty's River Stones
+4. Toad Hall Gate
+5. Library Tumble
+6. Runaway Caravan
+7. Tavern Barrel Hop
+8. Courtroom Chaos
+9. Jailbreak Bars
+10. Laundry Cart Escape
+11. Barge Crossing
+12. Train Tunnel Dash
+13. Wild Wood Gusts
+14. Badger's Lantern Path
+15. Motorcar Madness
+16. Roadside Cone Sprint
+17. Homecoming Ring Run
+18. Toad Hall Fireworks
+
 ## Project layout
 
 ```text
@@ -35,8 +58,6 @@ roblox-obby-lab/
     server/
     shared/
     workspace/
-  assets/
-  place/
   tests/
   scripts/
   default.project.json
@@ -45,11 +66,11 @@ roblox-obby-lab/
 ## Scripts
 
 - `scripts/dev.sh` prints the local tool versions and confirms the project file.
-- `scripts/check.sh` runs `stylua --check` and `selene`.
+- `scripts/check.sh` runs the storyboard contract, `stylua --check`, and `selene`.
 - `scripts/rojo_serve.sh` starts a Rojo server on the port declared in `default.project.json`.
 
 ## Notes
 
 - Kid-friendly tuning notes live in `README_KIDS.md`.
 - The original build spec for this project lives in `SPEC.md`.
-- CI runs formatting and lint checks from `.github/workflows/ci.yml`.
+- CI runs formatting and lint checks from `.github/workflows/ci.yml` when present.

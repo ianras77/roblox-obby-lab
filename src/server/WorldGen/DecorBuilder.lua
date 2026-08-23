@@ -85,7 +85,7 @@ function DecorBuilder.decorateZone(zoneModel, zoneConfig)
   emitter.Parent = confetti
 
   -- Gentle fireflies near ground for added sparkle
-  for i = 1, 4 do
+  for _ = 1, 4 do
     local firefly = Instance.new("ParticleEmitter")
     firefly.Texture = "rbxassetid://260430117"
     firefly.Rate = 6
@@ -93,7 +93,7 @@ function DecorBuilder.decorateZone(zoneModel, zoneConfig)
     firefly.Speed = NumberRange.new(0.5, 1.5)
     firefly.SpreadAngle = Vector2.new(180, 180)
     firefly.Size = NumberSequence.new(0.35)
-    firefly.Color = ColorSequence.new(zoneConfig.ThemeColor:lerp(Color3.new(1, 1, 1), 0.4))
+    firefly.Color = ColorSequence.new(zoneConfig.ThemeColor:Lerp(Color3.new(1, 1, 1), 0.4))
     firefly.Parent = zoneModel
   end
 end

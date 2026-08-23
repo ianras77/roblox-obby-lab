@@ -21,10 +21,23 @@ function UIController:createGui()
   gui.ResetOnSpawn = false
   gui.Parent = self.player:WaitForChild("PlayerGui")
 
+  local title = Instance.new("TextLabel")
+  title.Name = "Title"
+  title.Size = UDim2.fromScale(0.44, 0.05)
+  title.Position = UDim2.fromScale(0.28, 0.005)
+  title.BackgroundTransparency = 0.1
+  title.BackgroundColor3 = Color3.fromRGB(35, 45, 80)
+  title.BorderSizePixel = 0
+  title.Text = GameConfig.Title
+  title.Font = Enum.Font.GothamBlack
+  title.TextScaled = true
+  title.TextColor3 = Color3.fromRGB(255, 235, 160)
+  title.Parent = gui
+
   local bar = Instance.new("Frame")
   bar.Name = "ProgressBar"
   bar.Size = UDim2.fromScale(0.4, 0.05)
-  bar.Position = UDim2.fromScale(0.3, 0.05)
+  bar.Position = UDim2.fromScale(0.3, 0.06)
   bar.BackgroundColor3 = Color3.fromRGB(35, 60, 95)
   bar.BorderSizePixel = 0
   bar.Parent = gui
@@ -73,7 +86,7 @@ function UIController:createGui()
   local keyHud = Instance.new("TextLabel")
   keyHud.Name = "KeyCounter"
   keyHud.Size = UDim2.fromScale(0.18, 0.05)
-  keyHud.Position = UDim2.fromScale(0.8, 0.05)
+  keyHud.Position = UDim2.fromScale(0.8, 0.06)
   keyHud.BackgroundTransparency = 0.1
   keyHud.BackgroundColor3 = Color3.fromRGB(140, 170, 240)
   keyHud.TextColor3 = Color3.fromRGB(20, 35, 60)
@@ -150,7 +163,7 @@ function UIController:guideToStage(nextStage)
 
     local arrow = Instance.new("TextLabel")
     arrow.BackgroundTransparency = 1
-    arrow.Text = "⬆"
+    arrow.Text = "^"
     arrow.TextScaled = true
     arrow.Font = Enum.Font.GothamBold
     arrow.TextColor3 = Color3.fromRGB(255, 255, 0)
@@ -170,7 +183,7 @@ function UIController:flashMilestone(stage, total)
   gui.TextColor3 = Color3.fromRGB(255, 230, 180)
   gui.Font = Enum.Font.GothamBlack
   gui.TextScaled = true
-  gui.Text = string.format("Stage %d / %d — keep charging forward!", stage, total)
+  gui.Text = string.format("Chapter %d / %d unlocked - keep chasing Toad's plan!", stage, total)
   gui.Parent = self.gui
   game:GetService("Debris"):AddItem(gui, 1.2)
 end

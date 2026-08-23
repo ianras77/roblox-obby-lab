@@ -116,7 +116,7 @@ function StageTemplates.Warmup(ctx)
     })
     balloon.Anchored = true
     balloon.Transparency = 0.2
-    addBillboard(model, balloon, "Toad's Wild Welcome", Color3.fromRGB(255, 230, 200))
+    addBillboard(model, balloon, "Riverbank Welcome", Color3.fromRGB(255, 230, 200))
   end
   return model, ctx.origin * CFrame.new(step * 5, 0, 0)
 end
@@ -463,7 +463,7 @@ function StageTemplates.PubChaos(ctx)
   basePlatform(model, ctx.origin, ctx.color, Vector3.new(length, 1, WorldGenConfig.PathWidth))
 
   for i = 1, 5 do
-    local barrel = Build.part({
+    Build.part({
       Name = "Barrel",
       Parent = model,
       CFrame = ctx.origin * CFrame.new((length / 6) * i, 1.4, (i % 2 == 0) and 4 or -4),
@@ -527,7 +527,7 @@ function StageTemplates.TrainTunnel(ctx)
   tunnel.Transparency = 0.6
   tunnel.CanCollide = false
 
-  local tracks = Build.part({
+  Build.part({
     Name = "Tracks",
     Parent = model,
     CFrame = ctx.origin * CFrame.new(length * 0.5, 0.2, 0),
@@ -582,7 +582,7 @@ function StageTemplates.SeesawGate(ctx)
 
   local gateId = string.format("Gate_%03d", ctx.stageIndex or ctx.random:NextInteger(1000, 9999))
 
-  local gate = Build.part({
+  Build.part({
     Name = "Gate",
     Parent = model,
     CFrame = ctx.origin * CFrame.new(length * 0.6, 3, 0),
@@ -869,6 +869,487 @@ function StageTemplates.FinaleRing(ctx)
   confetti.Rotation = NumberRange.new(-180, 180)
   confetti.Parent = model
   return model, ctx.origin * CFrame.new(radius * 2 + 20, 0, 0)
+end
+
+local function addPathLights(parent, origin, length, color, zOffset)
+  local count = math.max(2, math.floor(length / WorldGenConfig.LaneLightSpacing))
+  for i = 0, count do
+    local light = Build.part({
+      Name = "StoryLantern",
+      Parent = parent,
+      CFrame = origin * CFrame.new((length / count) * i, 2.5, zOffset or -WorldGenConfig.PathWidth * 0.42),
+      Size = Vector3.new(0.7, 0.7, 0.7),
+      Color = color,
+      Material = Enum.Material.Neon,
+      Tags = { "Beacon" },
+    })
+    light.CanCollide = false
+
+    local glow = Instance.new("PointLight")
+    glow.Range = 14
+    glow.Brightness = 2.6
+    glow.Color = color
+    glow.Parent = light
+  end
+end
+
+local function addSparkles(part, color, rate)
+  local sparkles = Instance.new("ParticleEmitter")
+  sparkles.Texture = "rbxassetid://241594419"
+  sparkles.Rate = rate or 10
+  sparkles.Lifetime = NumberRange.new(0.6, 1.1)
+  sparkles.Speed = NumberRange.new(2, 5)
+  sparkles.Color = ColorSequence.new(color, Color3.new(1, 1, 1))
+  sparkles.Parent = part
+  return sparkles
+end
+
+local function addArch(parent, origin, name, color)
+  local left = Build.part({
+    Name = name .. "LeftPost",
+    Parent = parent,
+    CFrame = origin * CFrame.new(0, 5, -WorldGenConfig.PathWidth * 0.48),
+    Size = Vector3.new(2, 10, 2),
+    Color = color,
+    Material = Enum.Material.WoodPlanks,
+    Tags = { "Beacon" },
+  })
+  left.CanCollide = false
+
+  local right = Build.part({
+    Name = name .. "RightPost",
+    Parent = parent,
+    CFrame = origin * CFrame.new(0, 5, WorldGenConfig.PathWidth * 0.48),
+    Size = Vector3.new(2, 10, 2),
+    Color = color,
+    Material = Enum.Material.WoodPlanks,
+    Tags = { "Beacon" },
+  })
+  right.CanCollide = false
+
+  local top = Build.part({
+    Name = name .. "Top",
+    Parent = parent,
+    CFrame = origin * CFrame.new(0, 10, 0),
+    Size = Vector3.new(3, 2, WorldGenConfig.PathWidth + 3),
+    Color = color:Lerp(Color3.fromRGB(255, 235, 150), 0.35),
+    Material = Enum.Material.WoodPlanks,
+    Tags = { "Beacon" },
+  })
+  top.CanCollide = false
+  addBillboard(parent, top, name, Color3.fromRGB(255, 238, 185))
+end
+
+function StageTemplates.RiverbankWelcome(ctx)
+  local model = Build.model("Stage_RiverbankWelcome", ctx.parent)
+  local step = 13
+  local length = step * 6
+
+  local waterLeft = Build.part({
+    Name = "FriendlyRiverLeft",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(length * 0.5, -1.2, -WorldGenConfig.PathWidth * 0.74),
+    Size = Vector3.new(length + 18, 2, 7),
+    Color = Color3.fromRGB(75, 180, 255),
+    Material = Enum.Material.Glass,
+  })
+  waterLeft.Transparency = 0.35
+  waterLeft.CanCollide = false
+
+  local waterRight = waterLeft:Clone()
+  waterRight.Name = "FriendlyRiverRight"
+  waterRight.CFrame = ctx.origin * CFrame.new(length * 0.5, -1.2, WorldGenConfig.PathWidth * 0.74)
+  waterRight.Parent = model
+
+  for i = 0, 6 do
+    local padColor = (i % 2 == 0) and Color3.fromRGB(110, 235, 150) or Color3.fromRGB(255, 222, 112)
+    local pad = basePlatform(model, ctx.origin * CFrame.new(step * i, 0, 0), padColor, Vector3.new(11, 1, 11))
+    pad.Material = Enum.Material.Grass
+    addSparkles(pad, Color3.fromRGB(255, 250, 170), 4)
+  end
+
+  addSign(model, ctx.origin * CFrame.new(8, 4, -7), "Riverbank start")
+  addSign(model, ctx.origin * CFrame.new(34, 6, 7), "Toad has a plan!")
+  addPathLights(model, ctx.origin, length, Color3.fromRGB(255, 245, 150), -WorldGenConfig.PathWidth * 0.45)
+
+  return model, ctx.origin * CFrame.new(length + 8, 0, 0)
+end
+
+function StageTemplates.MoleBurrowBounce(ctx)
+  local model = Build.model("Stage_MoleBurrowBounce", ctx.parent)
+  local length = WorldGenConfig.StageLengthMin + 14
+  local step = length / 6
+
+  for i = 0, 6 do
+    local hill = Build.part({
+      Name = "MoleHillBounce",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(step * i, (i % 2 == 0) and 2.4 or 5.2, (i % 3 - 1) * 3.5),
+      Size = Vector3.new(10, 1.5, 10),
+      Color = (i % 2 == 0) and Color3.fromRGB(145, 105, 70) or Color3.fromRGB(180, 145, 90),
+      Material = Enum.Material.Ground,
+      Tags = { "BouncePad", "Beacon" },
+      Attributes = { Power = ObstacleConfig.BouncePower * (1.1 + i * 0.04) },
+    })
+    hill.Transparency = 0.05
+    addSparkles(hill, Color3.fromRGB(255, 236, 170), 8)
+  end
+
+  for i = 1, 3 do
+    local crumbly = Build.part({
+      Name = "CrumblyBurrowBridge",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(step * (i * 2 - 0.5), 1.2, (i % 2 == 0) and 5 or -5),
+      Size = Vector3.new(8, 0.8, 8),
+      Color = Color3.fromRGB(205, 170, 112),
+      Material = Enum.Material.Ground,
+      Tags = { "FallingPlatform", "Beacon" },
+      Attributes = {
+        DropDelay = ObstacleConfig.FallingPlatformDelay,
+        RespawnTime = ObstacleConfig.FallingPlatformRespawn,
+      },
+    })
+    crumbly.Anchored = true
+  end
+
+  addSign(model, ctx.origin * CFrame.new(8, 6, -6), "Mole says: bounce!")
+  addPathLights(model, ctx.origin, length, Color3.fromRGB(255, 210, 130), WorldGenConfig.PathWidth * 0.44)
+  return model, ctx.origin * CFrame.new(length + 8, 0, 0)
+end
+
+function StageTemplates.RattyRiverStones(ctx)
+  local model = Build.model("Stage_RattyRiverStones", ctx.parent)
+  local length = WorldGenConfig.StageLengthMax
+
+  local river = Build.part({
+    Name = "DeepBlueRiver",
+    Parent = model,
+    CFrame = ctx.origin * CFrame.new(length * 0.5, -2.7, 0),
+    Size = Vector3.new(length + 18, 5, WorldGenConfig.PathWidth + 12),
+    Color = Color3.fromRGB(35, 120, 230),
+    Material = Enum.Material.Water,
+    Tags = { "KillBrick" },
+  })
+  river.Transparency = 0.25
+  addSparkles(river, Color3.fromRGB(145, 220, 255), 16)
+
+  for i = 0, 6 do
+    local stone = Build.part({
+      Name = "RiverStone",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 6) * i, 0.4, (i % 2 == 0) and -4 or 4),
+      Size = Vector3.new(8, 1.2, 7),
+      Color = Color3.fromRGB(220, 224, 210),
+      Material = Enum.Material.Slate,
+      Tags = { "Beacon" },
+    })
+    stone.Shape = Enum.PartType.Cylinder
+  end
+
+  for i = 1, 3 do
+    local leaf = Build.part({
+      Name = "SwayingLilyPad",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 4) * i, 1.1, 0),
+      Size = Vector3.new(9, 1, 9),
+      Color = Color3.fromRGB(80, 220, 120),
+      Material = Enum.Material.Grass,
+      Tags = { "MovingPlatform", "Beacon" },
+      Attributes = {
+        Amplitude = 5,
+        Speed = scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.45, 0.7, 1.3),
+        Axis = Vector3.new(0, 0, 1),
+        CarryPlayers = true,
+        Phase = i,
+      },
+    })
+    leaf.Shape = Enum.PartType.Cylinder
+  end
+
+  addSign(model, ctx.origin * CFrame.new(8, 5, -8), "Ratty's river route")
+  addPathLights(model, ctx.origin, length, Color3.fromRGB(120, 235, 255), -WorldGenConfig.PathWidth * 0.5)
+  return model, ctx.origin * CFrame.new(length + 10, 0, 0)
+end
+
+function StageTemplates.LibraryTumble(ctx)
+  local model, endCFrame = StageTemplates.ToadLibrary(ctx)
+  addSign(model, ctx.origin * CFrame.new(10, 8, 0), "Books are bouncing!")
+  return model, endCFrame
+end
+
+function StageTemplates.RunawayCaravan(ctx)
+  local model, endCFrame = StageTemplates.CaravanChase(ctx)
+  addSign(model, ctx.origin * CFrame.new(12, 6, 7), "Runaway caravan!")
+  return model, endCFrame
+end
+
+function StageTemplates.TavernBarrelHop(ctx)
+  local model, endCFrame = StageTemplates.PubChaos(ctx)
+  addSign(model, ctx.origin * CFrame.new(8, 6, -7), "Barrel hop!")
+  return model, endCFrame
+end
+
+function StageTemplates.JailbreakBars(ctx)
+  local model, endCFrame = StageTemplates.JailBreak(ctx)
+  addSign(model, ctx.origin * CFrame.new(8, 7, -7), "Wait for the bars")
+  return model, endCFrame
+end
+
+function StageTemplates.LaundryCartEscape(ctx)
+  local model = Build.model("Stage_LaundryCartEscape", ctx.parent)
+  local length = WorldGenConfig.StageLengthMin + 18
+
+  local floor = basePlatform(
+    model,
+    ctx.origin * CFrame.new(length * 0.5, 0, 0),
+    Color3.fromRGB(240, 230, 205),
+    Vector3.new(length, 1, WorldGenConfig.PathWidth)
+  )
+  floor.Material = Enum.Material.WoodPlanks
+
+  for i = 1, 4 do
+    local sheet = Build.part({
+      Name = "FlutteringSheet",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 5) * i, 4, 0),
+      Size = Vector3.new(1, 7, WorldGenConfig.PathWidth - 4),
+      Color = (i % 2 == 0) and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(180, 225, 255),
+      Material = Enum.Material.Fabric,
+      Tags = { "TimedTile" },
+      Attributes = { Cycle = ObstacleConfig.TimedTileInterval * 0.75 + i * 0.1 },
+    })
+    sheet.CanCollide = true
+  end
+
+  for i = 1, 3 do
+    local basket = Build.part({
+      Name = "LaundryBasketRide",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 4) * i, 1.6, (i % 2 == 0) and 5 or -5),
+      Size = Vector3.new(8, 1.2, 6),
+      Color = Color3.fromRGB(170, 115, 70),
+      Material = Enum.Material.WoodPlanks,
+      Tags = { "MovingPlatform", "Beacon" },
+      Attributes = {
+        Amplitude = 5,
+        Speed = scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.5, 0.8, 1.5),
+        Axis = Vector3.new(0, 0, 1),
+        CarryPlayers = true,
+        Phase = i * 0.8,
+      },
+    })
+    addSparkles(basket, Color3.fromRGB(255, 255, 210), 5)
+  end
+
+  addSign(model, ctx.origin * CFrame.new(9, 6, -7), "Laundry cart escape")
+  addPathLights(model, ctx.origin, length, Color3.fromRGB(255, 245, 180), WorldGenConfig.PathWidth * 0.45)
+  return model, ctx.origin * CFrame.new(length + 8, 0, 0)
+end
+
+function StageTemplates.BargeCrossing(ctx)
+  local model, endCFrame = StageTemplates.RiverBarge(ctx)
+  addSign(model, ctx.origin * CFrame.new(8, 6, -8), "Barge crossing")
+  return model, endCFrame
+end
+
+function StageTemplates.TrainTunnelDash(ctx)
+  local model, endCFrame = StageTemplates.TrainTunnel(ctx)
+  addSign(model, ctx.origin * CFrame.new(10, 7, 7), "Train tunnel dash")
+  return model, endCFrame
+end
+
+function StageTemplates.WildWoodGusts(ctx)
+  local model, endCFrame = StageTemplates.WildWoods(ctx)
+  addSign(model, ctx.origin * CFrame.new(8, 7, -7), "Wild Wood gusts")
+  return model, endCFrame
+end
+
+function StageTemplates.BadgerLanternPath(ctx)
+  local model = Build.model("Stage_BadgerLanternPath", ctx.parent)
+  local length = WorldGenConfig.StageLengthMax
+
+  basePlatform(model, ctx.origin, Color3.fromRGB(92, 72, 56), Vector3.new(12, 1, WorldGenConfig.PathWidth - 4))
+  for i = 1, 6 do
+    local z = (i % 2 == 0) and 5 or -5
+    local log = Build.part({
+      Name = "BadgerLogBridge",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 7) * i, 0.9 + i * 0.18, z),
+      Size = Vector3.new(10, 1.2, 5),
+      Color = Color3.fromRGB(105, 75, 45),
+      Material = Enum.Material.Wood,
+      Tags = { "Beacon" },
+    })
+    if i % 3 == 0 then
+      Build.tag(log, { "MovingPlatform" })
+      log:SetAttribute("Amplitude", 3)
+      log:SetAttribute("Speed", scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.35, 0.8, 1.4))
+      log:SetAttribute("Axis", Vector3.new(0, 0, 1))
+      log:SetAttribute("CarryPlayers", true)
+    end
+  end
+
+  for i = 0, 6 do
+    local lantern = Build.part({
+      Name = "BadgerLantern",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 6) * i, 6.5, (i % 2 == 0) and -8 or 8),
+      Size = Vector3.new(1.4, 2, 1.4),
+      Color = Color3.fromRGB(255, 214, 120),
+      Material = Enum.Material.Neon,
+      Tags = { "Beacon" },
+    })
+    lantern.CanCollide = false
+    local glow = Instance.new("PointLight")
+    glow.Range = 20
+    glow.Brightness = 4
+    glow.Color = Color3.fromRGB(255, 220, 150)
+    glow.Parent = lantern
+  end
+
+  basePlatform(
+    model,
+    ctx.origin * CFrame.new(length, 0.6, 0),
+    Color3.fromRGB(92, 72, 56),
+    Vector3.new(12, 1, WorldGenConfig.PathWidth - 4)
+  )
+  addSign(model, ctx.origin * CFrame.new(8, 6, 0), "Follow Badger's lights")
+  return model, ctx.origin * CFrame.new(length + 8, 0, 0)
+end
+
+function StageTemplates.MotorcarMadness(ctx)
+  local model, endCFrame = StageTemplates.MotorMadness(ctx)
+  addSign(model, ctx.origin * CFrame.new(10, 6, 7), "Motorcar madness")
+  return model, endCFrame
+end
+
+function StageTemplates.RoadsideConeSprint(ctx)
+  local model = Build.model("Stage_RoadsideConeSprint", ctx.parent)
+  local length = WorldGenConfig.StageLengthMin + 18
+
+  local road = basePlatform(
+    model,
+    ctx.origin * CFrame.new(length * 0.5, 0, 0),
+    Color3.fromRGB(55, 55, 62),
+    Vector3.new(length, 1, WorldGenConfig.PathWidth)
+  )
+  road.Material = Enum.Material.Asphalt
+  road:SetAttribute("Speed", scaleSpeed(ctx, ObstacleConfig.ConveyorSpeed * 1.3, 0.7, 1.5))
+  Build.tag(road, { "Conveyor" })
+
+  for i = 1, 7 do
+    local cone = Build.part({
+      Name = "StoryCone",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 8) * i, 1.2, (i % 2 == 0) and 5 or -5),
+      Size = Vector3.new(2, 3, 2),
+      Color = Color3.fromRGB(255, 140, 45),
+      Material = Enum.Material.Neon,
+      Tags = { "Rotator", "KillBrick" },
+      Attributes = { RotSpeed = scaleSpeed(ctx, ObstacleConfig.RotatorSpeed, 0.8, 1.7) },
+    })
+    cone.Shape = Enum.PartType.Cylinder
+    cone.CanCollide = false
+  end
+
+  local sidewalk = basePlatform(
+    model,
+    ctx.origin * CFrame.new(length * 0.5, 0.5, WorldGenConfig.PathWidth * 0.55),
+    Color3.fromRGB(230, 230, 220),
+    Vector3.new(length, 0.5, 4)
+  )
+  sidewalk.Material = Enum.Material.SmoothPlastic
+
+  addSign(model, ctx.origin * CFrame.new(8, 6, -7), "Cone sprint!")
+  addPathLights(model, ctx.origin, length, Color3.fromRGB(255, 210, 120), -WorldGenConfig.PathWidth * 0.45)
+  return model, ctx.origin * CFrame.new(length + 8, 0, 0)
+end
+
+function StageTemplates.HomecomingRingRun(ctx)
+  local model = Build.model("Stage_HomecomingRingRun", ctx.parent)
+  local length = WorldGenConfig.StageLengthMax
+  local steps = 9
+
+  for i = 0, steps do
+    local pct = i / steps
+    local z = math.sin(pct * math.pi * 2) * 7
+    local y = math.sin(pct * math.pi) * 4
+    local platform = basePlatform(
+      model,
+      ctx.origin * CFrame.new(length * pct, y, z),
+      Color3.fromRGB(120, 235, 210):Lerp(Color3.fromRGB(255, 210, 120), pct),
+      Vector3.new(9, 1, 9)
+    )
+    platform.Material = Enum.Material.Neon
+    addSparkles(platform, Color3.fromRGB(255, 245, 180), 8)
+  end
+
+  for i = 1, 4 do
+    local ring = Build.part({
+      Name = "HomecomingRing",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 5) * i, 5.5, 0),
+      Size = Vector3.new(1.2, 10, WorldGenConfig.PathWidth - 4),
+      Color = Color3.fromRGB(255, 230, 120),
+      Material = Enum.Material.Neon,
+      Tags = { "Beacon" },
+    })
+    ring.CanCollide = false
+  end
+
+  addSign(model, ctx.origin * CFrame.new(8, 7, -8), "Homecoming ring run")
+  return model, ctx.origin * CFrame.new(length + 8, 0, 0)
+end
+
+function StageTemplates.ToadHallFireworks(ctx)
+  local model = Build.model("Stage_ToadHallFireworks", ctx.parent)
+  local length = WorldGenConfig.StageLengthMin + 24
+
+  local carpet = basePlatform(
+    model,
+    ctx.origin * CFrame.new(length * 0.5, 0, 0),
+    Color3.fromRGB(220, 55, 80),
+    Vector3.new(length, 1, 10)
+  )
+  carpet.Material = Enum.Material.Fabric
+
+  for i = 0, 5 do
+    local star = Build.part({
+      Name = "FinaleStarStep",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new((length / 5) * i, 1.2, (i % 2 == 0) and -5 or 5),
+      Size = Vector3.new(8, 1, 8),
+      Color = (i % 2 == 0) and Color3.fromRGB(255, 225, 110) or Color3.fromRGB(120, 240, 255),
+      Material = Enum.Material.Neon,
+      Tags = { "Beacon" },
+    })
+    addSparkles(star, Color3.fromRGB(255, 255, 200), 14)
+  end
+
+  addArch(model, ctx.origin * CFrame.new(length * 0.82, 0, 0), "Toad Hall Party", Color3.fromRGB(120, 80, 50))
+
+  for i = 1, 5 do
+    local firework = Build.part({
+      Name = "FinaleFirework",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(length * (0.2 + i * 0.12), 18 + i, (i % 2 == 0) and 8 or -8),
+      Size = Vector3.new(1, 1, 1),
+      Color = Color3.fromRGB(255, 255, 255),
+      Material = Enum.Material.Neon,
+    })
+    firework.CanCollide = false
+    local burst = Instance.new("ParticleEmitter")
+    burst.Texture = "rbxassetid://258128463"
+    burst.Rate = 26
+    burst.Lifetime = NumberRange.new(0.8, 1.4)
+    burst.Speed = NumberRange.new(18, 28)
+    burst.SpreadAngle = Vector2.new(360, 360)
+    burst.Color = ColorSequence.new(Color3.fromRGB(255, 230, 120), Color3.fromRGB(120, 240, 255))
+    burst.Parent = firework
+  end
+
+  addSign(model, ctx.origin * CFrame.new(10, 7, -8), "Final dash to Toad Hall!")
+  return model, ctx.origin * CFrame.new(length + 8, 0, 0)
 end
 
 return StageTemplates
