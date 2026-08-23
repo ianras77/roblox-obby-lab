@@ -20,3 +20,6 @@ Practice run can qualify for a leaderboard.
 
 Also verify a new player cannot activate Time Trial, and that it becomes
 available only after an Adventure completion.
+
+Reset and death should clear residual velocity before safe-spawn teleport; test
+this at moving platforms, carts, and hazards.

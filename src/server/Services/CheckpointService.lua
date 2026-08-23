@@ -215,7 +215,11 @@ function CheckpointService:teleportToStage(player, targetStage)
     if stage.stageIndex == targetStage then
       local cp = stage.checkpoint
       if cp and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-        player.Character.HumanoidRootPart.CFrame = cp.CFrame + Vector3.new(0, 5, 0)
+        local root = player.Character.HumanoidRootPart
+        root.AssemblyLinearVelocity = Vector3.new()
+        root.AssemblyAngularVelocity = Vector3.new()
+        root.CFrame = stage.safeSpawn or (cp.CFrame + Vector3.new(0, 5, 0))
+        root:SetNetworkOwner(nil)
       end
       return true
     end
