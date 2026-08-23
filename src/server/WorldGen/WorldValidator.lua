@@ -305,7 +305,8 @@ function WorldValidator.validate(
         if descendant:IsA("BasePart") and not descendant.Anchored then
           local intentionalRide = descendant:FindFirstAncestorWhichIsA("Model")
           local isCartPart = intentionalRide and intentionalRide:FindFirstChild("Seat") ~= nil
-          if not isCartPart then
+          local isIntentionalPhysics = descendant:GetAttribute("PhysicsDecor") == true
+          if not isCartPart and not isIntentionalPhysics then
             table.insert(errors, "unanchored environment part: " .. descendant:GetFullName())
           end
         end

@@ -163,6 +163,7 @@ grep -q 'did not return a valid exit CFrame' "$ROOT_DIR/src/server/WorldGen/Stag
 grep -q 'duplicate collectible id' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "duplicate collectible validation missing"
 grep -q 'does not progress forward' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "forward geometry validation missing"
 grep -q 'unanchored environment part' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "anchored environment validation missing"
+grep -q 'PhysicsDecor' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "intentional physics decoration marker missing"
 grep -q 'insufficient standing room' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "checkpoint standing-room validation missing"
 grep -q 'overlaps hazard' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "checkpoint hazard-overlap validation missing"
 grep -q 'failed validation with' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "invalid generated worlds are not rejected"

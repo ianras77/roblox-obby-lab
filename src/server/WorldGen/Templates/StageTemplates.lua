@@ -711,7 +711,7 @@ function StageTemplates.MotorMadness(ctx)
       Size = Vector3.new(1.5, 2.6, 1.5),
       Color = Color3.fromRGB(255, 140, 40),
       Material = Enum.Material.Plastic,
-      Anchored = false,
+      Anchored = true,
     })
     cone.Shape = Enum.PartType.Cylinder
   end
@@ -819,6 +819,7 @@ function StageTemplates.WildWoods(ctx)
       Material = Enum.Material.Neon,
       Anchored = false,
       Tags = { "Beacon" },
+      Attributes = { PhysicsDecor = true },
     })
     local light = Instance.new("PointLight")
     light.Range = 16

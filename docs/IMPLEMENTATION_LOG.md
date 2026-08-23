@@ -1276,3 +1276,14 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; current-SHA GitHub CI verification is pending.
 - Unverified: Roblox Studio and Creator Hub checks remain pending.
+
+## 2026-08-23 — Resolve generated-world physics validation conflict
+
+- Completed: motorcar cones are now anchored deterministic scenery, while the
+  intentionally rope-suspended Wild Wood lanterns carry an explicit
+  `PhysicsDecor` marker accepted by the validator.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; current-SHA GitHub CI verification is
+  pending.
+- Unverified: live physics behavior and generated-world traversal still require
+  Roblox Studio testing.
