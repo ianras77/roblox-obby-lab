@@ -21,6 +21,7 @@ function EnvironmentController.new()
   self.colorCorrection = Lighting:FindFirstChildOfClass("ColorCorrectionEffect")
     or Instance.new("ColorCorrectionEffect")
   self.colorCorrection.Parent = Lighting
+  self.activeTweens = {}
   self:bind()
   self:syncInitialState()
   return self
@@ -46,20 +47,36 @@ function EnvironmentController:transition(stage: number)
   local config = ZoneConfig[zoneIndex]
   local duration = self.player:GetAttribute("Accessibility_reducedMotion") and 0.05 or 1.25
   local info = TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
-  TweenService:Create(Lighting, info, {
-    Ambient = config.Ambient,
-    OutdoorAmbient = config.Ambient,
-    FogColor = config.FogColor,
-    FogEnd = config.FogEnd or 340,
-    ClockTime = config.ClockTime or 14,
-  }):Play()
-  TweenService:Create(self.atmosphere, info, {
-    Color = config.SkyColor,
-    Decay = config.FogColor,
-  }):Play()
-  TweenService:Create(self.colorCorrection, info, {
-    TintColor = config.ThemeColor,
-  }):Play()
+  for _, tween in ipairs(self.activeTweens) do
+    tween:Cancel()
+  end
+  self.activeTweens = {}
+  table.insert(
+    self.activeTweens,
+    TweenService:Create(Lighting, info, {
+      Ambient = config.Ambient,
+      OutdoorAmbient = config.Ambient,
+      FogColor = config.FogColor,
+      FogEnd = config.FogEnd or 340,
+      ClockTime = config.ClockTime or 14,
+    })
+  )
+  table.insert(
+    self.activeTweens,
+    TweenService:Create(self.atmosphere, info, {
+      Color = config.SkyColor,
+      Decay = config.FogColor,
+    })
+  )
+  table.insert(
+    self.activeTweens,
+    TweenService:Create(self.colorCorrection, info, {
+      TintColor = config.ThemeColor,
+    })
+  )
+  for _, tween in ipairs(self.activeTweens) do
+    tween:Play()
+  end
 end
 
 return EnvironmentController

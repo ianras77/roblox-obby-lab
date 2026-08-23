@@ -546,3 +546,12 @@
   whitespace checks pass locally.
 - Unverified: visual transition quality and lighting replication require
   Studio/device testing.
+
+## 2026-08-23 — Bound environment transition lifecycle
+
+- Completed: zone presentation now cancels prior Lighting, Atmosphere, and
+  ColorCorrection tweens before starting a new transition, preventing stacked
+  animations during rapid progression.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: visual smoothness and device performance require Studio testing.
