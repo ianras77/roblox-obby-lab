@@ -1065,6 +1065,16 @@
 - Unverified: corridor width against real Humanoid movement and jump feasibility
   requires Studio playtesting.
 
+## 2026-08-23 — Expose a structured zone manifest
+
+- Completed: `WorldBuilder` now returns authoritative zone records containing
+  model, index, entrance, exit, measured bounds, and center, enabling future
+  presentation and inspection code to use zone geometry without recomputing it.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: runtime zone presentation and streamed-world inspection require
+  Studio testing.
+
 ## 2026-08-23 — Separate route and exploration completion
 
 - Completed: the results screen now reports route completion separately from

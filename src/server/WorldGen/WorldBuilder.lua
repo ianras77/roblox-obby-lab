@@ -96,6 +96,7 @@ function WorldBuilder.buildWorld(seed)
   local lastCFrame = CFrame.new(0, 5, 0)
   local previousZoneExit = nil
   local allStages = {}
+  local zones = {}
 
   for zoneIndex = 1, GameConfig.Zones do
     local zoneCfg = ZoneConfig[((zoneIndex - 1) % #ZoneConfig) + 1]
@@ -110,6 +111,15 @@ function WorldBuilder.buildWorld(seed)
       previousExit = previousZoneExit,
     })
     DecorBuilder.decorateZone(zoneModel, zoneCfg)
+    local zoneCFrame, zoneSize = zoneModel:GetBoundingBox()
+    table.insert(zones, {
+      model = zoneModel,
+      zoneIndex = zoneIndex,
+      entrance = lastCFrame,
+      exit = endCFrame,
+      bounds = zoneSize,
+      center = zoneCFrame.Position,
+    })
     -- Lighting presentation is transitioned locally by EnvironmentController.
     for _, s in ipairs(stages) do
       table.insert(allStages, s)
@@ -132,6 +142,7 @@ function WorldBuilder.buildWorld(seed)
     model = obbyModel,
     startGate = startGate,
     stages = allStages,
+    zones = zones,
     seed = seed,
     totalStages = totalStages,
     progressEvent = progressEvent,
