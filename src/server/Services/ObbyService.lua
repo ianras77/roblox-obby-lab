@@ -46,6 +46,7 @@ function ObbyService.new()
   self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent)
   self.checkpoints:bindCheckpoints()
   self.keyProgress = {}
+  self.collectedKeys = {}
   self.totalKeys = 0
   self:scanBehaviors()
   self:hookCommands()
@@ -87,21 +88,34 @@ function ObbyService:hookCommands()
       end
     end))
   end))
+  self.maid:Give(Players.PlayerRemoving:Connect(function(player)
+    self.keyProgress[player] = nil
+    self.collectedKeys[player] = nil
+  end))
 end
 
 function ObbyService:registerKey(part)
+  local keyId = part:GetAttribute("KeyId")
+  if not keyId then
+    warn("[Keys] collectible missing stable KeyId", part:GetFullName())
+    return
+  end
   self.totalKeys = self.totalKeys + 1
   self.maid:Give(part.Touched:Connect(function(hit)
     local player = Players:GetPlayerFromCharacter(hit.Parent)
     if not player then
       return
     end
+    self.collectedKeys[player] = self.collectedKeys[player] or {}
+    if self.collectedKeys[player][keyId] then
+      return
+    end
+    self.collectedKeys[player][keyId] = true
     self.keyProgress[player] = (self.keyProgress[player] or 0) + 1
     local sound = part:FindFirstChildOfClass("Sound")
     if sound then
       sound:Play()
     end
-    part:Destroy()
     if self.world.keyEvent then
       self.world.keyEvent:FireClient(player, { found = self.keyProgress[player], total = self.totalKeys })
     end

@@ -4,17 +4,14 @@ local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild
 local RandomUtil = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Random"))
 local ZoneBuilder = require(script.Parent.ZoneBuilder)
 local DecorBuilder = require(script.Parent.DecorBuilder)
+local WorldValidator = require(script.Parent.WorldValidator)
 
 local WorldBuilder = {}
 
 local function clearExisting()
-  local existing = workspace:FindFirstChild("Obby")
+  local existing = workspace:FindFirstChild("GeneratedObby")
   if existing then
     existing:Destroy()
-  end
-  local weather = workspace:FindFirstChild("Weather")
-  if weather then
-    weather:Destroy()
   end
 end
 
@@ -44,7 +41,10 @@ function WorldBuilder.buildWorld(seed)
   local progressEvent, keyEvent, finaleEvent = ensureFolders()
 
   local obbyModel = Instance.new("Model")
-  obbyModel.Name = "Obby"
+  obbyModel.Name = "GeneratedObby"
+  obbyModel:SetAttribute("GeneratorOwner", "ToadsGreatEscape")
+  obbyModel:SetAttribute("GeneratorVersion", "2")
+  obbyModel:SetAttribute("Seed", seed)
   obbyModel.Parent = workspace
 
   -- Spawn pad for clean starting flow
@@ -79,7 +79,12 @@ function WorldBuilder.buildWorld(seed)
     for _, s in ipairs(stages) do
       table.insert(allStages, s)
     end
-    lastCFrame = endCFrame * CFrame.new(GameConfig.StageSpacing.X, GameConfig.ElevationPerZone, 0)
+    lastCFrame = endCFrame * CFrame.new(0, GameConfig.ElevationPerZone, 0)
+  end
+
+  local validationErrors = WorldValidator.validate(allStages, totalStages)
+  for _, err in ipairs(validationErrors) do
+    warn("[WorldValidator] " .. err)
   end
 
   print(string.format("[Obby] Built %d zones, %d stages, seed=%s", GameConfig.Zones, totalStages, tostring(seed)))
@@ -93,6 +98,7 @@ function WorldBuilder.buildWorld(seed)
     progressEvent = progressEvent,
     keyEvent = keyEvent,
     finaleEvent = finaleEvent,
+    validationErrors = validationErrors,
   }
 end
 

@@ -142,7 +142,7 @@ function UIController:updateKeys(found, total)
 end
 
 function UIController:guideToStage(nextStage)
-  local obby = workspace:FindFirstChild("Obby")
+  local obby = workspace:FindFirstChild("GeneratedObby")
   if not obby then
     return
   end

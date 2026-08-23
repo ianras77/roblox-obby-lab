@@ -28,8 +28,11 @@ function ZoneBuilder.buildZone(args)
       checkpoint = checkpoint,
       stageIndex = stageIndex,
       stageType = stageType,
+      stageId = stageModel:GetAttribute("StageId"),
+      entrance = currentCFrame,
+      exit = endCFrame,
     })
-    currentCFrame = endCFrame * CFrame.new(GameConfig.StageSpacing.X, args.elevationStep, 0)
+    currentCFrame = endCFrame * CFrame.new(0, args.elevationStep, 0)
   end
 
   return zoneModel, stages, currentCFrame

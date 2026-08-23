@@ -67,7 +67,12 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
   end
   local humanoidRoot = hit.Parent:FindFirstChild("HumanoidRootPart")
   if humanoidRoot then
+    local previous = player:GetAttribute("Checkpoint") or 0
+    if stageIndex <= previous then
+      return
+    end
     player:SetAttribute("Checkpoint", stageIndex)
+    player:SetAttribute("CheckpointId", checkpoint:GetAttribute("StageId"))
     local sound = checkpoint:FindFirstChildOfClass("Sound")
     if sound then
       sound:Play()
@@ -91,7 +96,7 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
       local finale = game:GetService("ReplicatedStorage"):FindFirstChild("SharedEvents")
       local evt = finale and finale:FindFirstChild(GameConfig.FinaleRemote)
       if evt then
-        evt:FireAllClients()
+        evt:FireClient(player, { stage = stageIndex })
       end
     end
   end

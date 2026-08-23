@@ -3,6 +3,7 @@ local StageTemplates = require(script.Parent:WaitForChild("Templates"):WaitForCh
 local Build = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Build"))
 local WorldGenConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("WorldGenConfig"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
+local StageConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("StageConfig"))
 
 local StageBuilder = {}
 
@@ -35,9 +36,17 @@ function StageBuilder.buildStage(args)
     builtModel.Parent = model
   end
 
+  endCFrame = endCFrame or (args.origin * CFrame.new(WorldGenConfig.StageLengthMax, 0, 0))
+  local definition = StageConfig.getByIndex(args.stageIndex)
+  local stageId = definition and definition.id or string.format("stage_%03d", args.stageIndex)
+  model:SetAttribute("StageId", stageId)
+  model:SetAttribute("StageIndex", args.stageIndex)
+
   local checkpointCFrame = endCFrame * CFrame.new(0, WorldGenConfig.PlatformSize.Y + 2, 0)
   local cp =
     Build.checkpoint(string.format("CP_%03d", args.stageIndex), checkpointCFrame, WorldGenConfig.CheckpointSize, model)
+  cp:SetAttribute("StageId", stageId)
+  cp:SetAttribute("StageIndex", args.stageIndex)
 
   -- Floating stage banner visible from afar
   local banner = Instance.new("BillboardGui")
@@ -76,6 +85,7 @@ function StageBuilder.buildStage(args)
   if args.random:NextNumber() < GameConfig.KeySpawnChance then
     local keyOffset = args.random:NextNumber(-6, 6)
     local key = Build.collectibleKey(args.origin * CFrame.new(10, 6, keyOffset), model)
+    key:SetAttribute("KeyId", string.format("%s_key_01", stageId))
     key:SetAttribute("StageIndex", args.stageIndex)
   end
 
