@@ -356,6 +356,7 @@ function ObbyService:scanBehaviors()
   end)
 
   add("Cart", function(part)
+    part:SetNetworkOwner(nil)
     table.insert(self.behaviors.carts, {
       base = part,
       seat = part.Parent:FindFirstChild("Seat"),
@@ -495,35 +496,39 @@ function ObbyService:startHeartbeat()
       end
       local gateActiveCount = {}
       for _, pad in ipairs(self.behaviors.pads) do
-        pad.active = false
-        for _, p in ipairs(pad.part:GetTouchingParts()) do
-          if p.Parent and p.Parent:FindFirstChild("HumanoidRootPart") then
-            pad.active = true
-            break
+        if pad.part and pad.part.Parent then
+          pad.active = false
+          for _, p in ipairs(pad.part:GetTouchingParts()) do
+            if p.Parent and p.Parent:FindFirstChild("HumanoidRootPart") then
+              pad.active = true
+              break
+            end
           end
-        end
-        if pad.active and pad.gateId then
-          gateActiveCount[pad.gateId] = (gateActiveCount[pad.gateId] or 0) + 1
+          if pad.active and pad.gateId then
+            gateActiveCount[pad.gateId] = (gateActiveCount[pad.gateId] or 0) + 1
+          end
         end
       end
       local playerCount = #Players:GetPlayers()
       for gateId, gate in pairs(self.behaviors.gates) do
-        local hits = gateActiveCount[gateId] or 0
-        if hits >= 2 then
-          self.gateTimers[gateId] = 0
-          gate.Transparency = 0.9
-          gate.CanCollide = false
-          gate.Color = Color3.fromRGB(120, 255, 120)
-        else
-          if hits >= 1 and playerCount <= 1 then
-            self.gateTimers[gateId] = (self.gateTimers[gateId] or 0) + queryDt
-          else
+        if gate and gate.Parent then
+          local hits = gateActiveCount[gateId] or 0
+          if hits >= 2 then
             self.gateTimers[gateId] = 0
+            gate.Transparency = 0.9
+            gate.CanCollide = false
+            gate.Color = Color3.fromRGB(120, 255, 120)
+          else
+            if hits >= 1 and playerCount <= 1 then
+              self.gateTimers[gateId] = (self.gateTimers[gateId] or 0) + queryDt
+            else
+              self.gateTimers[gateId] = 0
+            end
+            local soloOpen = (self.gateTimers[gateId] or 0) >= 6
+            gate.Transparency = soloOpen and 0.9 or 0
+            gate.CanCollide = not soloOpen
+            gate.Color = soloOpen and Color3.fromRGB(200, 255, 200) or Color3.fromRGB(255, 120, 120)
           end
-          local soloOpen = (self.gateTimers[gateId] or 0) >= 6
-          gate.Transparency = soloOpen and 0.9 or 0
-          gate.CanCollide = not soloOpen
-          gate.Color = soloOpen and Color3.fromRGB(200, 255, 200) or Color3.fromRGB(255, 120, 120)
         end
       end
     end
@@ -542,14 +547,18 @@ function ObbyService:startHeartbeat()
     end
 
     for _, item in ipairs(self.behaviors.lava) do
-      local pos = item.part.Position
-      local y = item.floorY - 8 + math.abs(math.sin(tickNow * (item.speed / 6))) * 12
-      item.part.Position = Vector3.new(pos.X, y, pos.Z)
+      if item.part and item.part.Parent then
+        local pos = item.part.Position
+        local y = item.floorY - 8 + math.abs(math.sin(tickNow * (item.speed / 6))) * 12
+        item.part.Position = Vector3.new(pos.X, y, pos.Z)
+      end
     end
 
     for _, item in ipairs(self.behaviors.beacons) do
-      local bob = math.sin(tickNow * 1.5) * 0.5
-      item.part.CFrame = item.origin * CFrame.new(0, bob, 0) * CFrame.Angles(0, dt * 1.2, 0)
+      if item.part and item.part.Parent then
+        local bob = math.sin(tickNow * 1.5) * 0.5
+        item.part.CFrame = item.origin * CFrame.new(0, bob, 0) * CFrame.Angles(0, dt * 1.2, 0)
+      end
     end
 
     for _, item in ipairs(self.behaviors.carts) do
