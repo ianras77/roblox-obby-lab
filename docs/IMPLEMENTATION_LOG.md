@@ -989,3 +989,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: real concurrent-session conflict behavior requires a staging
   DataStore test.
+
+## 2026-08-23 — Apply settings before initial HUD presentation
+
+- Completed: the client now applies persisted accessibility and audio settings
+  before rendering the initial timer, progress, key state, and effects, avoiding
+  a transient default presentation during join synchronization.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: visible join-time behavior under real network latency requires
+  Studio testing.

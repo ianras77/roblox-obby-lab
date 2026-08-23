@@ -47,16 +47,16 @@ function UIController:syncInitialState()
   end)
   if ok and payload then
     self.highestChapter = payload.highestChapter or 0
-    self:updateTimerState(payload)
-    self:updateProgress(payload.stage or 0, payload.total or 1)
-    self:updateKeys(payload.keys or 0, payload.totalKeys or 0)
-    self:applyCollectedKeys(payload.collectedKeys)
     for key, enabled in pairs(payload.settings or {}) do
       if self.settings[key] ~= nil and (type(enabled) == "boolean" or type(enabled) == "number") then
         self.settings[key] = enabled
         self.player:SetAttribute("Accessibility_" .. key, enabled)
       end
     end
+    self:updateTimerState(payload)
+    self:updateProgress(payload.stage or 0, payload.total or 1)
+    self:updateKeys(payload.keys or 0, payload.totalKeys or 0)
+    self:applyCollectedKeys(payload.collectedKeys)
     local scale = self.gui:FindFirstChild("AccessibilityScale")
     if scale then
       scale.Scale = self.settings.largeText and 1.15 or 1

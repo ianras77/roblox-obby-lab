@@ -148,6 +148,7 @@ grep -q 'function CheckpointService:setPracticeCheckpoint' "$ROOT_DIR/src/server
 grep -q 'showTimer = "Show Time Trial timer"' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "timer visibility setting is missing"
 grep -q 'function UIController:applyAudioVolumes' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "local audio volume mixing is missing"
 grep -q 'function UIController:refreshVolumeLabels' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "audio control labels are not synchronized"
+grep -q 'self:updateTimerState(payload)' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "initial timer state sync missing"
 grep -q 'masterVolume = "number"' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "numeric audio settings are not server-validated"
 grep -q 'SoundGroups.ensure("Music"' "$ROOT_DIR/src/server/ServerMain.server.lua" || fail "Music SoundGroup is missing"
 grep -q 'SoundGroups.ensure("Ambience"' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "Ambience SoundGroup is missing"
