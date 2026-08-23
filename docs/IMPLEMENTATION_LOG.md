@@ -1065,6 +1065,16 @@
 - Unverified: live malformed stage identity injection remains a Studio-only
   test.
 
+## 2026-08-23 — Cross-check model identity attributes
+
+- Completed: `WorldValidator` now compares generated model `StageId` and
+  `StageIndex` attributes with the stage manifest in addition to canonical
+  configuration, preventing metadata drift between runtime instances and
+  persistence-facing records.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live attribute mutation remains a Studio-only test.
+
 ## 2026-08-23 — Harden malformed stage diagnostics
 
 - Completed: `WorldValidator` now requires bounded string stage IDs and finite

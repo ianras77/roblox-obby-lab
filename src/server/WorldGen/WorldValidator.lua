@@ -115,6 +115,14 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     if modelIsModel and stageModel:GetAttribute("ZoneIndex") ~= expectedZone then
       table.insert(errors, string.format("stage %s model is outside its expected zone", stageLabel(stage)))
     end
+    if modelIsModel then
+      if stageModel:GetAttribute("StageId") ~= stage.stageId then
+        table.insert(errors, string.format("stage %s model ID differs from manifest", stageLabel(stage)))
+      end
+      if stageModel:GetAttribute("StageIndex") ~= stage.stageIndex then
+        table.insert(errors, string.format("stage %s model index differs from manifest", stageLabel(stage)))
+      end
+    end
     if modelIsModel and validZoneModel and stageModel.Parent ~= stage.zoneModel then
       table.insert(errors, string.format("stage %s is not parented to its zone model", stageLabel(stage)))
     end
