@@ -24,11 +24,16 @@ function AnalyticsService:track(player: Player?, eventName: string, fields: { [s
   if not self.enabled or not allowedEvents[eventName] or not player then
     return
   end
-  -- Keep the integration boundary deliberately small. A production sink can
-  -- receive only allowlisted events and a fixed low-cardinality value.
-  local _ = fields
+  -- Roblox custom events accept one numeric value. Chapter events use their
+  -- bounded numeric chapter; all other events use `1`. Never encode a key ID,
+  -- user text, or arbitrary payload.
+  local value = 1
+  local chapter = fields and tonumber(fields.chapter or fields.stage)
+  if chapter and chapter % 1 == 0 and chapter >= 1 and chapter <= 18 then
+    value = chapter
+  end
   local ok, err = pcall(function()
-    RobloxAnalytics:LogCustomEvent(player, eventName, 1)
+    RobloxAnalytics:LogCustomEvent(player, eventName, value)
   end)
   if not ok then
     warn(string.format("[Analytics] event failed (%s): %s", eventName, tostring(err)))

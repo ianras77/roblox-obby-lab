@@ -1519,3 +1519,12 @@
 - Tests: local contracts, Stylua, and whitespace checks pass; GitHub CI failure
   reproduction was identified from the Selene log and requires the new commit
   to rerun.
+
+## 2026-08-23 — Preserve bounded chapter context in analytics
+
+- Completed: allowlisted chapter events now submit their validated numeric
+  chapter as the Roblox custom-event value; arbitrary fields and key IDs remain
+  excluded from telemetry.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live analytics delivery remains
+  Studio-unverified.
