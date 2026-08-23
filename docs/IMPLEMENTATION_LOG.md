@@ -9,6 +9,15 @@
   whitespace checks pass locally.
 - Unverified: live chat command behavior requires Studio testing.
 
+## 2026-08-23 — Snapshot profiles before datastore writes
+
+- Completed: saves now sanitize a stable profile snapshot before entering the
+  yielding `UpdateAsync` path, preventing concurrent touches/settings changes
+  from mutating the value mid-save.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live concurrent save behavior requires staging DataStore tests.
+
 ## 2026-08-23 — Require a live character at the Time Trial gate
 
 - Completed: Time Trial gate admission now requires a live Humanoid in addition

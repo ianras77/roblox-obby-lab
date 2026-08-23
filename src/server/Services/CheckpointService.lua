@@ -126,7 +126,8 @@ function CheckpointService:saveCheckpoint(player)
   local profile = self.profiles[player] or ProfileSchema.default()
   profile.highestChapter = math.max(profile.highestChapter, player:GetAttribute("Checkpoint") or 0)
   self.profiles[player] = profile
-  self.store:SetAsync("player:" .. tostring(player.UserId), profile)
+  local snapshot = ProfileSchema.sanitize(profile)
+  self.store:SetAsync("player:" .. tostring(player.UserId), snapshot)
 end
 
 function CheckpointService:getProfile(player)
