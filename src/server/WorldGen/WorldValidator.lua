@@ -43,8 +43,13 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     end
   end
   for _, key in ipairs(CollectionService:GetTagged("KeyCollectible")) do
-    if not key:GetAttribute("KeyId") then
+    local keyId = key:GetAttribute("KeyId")
+    if not keyId then
       table.insert(errors, "collectible missing KeyId: " .. key:GetFullName())
+    elseif ids[keyId] then
+      table.insert(errors, "duplicate collectible id: " .. keyId)
+    else
+      ids[keyId] = true
     end
   end
   return errors, #stages

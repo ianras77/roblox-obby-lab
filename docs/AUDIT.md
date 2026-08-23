@@ -26,7 +26,8 @@ manual Studio comparison before either is treated as authoritative.
 - Workspace cleanup uses broad names (`Obby`, `Weather`).
 - A checkpoint touch always overwrites the player's checkpoint, including with
   an earlier stage; progress is broadcast only after a touch.
-- Keys are randomly created and globally destroyed on the first player's touch.
+- Keys are now authored deterministically with stable IDs and per-player credit;
+  duplicate-ID validation is active.
 - Persistence now has an explicit environment gate, versioned profile schema,
   bounded retry wrapper, autosave, and shutdown save. Migration coverage and
   live DataStore behavior still require Studio validation.

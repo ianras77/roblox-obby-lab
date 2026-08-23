@@ -30,4 +30,5 @@ grep -q 'approvedForRelease' "$ROOT_DIR/src/shared/Config/AssetRegistry.lua" || 
 grep -q 'playFirstApprovedMusic' "$ROOT_DIR/src/server/ServerMain.server.lua" || fail "asset approval gate missing"
 grep -q 'ChapterFlavor' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "chapter presentation metadata missing"
 grep -q 'StageBuildResult' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "explicit stage build result missing"
+grep -q 'duplicate collectible id' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "duplicate collectible validation missing"
 echo "production contracts ok"
