@@ -11,6 +11,7 @@ local function ensureSound(name, soundId)
   sound.SoundId = soundId or ""
   sound.Looped = true
   sound.Volume = 0.4
+  sound.SoundGroup = SoundService:FindFirstChild("Ambience")
   sound.Parent = SoundService
   if soundId and soundId ~= "" then
     sound:Play()

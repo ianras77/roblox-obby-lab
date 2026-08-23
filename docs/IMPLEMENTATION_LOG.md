@@ -851,3 +851,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: migration behavior against live legacy records requires a
   Studio sandbox DataStore run.
+
+## 2026-08-23 — Route audio through production SoundGroups
+
+- Completed: server startup now creates shared Music, Ambience, SFX, and UI
+  buses; approved music, zone ambience, and finale feedback are assigned to
+  the appropriate groups while unapproved assets still resolve to silence.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: actual audio playback, permissions, and device mixing require
+  Creator Hub and Studio verification.

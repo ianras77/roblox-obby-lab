@@ -99,6 +99,7 @@ function EffectsController:finale()
     local s = Instance.new("Sound")
     s.SoundId = AssetRegistry.getApprovedId("finale_chime")
     s.Volume = 1
+    s.SoundGroup = game:GetService("SoundService"):FindFirstChild("SFX")
     s.Parent = root
     s:Play()
     game.Debris:AddItem(s, 3)
