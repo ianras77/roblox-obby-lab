@@ -79,3 +79,10 @@
   timing fields before storing them.
 - Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
 - Unverified: live migration against Roblox DataStore records.
+
+## 2026-08-23 — GitHub CI green
+
+- Completed: draft PR CI run `32657495468` passed Stylua, Selene, contract
+  checks, and the pinned Rojo place build.
+- Evidence: GitHub Actions job completed successfully; this does not replace
+  Roblox Studio playtesting or device/multiplayer validation.
