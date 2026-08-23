@@ -217,6 +217,8 @@ grep -q 'ProfileLoadStatus' "$ROOT_DIR/src/server/Services/CheckpointService.lua
 grep -q 'highestChapter = self:getProfile(player).highestChapter' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "initial highest chapter sync missing"
 grep -q 'highestChapter = self.checkpoints and self.checkpoints:getProfile(player).highestChapter' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "state highest chapter sync missing"
 grep -q 'ProfileSaveStatus' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile save status visibility missing"
+grep -q 'ephemeral profile' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "datastore failure playability path missing"
+grep -q 'persistenceAllowed' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "failed reads are not write-gated"
 grep -q 'function Wrapper:isEnabled' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "datastore environment visibility missing"
 grep -q 'self.checkpoints:isLoaded(player)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "key collection can race profile load"
 grep -q '#keyId > 80' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "key identity bounds missing"

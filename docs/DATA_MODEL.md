@@ -13,6 +13,11 @@ backoff, autosave, `PlayerRemoving`, `BindToClose`, and separate Studio
 sandbox/private staging/production store naming. Live Roblox verification is
 still required before release.
 
+If a profile read fails, the player receives a sanitized ephemeral profile and
+may continue playing for that session. The service does not write that profile
+back unless the read succeeded, preventing an outage from overwriting stored
+progress. The load/save diagnostic attributes expose this distinction.
+
 `GameConfig.Environment` is an explicit deployment label. The development
 environment cannot write production data; staging and production must use
 distinct configured store names. The checkpoint service now autosaves on the

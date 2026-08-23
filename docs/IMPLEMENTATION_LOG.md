@@ -1247,3 +1247,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: reconnect behavior with live DataStore profiles still requires
   Roblox Studio/private staging testing.
+
+## 2026-08-23 — Keep gameplay available during profile outages
+
+- Completed: failed profile reads now provide a sanitized session-only profile;
+  checkpoint and key gameplay remains available while persistence writes stay
+  disabled until a read is confirmed successful.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live DataStore outage recovery and reconnect behavior still
+  require Roblox Studio/private staging testing.

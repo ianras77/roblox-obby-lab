@@ -22,6 +22,7 @@ function CheckpointService.new(stages, progressEvent, runState, analytics, total
   self.totalKeysProvider = totalKeysProvider
   self.store = DataStoreWrapper.new(GameConfig.DataStoreName)
   self.loaded = {}
+  self.persistenceAllowed = {}
   self.profiles = {}
   self.deathConnections = {}
   activeService = self
@@ -65,6 +66,7 @@ function CheckpointService:initializePlayer(player)
   self:loadCheckpoint(player)
   if not player.Parent then
     self.loaded[player] = nil
+    self.persistenceAllowed[player] = nil
     self.profiles[player] = nil
     return
   end
@@ -110,6 +112,7 @@ function CheckpointService:hookPlayers()
       self.deathConnections[player] = nil
     end
     self.loaded[player] = nil
+    self.persistenceAllowed[player] = nil
     self.profiles[player] = nil
   end))
 end
@@ -122,11 +125,15 @@ function CheckpointService:loadCheckpoint(player)
   if not player.Parent then
     return
   end
-  self.loaded[player] = loadSucceeded == true
+  -- A failed read still gets an ephemeral profile so the player can play;
+  -- only a confirmed read authorizes writes back to the store.
+  self.loaded[player] = true
+  self.persistenceAllowed[player] = loadSucceeded == true
   local profile = ProfileSchema.sanitize(saved)
   self.profiles[player] = profile
-  if not self.loaded[player] then
+  if not self.persistenceAllowed[player] then
     player:SetAttribute("ProfileLoadStatus", "Failed")
+    player:SetAttribute("ProfileSaveStatus", "Skipped")
     warn(string.format("[DataStore] Profile load failed for %s; writes are disabled", player.Name))
     return
   end
@@ -142,7 +149,7 @@ function CheckpointService:loadCheckpoint(player)
 end
 
 function CheckpointService:saveCheckpoint(player)
-  if not GameConfig.SaveCheckpoints or not self:isLoaded(player) then
+  if not GameConfig.SaveCheckpoints or not self:isLoaded(player) or not self.persistenceAllowed[player] then
     return
   end
   local profile = self.profiles[player] or ProfileSchema.default()
