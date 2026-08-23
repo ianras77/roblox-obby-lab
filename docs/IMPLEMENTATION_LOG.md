@@ -177,3 +177,12 @@
   pass locally.
 - Unverified: timing feel, reset behavior, and multiplayer gate crossings still
   require Studio playtesting.
+
+## 2026-08-23 — Fail-closed world acceptance
+
+- Completed: WorldBuilder now destroys and rejects generated content when
+  WorldValidator reports any error, instead of warning and serving an invalid
+  layout.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: validator behavior against live Studio physics remains pending.

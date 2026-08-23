@@ -47,6 +47,7 @@ grep -q 'does not progress forward' "$ROOT_DIR/src/server/WorldGen/WorldValidato
 grep -q 'unanchored environment part' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "anchored environment validation missing"
 grep -q 'insufficient standing room' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "checkpoint standing-room validation missing"
 grep -q 'overlaps hazard' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "checkpoint hazard-overlap validation missing"
+grep -q 'failed validation with' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "invalid generated worlds are not rejected"
 grep -q 'timedOut = item.elapsed > 45' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "cart timeout recovery missing"
 grep -q 'SetNetworkOwner(nil)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "respawn network ownership reset missing"
 grep -q 'shutdownBound' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "shutdown callback lifecycle guard missing"

@@ -112,6 +112,10 @@ function WorldBuilder.buildWorld(seed)
   for _, err in ipairs(validationErrors) do
     warn("[WorldValidator] " .. err)
   end
+  if #validationErrors > 0 then
+    obbyModel:Destroy()
+    error(string.format("Generated obby failed validation with %d error(s)", #validationErrors))
+  end
 
   print(string.format("[Obby] Built %d zones, %d stages, seed=%s", GameConfig.Zones, totalStages, tostring(seed)))
   return {
