@@ -1,5 +1,14 @@
 # Implementation log
 
+## 2026-08-23 — Guard checkpoint binding at runtime
+
+- Completed: checkpoint event binding now requires a `BasePart` and warns on
+  invalid manifest entries, adding runtime defense beyond world-build
+  validation.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: malformed live rebuild behavior requires Studio testing.
+
 ## 2026-08-23 — Restrict physics touches to live players
 
 - Completed: conveyor and bounce-pad forces now require a live player

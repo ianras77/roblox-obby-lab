@@ -175,10 +175,12 @@ end
 function CheckpointService:bindCheckpoints()
   for _, stage in ipairs(self.stages) do
     local cp = stage.checkpoint
-    if cp then
+    if cp and cp:IsA("BasePart") then
       self.maid:Give(cp.Touched:Connect(function(hit)
         self:onCheckpointTouched(stage.stageIndex, cp, hit)
       end))
+    else
+      warn(string.format("[Checkpoint] stage %s has no valid checkpoint", tostring(stage.stageIndex)))
     end
   end
 end

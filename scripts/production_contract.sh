@@ -86,6 +86,7 @@ grep -q 'checkpointProfile.highestChapter = math.max' "$ROOT_DIR/src/server/Serv
 grep -q 'profile.highestChapter = math.max(profile.highestChapter' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "save path can regress profile progress"
 grep -q 'local snapshot = ProfileSchema.sanitize(profile)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "save path passes mutable profile"
 grep -q 'if not self:isLoaded(player) then' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint progression is not load-gated"
+grep -q 'if cp and cp:IsA("BasePart") then' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint binding lacks runtime type guard"
 grep -q 'MaxCollectedKeys = 100' "$ROOT_DIR/src/shared/Config/ProfileSchema.lua" || fail "profile key bound missing"
 grep -q 'ProfileSchema.MaxCollectedKeys' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "runtime key bound missing"
 grep -q 'profile_contract.sh' "$ROOT_DIR/scripts/check.sh" || fail "profile contract is not in the CI gate"
