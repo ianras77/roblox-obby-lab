@@ -404,6 +404,16 @@
 - Unverified: live migration of malicious or corrupt records requires staging
   DataStore validation.
 
+## 2026-08-23 — Bound persisted profile counters
+
+- Completed: death and completion counters are now clamped to a sane upper
+  bound during profile sanitization, preventing corrupt records from inflating
+  HUD values or concurrent-save merges.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live migration of extreme counter values requires staging
+  DataStore validation.
+
 ## 2026-08-23 — Guard invalid checkpoint instances
 
 - Completed: the world validator now inspects checkpoint geometry only after

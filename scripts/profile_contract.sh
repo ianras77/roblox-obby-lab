@@ -25,6 +25,7 @@ for marker in (
     "ProfileSchema.MaxCollectedKeys = 100",
     "ProfileSchema.MaxChapter = 18",
     "ProfileSchema.MaxChapter",
+    "ProfileSchema.MaxCounter = 1000000000",
     "keyCount >= ProfileSchema.MaxCollectedKeys",
 ):
     if marker not in source:

@@ -15,6 +15,7 @@ local ProfileSchema = {}
 ProfileSchema.CurrentVersion = 1
 ProfileSchema.MaxCollectedKeys = 100
 ProfileSchema.MaxChapter = 18
+ProfileSchema.MaxCounter = 1000000000
 
 function ProfileSchema.default(): PlayerProfile
   return {
@@ -46,8 +47,9 @@ function ProfileSchema.sanitize(raw: any): PlayerProfile
   local legacyChapter = raw.checkpoint
   profile.highestChapter =
     math.clamp(math.max(0, math.floor(tonumber(raw.highestChapter or legacyChapter) or 0)), 0, ProfileSchema.MaxChapter)
-  profile.totalDeaths = math.max(0, math.floor(tonumber(raw.totalDeaths) or 0))
-  profile.completionCount = math.max(0, math.floor(tonumber(raw.completionCount) or 0))
+  profile.totalDeaths = math.clamp(math.max(0, math.floor(tonumber(raw.totalDeaths) or 0)), 0, ProfileSchema.MaxCounter)
+  profile.completionCount =
+    math.clamp(math.max(0, math.floor(tonumber(raw.completionCount) or 0)), 0, ProfileSchema.MaxCounter)
   local bestRunMs = tonumber(raw.bestRunMs)
   if bestRunMs and bestRunMs > 0 and bestRunMs < 86400000 then
     profile.bestRunMs = math.floor(bestRunMs)
