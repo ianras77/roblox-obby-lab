@@ -16,6 +16,7 @@ function CheckpointService.new(stages, progressEvent, runState)
   self.runState = runState
   self.store = DataStoreWrapper.new(GameConfig.DataStoreName)
   self.loaded = {}
+  self.profiles = {}
   self:hookPlayers()
   local autosaveActive = true
   self.maid:Give(function()
@@ -69,6 +70,7 @@ function CheckpointService:hookPlayers()
   self.maid:Give(Players.PlayerRemoving:Connect(function(player)
     self:saveCheckpoint(player)
     self.loaded[player] = nil
+    self.profiles[player] = nil
   end))
 end
 
@@ -76,6 +78,7 @@ function CheckpointService:loadCheckpoint(player)
   local saved = self.store:GetAsync(player.UserId)
   self.loaded[player] = true
   local profile = ProfileSchema.sanitize(saved)
+  self.profiles[player] = profile
   profile.highestChapter = math.clamp(profile.highestChapter, 0, #self.stages)
   if profile.highestChapter > 0 then
     player:SetAttribute("Checkpoint", profile.highestChapter)
@@ -87,9 +90,23 @@ function CheckpointService:saveCheckpoint(player)
   if not GameConfig.SaveCheckpoints then
     return
   end
-  local profile = ProfileSchema.sanitize(nil)
+  local profile = self.profiles[player] or ProfileSchema.default()
   profile.highestChapter = player:GetAttribute("Checkpoint") or 0
   self.store:SetAsync(player.UserId, profile)
+end
+
+function CheckpointService:getProfile(player)
+  return self.profiles[player] or ProfileSchema.default()
+end
+
+function CheckpointService:markKey(player, keyId: string): boolean
+  local profile = self:getProfile(player)
+  if profile.collectedKeys[keyId] then
+    return false
+  end
+  profile.collectedKeys[keyId] = true
+  self.profiles[player] = profile
+  return true
 end
 
 function CheckpointService:bindCheckpoints()

@@ -35,6 +35,14 @@ end
 local ObbyService = {}
 ObbyService.__index = ObbyService
 
+local function countKeys(profile)
+  local count = 0
+  for _ in pairs(profile.collectedKeys) do
+    count += 1
+  end
+  return count
+end
+
 function ObbyService.new()
   if ObbyService._instance then
     return ObbyService._instance
@@ -49,8 +57,9 @@ function ObbyService.new()
       stage = player:GetAttribute("Checkpoint") or 0,
       total = self.world.totalStages,
       mode = player:GetAttribute("RunMode") or "Adventure",
-      keys = self.keyProgress[player] or 0,
+      keys = countKeys(self.checkpoints and self.checkpoints:getProfile(player) or { collectedKeys = {} }),
       totalKeys = self.totalKeys,
+      collectedKeys = self.checkpoints and self.checkpoints:getProfile(player).collectedKeys or {},
     }
   end
   self.runState = RunStateService.new(self.world.totalStages)
@@ -118,11 +127,14 @@ function ObbyService:registerKey(part)
       return
     end
     self.collectedKeys[player] = self.collectedKeys[player] or {}
-    if self.collectedKeys[player][keyId] then
+    if self.collectedKeys[player][keyId] or not self.checkpoints:markKey(player, keyId) then
       return
     end
     self.collectedKeys[player][keyId] = true
-    self.keyProgress[player] = (self.keyProgress[player] or 0) + 1
+    self.keyProgress[player] = 0
+    for _ in pairs(self.checkpoints:getProfile(player).collectedKeys) do
+      self.keyProgress[player] += 1
+    end
     local sound = part:FindFirstChildOfClass("Sound")
     if sound then
       sound:Play()
@@ -486,8 +498,9 @@ function ObbyService:rebuild(seed)
       stage = player:GetAttribute("Checkpoint") or 0,
       total = self.world.totalStages,
       mode = player:GetAttribute("RunMode") or "Adventure",
-      keys = self.keyProgress[player] or 0,
+      keys = countKeys(self.checkpoints and self.checkpoints:getProfile(player) or { collectedKeys = {} }),
       totalKeys = self.totalKeys,
+      collectedKeys = self.checkpoints and self.checkpoints:getProfile(player).collectedKeys or {},
     }
   end
   self.checkpoints:destroy()
