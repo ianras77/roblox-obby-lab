@@ -65,7 +65,7 @@ function WorldBuilder.buildWorld(seed)
   local obbyModel = Instance.new("Model")
   obbyModel.Name = "GeneratedObby"
   obbyModel:SetAttribute("GeneratorOwner", "ToadsGreatEscape")
-  obbyModel:SetAttribute("GeneratorVersion", "2")
+  obbyModel:SetAttribute("GeneratorVersion", WorldGenConfig.GeneratorVersion)
   obbyModel:SetAttribute("Seed", seed)
   obbyModel.Parent = workspace
 

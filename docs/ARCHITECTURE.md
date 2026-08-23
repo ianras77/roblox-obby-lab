@@ -2,8 +2,10 @@
 
 The server owns generated geometry, checkpoints, collectibles, completion, and
 development commands. Clients own presentation only. `WorldBuilder` creates a
-single `Workspace.GeneratedObby` tree marked with `GeneratorOwner`, version,
-and seed attributes; rebuilds may remove only that owned tree.
+single `Workspace.GeneratedObby` tree marked with `GeneratorOwner`, the
+canonical generator version, and seed attributes; rebuilds may remove only
+that owned tree. The validator rejects an unsupported structural version, so a
+seed is never mistaken for an identical layout after generator changes.
 
 `StageBuilder` gives every stage a stable ID, entrance, exit, checkpoint, and
 metadata including the chapter's primary mechanic, flavor, and difficulty tier.

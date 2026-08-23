@@ -73,6 +73,24 @@ local function validateZones(zones, totalZones, root)
   return errors
 end
 
+local function validateRoot(root)
+  local errors = {}
+  if typeof(root) ~= "Instance" or not root:IsA("Model") then
+    table.insert(errors, "generated root is missing or invalid")
+    return errors
+  end
+  if root:GetAttribute("GeneratorOwner") ~= "ToadsGreatEscape" then
+    table.insert(errors, "generated root has invalid owner")
+  end
+  if root:GetAttribute("GeneratorVersion") ~= WorldGenConfig.GeneratorVersion then
+    table.insert(errors, "generated root has unsupported generator version")
+  end
+  if type(root:GetAttribute("Seed")) ~= "number" then
+    table.insert(errors, "generated root is missing a numeric seed")
+  end
+  return errors
+end
+
 function WorldValidator.validate(
   stages: { any },
   totalStages: number,
@@ -80,6 +98,9 @@ function WorldValidator.validate(
   root: Instance?
 ): ({ string }, number)
   local errors = {}
+  for _, rootError in ipairs(validateRoot(root)) do
+    table.insert(errors, rootError)
+  end
   if zones then
     for _, zoneError in ipairs(validateZones(zones, GameConfig.Zones, root)) do
       table.insert(errors, zoneError)

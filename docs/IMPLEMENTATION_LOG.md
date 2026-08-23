@@ -1221,3 +1221,11 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: live traversal and multiplayer checkpoint timing still require
   Roblox Studio/private staging testing.
+
+## 2026-08-23 — Centralize generator version provenance
+
+- Completed: the structural generator version is now owned by world-generation
+  configuration and validated against the generated root alongside its seed.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: cross-version rebuild behavior in Roblox Studio remains pending.
