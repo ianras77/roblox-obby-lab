@@ -36,6 +36,7 @@ function ZoneBuilder.buildZone(args)
       safeSpawn = result.safeSpawn,
       bounds = result.bounds,
       mechanics = result.mechanics,
+      pathCorridor = result.pathCorridor,
       connectorLength = connectorLength,
       zoneIndex = args.zoneIndex,
       zoneModel = zoneModel,

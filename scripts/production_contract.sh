@@ -26,6 +26,8 @@ grep -q 'incorrect zone ownership' "$ROOT_DIR/src/server/WorldGen/WorldValidator
 grep -q 'model is outside its expected zone' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator model zone check missing"
 grep -q 'SetAttribute("ZoneIndex", args.zoneIndex)' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage model zone marker missing"
 grep -q 'zoneModel = zoneModel' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage zone container reference missing"
+grep -q 'pathCorridor = result.pathCorridor' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage path corridor missing"
+grep -q 'missing a valid path corridor' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator path corridor check missing"
 grep -q 'not parented to its zone model' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator zone hierarchy check missing"
 grep -q 'missing a valid zone model' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator missing-zone fail-closed check missing"
 grep -q 'not measured correctly' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator connector measurement check missing"

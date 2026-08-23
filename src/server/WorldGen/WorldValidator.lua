@@ -67,6 +67,12 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     local validSafeSpawn = typeof(stage.safeSpawn) == "CFrame"
     local validConnectorLength = type(stage.connectorLength) == "number" and finite(stage.connectorLength)
     local validZoneModel = typeof(stage.zoneModel) == "Instance" and stage.zoneModel:IsA("Model")
+    local corridor = stage.pathCorridor
+    local validCorridor = type(corridor) == "table"
+      and typeof(corridor.center) == "CFrame"
+      and type(corridor.width) == "number"
+      and finite(corridor.width)
+      and corridor.width > 0
     if not validEntrance or not validExit then
       table.insert(errors, string.format("stage %s missing entrance or exit", stageLabel(stage)))
     end
@@ -78,6 +84,9 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     end
     if not validZoneModel then
       table.insert(errors, string.format("stage %s is missing a valid zone model", stageLabel(stage)))
+    end
+    if not validCorridor then
+      table.insert(errors, string.format("stage %s is missing a valid path corridor", stageLabel(stage)))
     end
     local expectedZone = type(stage.stageIndex) == "number" and math.ceil(stage.stageIndex / GameConfig.StagesPerZone)
       or nil

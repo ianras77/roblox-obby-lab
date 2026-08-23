@@ -16,6 +16,10 @@ export type StageBuildResult = {
   safeSpawn: CFrame,
   bounds: Vector3,
   mechanics: { string },
+  pathCorridor: {
+    center: CFrame,
+    width: number,
+  },
 }
 
 function StageBuilder.buildStage(args)
@@ -126,6 +130,10 @@ function StageBuilder.buildStage(args)
     safeSpawn = cp.CFrame + Vector3.new(0, 4, 0),
     bounds = bounds,
     mechanics = { presentation.mechanic },
+    pathCorridor = {
+      center = args.origin,
+      width = WorldGenConfig.PathWidth,
+    },
   } :: StageBuildResult
 end
 

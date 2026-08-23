@@ -1055,6 +1055,16 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: malformed live instance injection remains a Studio-only test.
 
+## 2026-08-23 — Add explicit stage path corridors
+
+- Completed: stage build results now carry a gameplay path corridor descriptor,
+  and the world validator requires a finite positive corridor width and CFrame
+  center for every stage.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: corridor width against real Humanoid movement and jump feasibility
+  requires Studio playtesting.
+
 ## 2026-08-23 — Separate route and exploration completion
 
 - Completed: the results screen now reports route completion separately from
