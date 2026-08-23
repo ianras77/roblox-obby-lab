@@ -7,9 +7,12 @@ and seed attributes; rebuilds may remove only that owned tree.
 
 `StageBuilder` gives every stage a stable ID, entrance, exit, checkpoint, and
 metadata including the chapter's primary mechanic, flavor, and difficulty tier.
-`ZoneBuilder` connects exits and entrances, so templates do not also
-hide travel spacing. `WorldValidator` checks the generated manifest before the
-world is considered valid.
+`ZoneBuilder` records each stage's measured connector length and owning zone as
+it connects exits and entrances, so templates do not hide travel spacing.
+`WorldBuilder` carries the previous zone exit into the next zone, including the
+intentional elevation transition.
+`WorldValidator` checks those measurements and ownership before the world is
+considered valid.
 
 The current obstacle runtime remains centralized for compatibility, but the
 new contracts make a later component split safe. Studio playtesting is required

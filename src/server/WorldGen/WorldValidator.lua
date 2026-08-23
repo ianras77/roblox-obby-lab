@@ -56,11 +56,20 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     local validEntrance = typeof(stage.entrance) == "CFrame"
     local validExit = typeof(stage.exit) == "CFrame"
     local validSafeSpawn = typeof(stage.safeSpawn) == "CFrame"
+    local validConnectorLength = type(stage.connectorLength) == "number" and finite(stage.connectorLength)
     if not validEntrance or not validExit then
       table.insert(errors, string.format("stage %d missing entrance or exit", stage.stageIndex or -1))
     end
     if not validSafeSpawn or typeof(stage.bounds) ~= "Vector3" or type(stage.mechanics) ~= "table" then
       table.insert(errors, string.format("stage %d missing build result fields", stage.stageIndex or -1))
+    end
+    if not validConnectorLength or stage.connectorLength < 0 then
+      table.insert(errors, string.format("stage %d has invalid connector length", stage.stageIndex or -1))
+    end
+    local expectedZone = type(stage.stageIndex) == "number" and math.ceil(stage.stageIndex / GameConfig.StagesPerZone)
+      or nil
+    if stage.zoneIndex ~= expectedZone then
+      table.insert(errors, string.format("stage %d has incorrect zone ownership", stage.stageIndex or -1))
     end
     if
       stage.bounds
@@ -108,9 +117,16 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
       end
       if previousExit then
         local connector = (stage.entrance.Position - previousExit.Position).Magnitude
-        if connector > GameConfig.StageSpacing.X then
+        if not validConnectorLength or math.abs(stage.connectorLength - connector) > 0.01 then
+          table.insert(
+            errors,
+            string.format("connector before stage %d is not measured correctly", stage.stageIndex or -1)
+          )
+        elseif connector > GameConfig.StageSpacing.X then
           table.insert(errors, string.format("connector before stage %d is too long", stage.stageIndex or -1))
         end
+      elseif validConnectorLength and stage.connectorLength > 0.01 then
+        table.insert(errors, string.format("first stage %d has a nonzero connector", stage.stageIndex or -1))
       end
       previousExit = stage.exit
     end

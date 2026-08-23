@@ -94,6 +94,7 @@ function WorldBuilder.buildWorld(seed)
   local rng = RandomUtil.new(seed)
   local totalStages = GameConfig.Zones * GameConfig.StagesPerZone
   local lastCFrame = CFrame.new(0, 5, 0)
+  local previousZoneExit = nil
   local allStages = {}
 
   for zoneIndex = 1, GameConfig.Zones do
@@ -106,12 +107,14 @@ function WorldBuilder.buildWorld(seed)
       zoneConfig = zoneCfg,
       random = rng,
       elevationStep = GameConfig.ElevationPerZone / GameConfig.StagesPerZone,
+      previousExit = previousZoneExit,
     })
     DecorBuilder.decorateZone(zoneModel, zoneCfg)
     -- Lighting presentation is transitioned locally by EnvironmentController.
     for _, s in ipairs(stages) do
       table.insert(allStages, s)
     end
+    previousZoneExit = endCFrame
     lastCFrame = endCFrame * CFrame.new(0, GameConfig.ElevationPerZone, 0)
   end
 

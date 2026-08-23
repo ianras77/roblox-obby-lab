@@ -999,3 +999,22 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: visible join-time behavior under real network latency requires
   Studio testing.
+
+## 2026-08-23 — Record and validate connector ownership
+
+- Completed: the stage manifest now records each stage's measured connector
+  length and expected zone index; `WorldValidator` rejects mismatches, overly
+  long links, nonzero first-stage connectors, and incorrect zone ownership.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: generated CFrame spacing and traversal feasibility still require
+  Studio inspection.
+
+## 2026-08-23 — Measure cross-zone connectors
+
+- Completed: connector measurement now carries the prior zone exit into the
+  next zone, so the first stage of each zone records and validates the actual
+  elevation-transition link instead of falsely starting at zero.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: cross-zone traversal remains a Studio geometry/playtest check.

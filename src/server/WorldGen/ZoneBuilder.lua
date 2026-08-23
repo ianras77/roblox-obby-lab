@@ -11,6 +11,7 @@ function ZoneBuilder.buildZone(args)
 
   local stages = {}
   local currentCFrame = args.origin
+  local previousExit = args.previousExit
   for i = 1, args.stagesPerZone do
     local stageIndex = ((args.zoneIndex - 1) * args.stagesPerZone) + i
     local stageType = WorldGenConfig.StageTypes[((stageIndex - 1) % #WorldGenConfig.StageTypes) + 1]
@@ -22,6 +23,7 @@ function ZoneBuilder.buildZone(args)
       zoneColor = args.zoneConfig.ThemeColor,
       random = args.random,
     })
+    local connectorLength = previousExit and (result.entrance.Position - previousExit.Position).Magnitude or 0
     table.insert(stages, {
       model = result.model,
       checkpoint = result.checkpoint,
@@ -33,7 +35,10 @@ function ZoneBuilder.buildZone(args)
       safeSpawn = result.safeSpawn,
       bounds = result.bounds,
       mechanics = result.mechanics,
+      connectorLength = connectorLength,
+      zoneIndex = args.zoneIndex,
     })
+    previousExit = result.exit
     currentCFrame = result.exit * CFrame.new(0, args.elevationStep, 0)
   end
 
