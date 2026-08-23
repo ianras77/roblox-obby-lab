@@ -486,14 +486,17 @@ function ObbyService:carryRiders(platform, translation, dt)
   end
 
   local velocity = translation / math.max(dt, 1 / 60)
+  local movedCharacters = {}
   for _, part in ipairs(touching) do
     local character = part.Parent
-    if character then
+    if character and not movedCharacters[character] then
       local humanoid = character:FindFirstChildOfClass("Humanoid")
       local hrp = character:FindFirstChild("HumanoidRootPart")
       if humanoid and humanoid.Health > 0 and hrp then
+        movedCharacters[character] = true
         hrp.CFrame = hrp.CFrame + translation
-        hrp.AssemblyLinearVelocity = hrp.AssemblyLinearVelocity + velocity
+        local currentVelocity = hrp.AssemblyLinearVelocity
+        hrp.AssemblyLinearVelocity = Vector3.new(velocity.X, currentVelocity.Y, velocity.Z)
       end
     end
   end

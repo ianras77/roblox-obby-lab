@@ -278,6 +278,16 @@
   pass locally.
 - Unverified: Studio persistence timing and reconnect behavior remain pending.
 
+## 2026-08-23 — Moving-platform rider deduplication
+
+- Completed: platform carrying now updates each character at most once per
+  frame, applies platform horizontal velocity without accumulating it, and
+  preserves the rider's vertical velocity.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: actual rider comfort, edge standing, latency, and multi-client
+  physics require Studio testing.
+
 ## 2026-08-23 — Canonical Time Trial start
 
 - Completed: crossing the validated Time Trial gate now clears the player's
