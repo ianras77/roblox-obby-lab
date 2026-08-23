@@ -98,6 +98,33 @@ local registry = {
   },
   music = {
     {
+      key = "zone_1_ambience",
+      type = "Sound",
+      id = "rbxassetid://1846220524",
+      verified = false,
+      approvedForRelease = false,
+      source = "legacy zone configuration",
+      note = "Verify ownership and moderation before release.",
+    },
+    {
+      key = "zone_2_ambience",
+      type = "Sound",
+      id = "rbxassetid://1837483576",
+      verified = false,
+      approvedForRelease = false,
+      source = "legacy zone configuration",
+      note = "Verify ownership and moderation before release.",
+    },
+    {
+      key = "zone_3_ambience",
+      type = "Sound",
+      id = "rbxassetid://1837635151",
+      verified = false,
+      approvedForRelease = false,
+      source = "legacy zone configuration",
+      note = "Verify ownership and moderation before release.",
+    },
+    {
       key = "riverbank_theme",
       type = "Sound",
       id = "rbxassetid://1843521234",

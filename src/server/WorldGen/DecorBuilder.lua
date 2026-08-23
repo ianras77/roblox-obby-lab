@@ -52,7 +52,7 @@ function DecorBuilder.applyLighting(zoneConfig)
   sun.Intensity = 0.22
   sun.Spread = 0.95
 
-  ensureSound("ZoneAmbience", zoneConfig.AmbientSoundId)
+  ensureSound("ZoneAmbience", AssetRegistry.getApprovedId(zoneConfig.AmbientSoundKey))
 end
 
 function DecorBuilder.decorateZone(zoneModel, zoneConfig)

@@ -336,6 +336,16 @@
 - Unverified: ownership, moderation, and visual playback require Creator
   Hub/Studio verification.
 
+## 2026-08-23 — Zone ambience asset gate
+
+- Completed: all three zone ambience references now use logical registry keys
+  and resolve through AssetRegistry approval instead of assigning raw IDs from
+  zone configuration.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally; GitHub CI was green before this change.
+- Unverified: ambience ownership, moderation, and playback remain Creator
+  Hub/Studio checks.
+
 ## 2026-08-23 — Scrollable settings panel
 
 - Completed: the settings/mode panel now uses automatic vertical canvas sizing

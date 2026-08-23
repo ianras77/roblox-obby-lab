@@ -62,6 +62,8 @@ grep -q 'getApprovedId("key_pickup")' "$ROOT_DIR/src/shared/Util/Build.lua" || f
 grep -q 'getApprovedId("finale_firework")' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale particle bypasses asset registry"
 grep -q 'getApprovedId("finale_chime")' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale sound bypasses asset registry"
 if rg -q 'rbxassetid://' "$ROOT_DIR/src/server/WorldGen" "$ROOT_DIR/src/shared/Util"; then fail "generated visual assets bypass registry"; fi
+if rg -q 'AmbientSoundId' "$ROOT_DIR/src"; then fail "zone ambience bypasses asset registry"; fi
+grep -q 'getApprovedId(zoneConfig.AmbientSoundKey)' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "zone ambience is not approval-gated"
 grep -q 'checkpointPulse' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "checkpoint feedback pulse missing"
 if grep -q 'Size = UDim2.fromScale(1, 1)' "$ROOT_DIR/src/client/Controllers/EffectsController.lua"; then fail "ordinary checkpoint feedback must not full-screen flash"; fi
 grep -q 'playFirstApprovedMusic' "$ROOT_DIR/src/server/ServerMain.server.lua" || fail "asset approval gate missing"
