@@ -46,4 +46,6 @@ grep -q 'overlaps hazard' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || 
 grep -q 'timedOut = item.elapsed > 45' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "cart timeout recovery missing"
 grep -q 'SetNetworkOwner(nil)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "respawn network ownership reset missing"
 grep -q 'shutdownBound' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "shutdown callback lifecycle guard missing"
+grep -q 'local direction = part.CFrame.LookVector' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "conveyor vertical velocity handling missing"
+grep -q 'if item.part and item.part.Parent then' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "obstacle lifecycle guards missing"
 echo "production contracts ok"

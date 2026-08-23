@@ -307,8 +307,8 @@ function ObbyService:scanBehaviors()
       local humanoidRoot = hit.Parent and hit.Parent:FindFirstChild("HumanoidRootPart")
       if humanoidRoot then
         local vel = humanoidRoot.AssemblyLinearVelocity
-        humanoidRoot.AssemblyLinearVelocity = Vector3.new(part.CFrame.LookVector.X, vel.Y, part.CFrame.LookVector.Z)
-          * (part:GetAttribute("Speed") or ObstacleConfig.ConveyorSpeed)
+        local direction = part.CFrame.LookVector * (part:GetAttribute("Speed") or ObstacleConfig.ConveyorSpeed)
+        humanoidRoot.AssemblyLinearVelocity = Vector3.new(direction.X, vel.Y, direction.Z)
       end
     end))
   end)
@@ -457,31 +457,39 @@ function ObbyService:startHeartbeat()
     end
 
     for _, item in ipairs(self.behaviors.rotators) do
-      item.part.CFrame = item.part.CFrame * CFrame.Angles(0, item.speed * dt, 0)
+      if item.part and item.part.Parent then
+        item.part.CFrame = item.part.CFrame * CFrame.Angles(0, item.speed * dt, 0)
+      end
     end
 
     for _, item in ipairs(self.behaviors.bossGavels) do
-      local t = math.sin(tickNow * item.speed)
-      local pitch = t * item.angle
-      item.part.CFrame = item.origin * CFrame.Angles(pitch, 0, 0)
+      if item.part and item.part.Parent then
+        local t = math.sin(tickNow * item.speed)
+        local pitch = t * item.angle
+        item.part.CFrame = item.origin * CFrame.Angles(pitch, 0, 0)
+      end
     end
 
     for _, item in ipairs(self.behaviors.timedTiles) do
-      item.t = item.t + dt
-      local on = (item.t % item.cycle) > (item.cycle / 2)
-      item.part.Transparency = on and 0 or 0.8
-      item.part.CanCollide = on
+      if item.part and item.part.Parent then
+        item.t = item.t + dt
+        local on = (item.t % item.cycle) > (item.cycle / 2)
+        item.part.Transparency = on and 0 or 0.8
+        item.part.CanCollide = on
+      end
     end
 
     if self.queryClock >= 0.1 then
       local queryDt = self.queryClock
       self.queryClock = 0
       for _, item in ipairs(self.behaviors.windZones) do
-        for _, touch in ipairs(item.part:GetTouchingParts()) do
-          local hrp = touch.Parent and touch.Parent:FindFirstChild("HumanoidRootPart")
-          if hrp then
-            hrp.AssemblyLinearVelocity = hrp.AssemblyLinearVelocity
-              + item.part.CFrame.RightVector * item.force * queryDt
+        if item.part and item.part.Parent then
+          for _, touch in ipairs(item.part:GetTouchingParts()) do
+            local hrp = touch.Parent and touch.Parent:FindFirstChild("HumanoidRootPart")
+            if hrp then
+              hrp.AssemblyLinearVelocity = hrp.AssemblyLinearVelocity
+                + item.part.CFrame.RightVector * item.force * queryDt
+            end
           end
         end
       end
@@ -521,13 +529,15 @@ function ObbyService:startHeartbeat()
     end
 
     for _, item in ipairs(self.behaviors.lasers) do
-      local active = (tickNow + item.phase) % item.cycle < (item.cycle / 2)
-      item.part.Transparency = active and 0 or 1
-      item.part.CanTouch = active
-      item.part.CanCollide = active
-      local emitter = item.part:FindFirstChildOfClass("ParticleEmitter")
-      if emitter then
-        emitter.Enabled = active
+      if item.part and item.part.Parent then
+        local active = (tickNow + item.phase) % item.cycle < (item.cycle / 2)
+        item.part.Transparency = active and 0 or 1
+        item.part.CanTouch = active
+        item.part.CanCollide = active
+        local emitter = item.part:FindFirstChildOfClass("ParticleEmitter")
+        if emitter then
+          emitter.Enabled = active
+        end
       end
     end
 

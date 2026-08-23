@@ -128,3 +128,13 @@
 - Tests: configuration, storyboard, production, Stylua, and whitespace checks
   pass locally.
 - Unverified: physical jump feasibility and respawn feel still require Studio.
+
+## 2026-08-23 — Obstacle lifecycle hardening
+
+- Completed: conveyor motion now preserves the player's vertical velocity
+  instead of multiplying it by conveyor speed; centralized animation/query
+  loops skip destroyed or detached obstacle instances safely.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: moving-platform rider feel and networked physics still require
+  multi-client Studio playtesting.
