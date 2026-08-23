@@ -93,6 +93,9 @@ function RunStateService:startAtGate(player: Player, gate: BasePart): boolean
 end
 
 function RunStateService:onChapterReached(player: Player, stageIndex: number): (number?, boolean)
+  if type(stageIndex) ~= "number" or stageIndex % 1 ~= 0 or stageIndex < 1 or stageIndex > self.totalStages then
+    return nil, false
+  end
   local state = self:get(player)
   if not state.running or not state.startedAt then
     return nil, false

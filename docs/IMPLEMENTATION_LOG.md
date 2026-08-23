@@ -1321,3 +1321,10 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; cart boarding and multiplayer physics remain
   unverified without Roblox Studio.
+
+## 2026-08-23 — Bound run-state chapter input
+
+- Completed: server run-state completion logic now rejects non-integer or
+  out-of-route chapter indices before recording timing or completion.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live run timing remains Studio-unverified.
