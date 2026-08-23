@@ -413,6 +413,15 @@
   whitespace checks pass locally.
 - Unverified: live malformed-instance coverage still requires Studio.
 
+## 2026-08-23 — Restart Time Trials from a clean start
+
+- Completed: selecting Time Trial, including using Reset while already in a
+  trial, now clears the server-owned checkpoint before the character respawns.
+  Adventure resets retain ordinary checkpoint behavior.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: respawn placement and gate re-entry timing require Studio.
+
 ## 2026-08-23 — Bounded rider contact queries
 
 - Completed: moving-platform contact detection now samples `GetTouchingParts()`

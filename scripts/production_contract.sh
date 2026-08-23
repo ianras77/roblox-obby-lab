@@ -34,6 +34,8 @@ grep -q 'RunStartGate' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail 
 grep -q 'startAtGate' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "server time trial gate handling missing"
 grep -q 'resetForTimeTrial' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "time trial checkpoint reset missing"
 grep -q 'resetForTimeTrial(player)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "time trial gate does not reset progress"
+grep -q 'if mode == "TimeTrial" then' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "time trial mode reset missing"
+grep -q 'self.modeEvent:FireServer("TimeTrial")' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "time trial reset control missing"
 grep -q 'SetPracticeStage' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "practice stage contract missing"
 grep -q 'bestChapterMs: table' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "finale payload contract is incomplete"
 grep -q 'profile.highestChapter < stage' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "practice stage progression guard missing"

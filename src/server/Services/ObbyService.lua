@@ -96,6 +96,9 @@ local function bindRunModes(self)
     if not self.runState:setMode(player, mode) then
       return
     end
+    if mode == "TimeTrial" then
+      self.checkpoints:resetForTimeTrial(player)
+    end
     self.world.progressEvent:FireClient(player, {
       stage = player:GetAttribute("Checkpoint") or 0,
       total = self.world.totalStages,

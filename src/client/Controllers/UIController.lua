@@ -281,6 +281,9 @@ end
 function UIController:bind()
   local reset = self.gui:FindFirstChild("ResetButton")
   reset.Activated:Connect(function()
+    if self.player:GetAttribute("RunMode") == "TimeTrial" then
+      self.modeEvent:FireServer("TimeTrial")
+    end
     local character = self.player.Character or self.player.CharacterAdded:Wait()
     local humanoid = character:FindFirstChildOfClass("Humanoid")
     if humanoid then
