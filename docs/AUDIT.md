@@ -27,8 +27,9 @@ manual Studio comparison before either is treated as authoritative.
 - A checkpoint touch always overwrites the player's checkpoint, including with
   an earlier stage; progress is broadcast only after a touch.
 - Keys are randomly created and globally destroyed on the first player's touch.
-- Persistence is disabled by configuration, uses `SetAsync`, has no schema,
-  migration, retry budget, autosave, or shutdown save.
+- Persistence now has an explicit environment gate, versioned profile schema,
+  bounded retry wrapper, autosave, and shutdown save. Migration coverage and
+  live DataStore behavior still require Studio validation.
 - `ObbyService` uses a server Heartbeat with repeated `GetTouchingParts` calls
   for wind and pressure pads, and directly edits moving-platform riders.
 - Lighting and ambience are applied globally during generation; decoration uses

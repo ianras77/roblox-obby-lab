@@ -82,7 +82,7 @@ function CheckpointService:hookPlayers()
 end
 
 function CheckpointService:loadCheckpoint(player)
-  local saved = self.store:GetAsync(player.UserId)
+  local saved = self.store:GetAsync("player:" .. tostring(player.UserId))
   self.loaded[player] = true
   local profile = ProfileSchema.sanitize(saved)
   self.profiles[player] = profile
@@ -99,7 +99,7 @@ function CheckpointService:saveCheckpoint(player)
   end
   local profile = self.profiles[player] or ProfileSchema.default()
   profile.highestChapter = player:GetAttribute("Checkpoint") or 0
-  self.store:SetAsync(player.UserId, profile)
+  self.store:SetAsync("player:" .. tostring(player.UserId), profile)
 end
 
 function CheckpointService:getProfile(player)

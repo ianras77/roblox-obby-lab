@@ -27,6 +27,13 @@
   timing, and split storage; Practice completion cannot qualify.
 - Completed: initialization synchronization includes run mode and timing data.
 - Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
+
+## 2026-08-23 — DataStore key correctness
+
+- Completed: profile reads/writes now use stable string keys prefixed with
+  `player:` as required by the Roblox DataStore API.
+- Tests: local contracts and formatting remain the baseline; live DataStore
+  availability and migration behavior remain unverified.
 - Unverified: time-trial UX, leaderboard policy, and Studio gameplay.
 
 ## 2026-08-23 — Persisted accessibility settings
