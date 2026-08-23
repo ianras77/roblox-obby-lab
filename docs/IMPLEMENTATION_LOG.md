@@ -1092,3 +1092,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: long-lived server soak behavior requires Roblox Studio testing.
+
+## 2026-08-23 — Reconcile release checklist with CI evidence
+
+- Completed: the release checklist now marks only the CI artifact, pinned
+  toolchain, and concurrency items proven by successful GitHub runs; Studio,
+  Creator Hub, asset, persistence, and publication items remain unchecked.
+- Tests: latest recorded GitHub CI run passes; local configuration, profile,
+  storyboard, production, Stylua, and whitespace checks pass.
+- Unverified: all Roblox Studio and Creator Hub checklist items remain pending.

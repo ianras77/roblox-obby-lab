@@ -3,10 +3,10 @@
 - [x] Local configuration, storyboard, production, and Stylua checks pass.
 - [ ] Selene and pure runtime tests pass in a local toolchain; Selene is not
       installed in this environment.
-- [ ] CI produces a valid Rojo place artifact from `default.project.json` using
+- [x] CI produces a valid Rojo place artifact from `default.project.json` using
       the pinned official Rojo release binary.
-- [ ] CI uses pinned official release binaries for Stylua and Selene.
-- [ ] Superseded branch CI runs are cancelled by workflow concurrency.
+- [x] CI uses pinned official release binaries for Stylua and Selene.
+- [x] Superseded branch CI runs are cancelled by workflow concurrency.
 - [ ] Studio full run and multiplayer run have evidence.
 - [ ] Creator Hub max players, supported devices, icon, thumbnails, badges,
       private staging place, and approved audio are configured.
