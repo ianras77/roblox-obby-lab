@@ -109,3 +109,13 @@
   gate and Rojo artifact build rather than the original prototype-only checks.
 - Tests: no runtime code changed; prior local and GitHub validation remains the
   evidence baseline.
+
+## 2026-08-23 — Canonical route contract
+
+- Completed: added a deterministic configuration contract for the ordered 18-
+  chapter route, unique stage types, matching display names, matching chapter
+  presentation metadata, and stable ID derivation.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: actual Roblox Studio traversal, physics, device layout, and
+  multiplayer behavior.

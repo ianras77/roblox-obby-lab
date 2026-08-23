@@ -4,7 +4,9 @@ This folder contains the current test notes and the remaining pure-Luau test
 entry point. A Roblox test runner is not installed in this environment, so
 runtime tests are explicitly tracked as pending rather than reported as green.
 
-The current storyboard contract runs from `scripts/storyboard_contract.sh` so `scripts/check.sh` works in the shared Roblox toolchain container without adding Python.
+The current storyboard, production, and canonical configuration contracts run
+from `scripts/` so `scripts/check.sh` works in the shared Roblox toolchain
+container without adding a Luau test framework.
 ## Test status
 
 The repository's executable confidence gates are the storyboard and production
