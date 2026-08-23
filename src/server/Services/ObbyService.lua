@@ -804,6 +804,17 @@ function ObbyService:startHeartbeat()
         local timedOut = item.elapsed > 45
         local abandoned = item.elapsed > 0 and item.emptyTime > 5
         if fellAway or timedOut or abandoned then
+          local occupant = item.seat and item.seat.Occupant
+          if occupant then
+            occupant.Sit = false
+            local character = occupant.Parent
+            local root = character and character:FindFirstChild("HumanoidRootPart")
+            if root and root:IsA("BasePart") then
+              root.CFrame = item.origin * CFrame.new(-6, 3, 0)
+              root.AssemblyLinearVelocity = Vector3.new()
+              root.AssemblyAngularVelocity = Vector3.new()
+            end
+          end
           item.base.AssemblyLinearVelocity = Vector3.new()
           item.base.AssemblyAngularVelocity = Vector3.new()
           item.base.CFrame = item.origin

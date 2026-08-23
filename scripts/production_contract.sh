@@ -174,6 +174,7 @@ grep -q 'wrong stable stage ID' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lu
 grep -q 'checkpoint is outside its model' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "checkpoint ownership validation missing"
 grep -q 'rejected invalid runtime checkpoint' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "runtime checkpoint identity validation missing"
 grep -q 'timedOut = item.elapsed > 45' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "cart timeout recovery missing"
+grep -q 'occupant.Sit = false' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "cart reset does not safely dismount riders"
 grep -q 'SetNetworkOwner(nil)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "respawn network ownership reset missing"
 grep -q 'shutdownBound' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "shutdown callback lifecycle guard missing"
 grep -q 'local direction = part.CFrame.LookVector' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "conveyor vertical velocity handling missing"

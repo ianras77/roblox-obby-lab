@@ -1213,6 +1213,14 @@
 - Unverified: live touch behavior and multiplayer timing still require Roblox
   Studio/private staging testing.
 
+## 2026-08-23 — Safely recover occupied carts
+
+- Completed: cart timeout, fall, and abandonment recovery now dismounts an
+  occupant and places them at a cleared recovery position before resetting the
+  cart, avoiding rider flings and soft-locks.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live cart behavior remains Studio-unverified.
+
 ## 2026-08-23 — Enforce contiguous checkpoint progression
 
 - Completed: the server now rejects forward checkpoint skips while preserving
