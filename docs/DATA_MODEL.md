@@ -30,6 +30,9 @@ Run state is server-owned and distinguishes `Adventure`, `TimeTrial`, and
 `Practice`. Practice completion is deliberately ineligible for a time-trial
 score. Timing and leaderboard submission still require Studio validation.
 
+Selecting Adventure for a replay clears only the live checkpoint and run
+position; persisted highest progress and Golden Keys are retained.
+
 Qualifying final-chapter completion updates `completionCount` on the server;
 only an eligible Time Trial completion updates the smallest `bestRunMs`.
 Character deaths increment `totalDeaths`; Adventure and Practice completion do

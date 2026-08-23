@@ -940,3 +940,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: runtime test execution still requires Roblox Studio or a chosen
   Luau runner.
+
+## 2026-08-23 — Make Adventure Replay restart from the start
+
+- Completed: selecting Adventure now clears the live checkpoint and returns
+  the character to the start gate, while preserving persisted unlock progress,
+  keys, and Time Trial personal bests.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: Results Replay positioning and persistence preservation require
+  Studio playtesting.

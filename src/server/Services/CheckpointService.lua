@@ -155,6 +155,15 @@ function CheckpointService:resetForTimeTrial(player)
   return true
 end
 
+function CheckpointService:resetForAdventure(player): boolean
+  if not self:isLoaded(player) then
+    return false
+  end
+  player:SetAttribute("Checkpoint", 0)
+  player:SetAttribute("CheckpointId", nil)
+  return true
+end
+
 function CheckpointService:setPracticeCheckpoint(player, targetStage): boolean
   if not self:isLoaded(player) or type(targetStage) ~= "number" or targetStage % 1 ~= 0 then
     return false

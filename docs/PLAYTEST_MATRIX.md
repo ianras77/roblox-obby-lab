@@ -30,3 +30,6 @@ available only after an Adventure completion.
 
 Reset and death should clear residual velocity before safe-spawn teleport; test
 this at moving platforms, carts, and hazards.
+
+The Results Replay action must return the player to the start without reducing
+saved unlock progress or collected keys.
