@@ -1510,3 +1510,12 @@
 - Tests: SVG files recognized as valid SVG images; configuration, profile,
   storyboard, production, Stylua, and whitespace checks pass locally. Roblox
   upload and in-game rendering remain unverified.
+
+## 2026-08-23 — Restore clean CI after remote bootstrap hardening
+
+- Completed: the validated state remote is now returned directly from the
+  bootstrap helper, removing the Selene unused-local warning introduced by the
+  class-validation refactor.
+- Tests: local contracts, Stylua, and whitespace checks pass; GitHub CI failure
+  reproduction was identified from the Selene log and requires the new commit
+  to rerun.

@@ -57,7 +57,7 @@ local function ensureFolders()
   return folder:FindFirstChild(RemoteContracts.Progress.name),
     folder:FindFirstChild(RemoteContracts.Keys.name),
     folder:FindFirstChild(RemoteContracts.Finale.name),
-    folder:FindFirstChild(RemoteContracts.State.name)
+    stateFunction
 end
 
 function WorldBuilder.buildWorld(seed)
