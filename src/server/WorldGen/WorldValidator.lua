@@ -1,6 +1,8 @@
 --!strict
 
 local CollectionService = game:GetService("CollectionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
 
 local WorldValidator = {}
 
@@ -8,6 +10,7 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
   local errors = {}
   local ids = {}
   local checkpoints = {}
+  local previousExit = nil
   for _, stage in ipairs(stages) do
     if stage.stageIndex ~= #checkpoints + 1 then
       table.insert(errors, string.format("stage order gap or duplicate near %d", stage.stageIndex or -1))
@@ -32,6 +35,19 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     end
     if not stage.safeSpawn or not stage.bounds or not stage.mechanics then
       table.insert(errors, string.format("stage %d missing build result fields", stage.stageIndex or -1))
+    end
+    if stage.entrance and stage.exit then
+      local forwardDistance = stage.exit.Position.X - stage.entrance.Position.X
+      if forwardDistance <= 0 then
+        table.insert(errors, string.format("stage %d does not progress forward", stage.stageIndex or -1))
+      end
+      if previousExit then
+        local connector = (stage.entrance.Position - previousExit.Position).Magnitude
+        if connector > GameConfig.StageSpacing.X then
+          table.insert(errors, string.format("connector before stage %d is too long", stage.stageIndex or -1))
+        end
+      end
+      previousExit = stage.exit
     end
     if not stage.model:GetAttribute("PrimaryMechanic") then
       table.insert(errors, string.format("stage %d missing presentation metadata", stage.stageIndex or -1))
