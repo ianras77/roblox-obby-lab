@@ -2,8 +2,117 @@ local Lighting = game:GetService("Lighting")
 local SoundService = game:GetService("SoundService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
+local Build = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Build"))
 
 local DecorBuilder = {}
+
+local function landmarkPart(parent, name, size, position, color, material)
+  local part = Build.part({
+    Name = name,
+    Parent = parent,
+    Size = size,
+    CFrame = CFrame.new(position),
+    Color = color,
+    Material = material or Enum.Material.Wood,
+  })
+  part.CanCollide = false
+  part.CanTouch = false
+  part.CanQuery = false
+  return part
+end
+
+local function addLandmark(zoneModel, zoneConfig, center, size)
+  local landmark = Build.model("DistantLandmark", zoneModel)
+  local rearZ = center.Z + size.Z * 0.5 + 32
+  local groundY = center.Y - size.Y * 0.5
+  if zoneConfig.Name == "Riverbank and Toad Hall" then
+    local stone = Color3.fromRGB(184, 164, 128)
+    local roof = Color3.fromRGB(94, 61, 45)
+    landmarkPart(
+      landmark,
+      "HallBody",
+      Vector3.new(34, 18, 5),
+      Vector3.new(center.X, groundY + 9, rearZ),
+      stone,
+      Enum.Material.Slate
+    )
+    landmarkPart(landmark, "HallRoof", Vector3.new(40, 3, 8), Vector3.new(center.X, groundY + 19, rearZ), roof)
+    for offset = -12, 12, 12 do
+      landmarkPart(
+        landmark,
+        "WarmWindow",
+        Vector3.new(4, 5, 0.4),
+        Vector3.new(center.X + offset, groundY + 10, rearZ - 2.7),
+        Color3.fromRGB(255, 215, 112),
+        Enum.Material.Neon
+      )
+    end
+    landmarkPart(
+      landmark,
+      "HallTower",
+      Vector3.new(8, 25, 6),
+      Vector3.new(center.X + 23, groundY + 12.5, rearZ),
+      stone,
+      Enum.Material.Slate
+    )
+  elseif zoneConfig.Name == "Trouble and Escape" then
+    local iron = Color3.fromRGB(55, 62, 70)
+    local brass = Color3.fromRGB(204, 151, 64)
+    landmarkPart(
+      landmark,
+      "RailwayShed",
+      Vector3.new(38, 13, 6),
+      Vector3.new(center.X, groundY + 6.5, rearZ),
+      Color3.fromRGB(128, 75, 48),
+      Enum.Material.Wood
+    )
+    landmarkPart(
+      landmark,
+      "ShedRoof",
+      Vector3.new(44, 2, 8),
+      Vector3.new(center.X, groundY + 14, rearZ),
+      iron,
+      Enum.Material.Metal
+    )
+    landmarkPart(
+      landmark,
+      "SignalPost",
+      Vector3.new(1.5, 18, 1.5),
+      Vector3.new(center.X - 25, groundY + 9, rearZ),
+      iron,
+      Enum.Material.Metal
+    )
+    landmarkPart(
+      landmark,
+      "SignalLamp",
+      Vector3.new(4, 4, 2),
+      Vector3.new(center.X - 25, groundY + 18, rearZ),
+      brass,
+      Enum.Material.Neon
+    )
+  else
+    local trunk = Color3.fromRGB(73, 54, 42)
+    local lantern = Color3.fromRGB(176, 223, 255)
+    for offset = -22, 22, 22 do
+      landmarkPart(
+        landmark,
+        "LanternTreeTrunk",
+        Vector3.new(3, 18, 3),
+        Vector3.new(center.X + offset, groundY + 9, rearZ),
+        trunk,
+        Enum.Material.Wood
+      )
+      landmarkPart(
+        landmark,
+        "LanternGlow",
+        Vector3.new(3, 3, 3),
+        Vector3.new(center.X + offset, groundY + 19, rearZ),
+        lantern,
+        Enum.Material.Neon
+      )
+    end
+  end
+end
 
 local function ensureSound(name, soundId)
   local sound = SoundService:FindFirstChild(name) or Instance.new("Sound")
@@ -68,6 +177,7 @@ function DecorBuilder.decorateZone(zoneModel, zoneConfig)
   end
 
   local zoneCFrame, zoneSize = zoneModel:GetBoundingBox()
+  addLandmark(zoneModel, zoneConfig, zoneCFrame.Position, zoneSize)
 
   -- Floating confetti emitter high above the zone for motion and brightness
   local confetti = Instance.new("Part")

@@ -871,3 +871,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: command behavior in current Roblox Studio chat channels requires
   Studio testing.
+
+## 2026-08-23 — Add zone-relative story landmarks
+
+- Completed: `DecorBuilder` now places anchored, non-collidable landmark kits
+  from measured zone bounds, giving the three zones distinct silhouettes and
+  orientation cues without adding gameplay-path geometry.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: landmark composition, occlusion, and mobile render cost require
+  Studio/device inspection.

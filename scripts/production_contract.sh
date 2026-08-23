@@ -142,6 +142,8 @@ grep -q 'ensureSoundGroup("Ambience"' "$ROOT_DIR/src/server/ServerMain.server.lu
 grep -q 'ensureSoundGroup("SFX"' "$ROOT_DIR/src/server/ServerMain.server.lua" || fail "SFX SoundGroup is missing"
 grep -q 'sound.SoundGroup = SoundService:FindFirstChild("Music")' "$ROOT_DIR/src/server/ServerMain.server.lua" || fail "music is not routed through Music group"
 grep -q 'sound.SoundGroup = SoundService:FindFirstChild("Ambience")' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "ambience is not routed through Ambience group"
+grep -q 'addLandmark(zoneModel, zoneConfig, zoneCFrame.Position, zoneSize)' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "zone-relative landmark layer is missing"
+grep -q 'CanQuery = false' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "landmark collision/query budget is not disabled"
 grep -q 'TextChatCommand' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "modern developer command path is missing"
 grep -q 'PrimaryAlias = definition.alias' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "developer command aliases are not explicit"
 grep -q 'self.cosmeticClock >= 1 / 30' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "cosmetic obstacle updates are not bounded"

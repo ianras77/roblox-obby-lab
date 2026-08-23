@@ -18,3 +18,9 @@ world material.
 
 No external models or unreviewed Toolbox scripts are used. Roblox asset IDs
 remain subject to the approval gate documented in `ASSET_MANIFEST.md`.
+
+Each generated zone also receives a low-cost distant landmark layer relative
+to its measured bounds: a warm Toad Hall silhouette, a trouble-zone railway
+shed and signal, or Wild Wood lantern trees. These parts are non-collidable
+and non-queryable background dressing, so they improve orientation without
+changing the authored route.
