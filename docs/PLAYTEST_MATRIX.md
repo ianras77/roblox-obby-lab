@@ -20,7 +20,7 @@ normal celebration path.
 
 Replay controls now expose Adventure, Time Trial, and Practice from the HUD;
 verify mode reset timing, checkpoint semantics, completion results, and that no
-Practice run can qualify for a leaderboard.
+Practice run must never qualify for a leaderboard or personal best.
 
 Also verify that Adventure replay completion unlocks Time Trial but does not
 replace the stored Time Trial personal best.
