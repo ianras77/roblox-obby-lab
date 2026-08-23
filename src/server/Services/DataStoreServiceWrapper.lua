@@ -21,7 +21,11 @@ function Wrapper.new(name)
     warn("[DataStore] Production environment is blocked in Studio")
     self.enabled = false
   end
-  self.store = self.enabled and DataStoreService:GetDataStore(name or GameConfig.DataStoreName) or nil
+  local storeName = name or GameConfig.DataStoreName
+  if RunService:IsStudio() and GameConfig.Environment == "StudioSandbox" then
+    storeName = storeName .. "_StudioSandbox"
+  end
+  self.store = self.enabled and DataStoreService:GetDataStore(storeName) or nil
   self.maxAttempts = 3
   return self
 end

@@ -365,6 +365,16 @@
 - Unverified: contact freshness and ride feel under latency require Studio
   multiplayer testing.
 
+## 2026-08-23 — Isolated Studio sandbox store
+
+- Completed: `StudioSandbox` now appends `_StudioSandbox` to the configured
+  DataStore name, preventing test profiles from sharing production records;
+  `Production` remains blocked while running in Studio.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: Roblox API access and sandbox request budgets require Studio
+  verification.
+
 ## 2026-08-23 — Scrollable settings panel
 
 - Completed: the settings/mode panel now uses automatic vertical canvas sizing

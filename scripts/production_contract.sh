@@ -56,6 +56,7 @@ grep -q 'checkpointProfile.highestChapter = math.max' "$ROOT_DIR/src/server/Serv
 grep -q 'MaxCollectedKeys = 100' "$ROOT_DIR/src/shared/Config/ProfileSchema.lua" || fail "profile key bound missing"
 grep -q 'ProfileSchema.MaxCollectedKeys' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "runtime key bound missing"
 grep -q 'GetRequestBudgetForRequestType' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "datastore request budget is not checked"
+grep -q 'storeName .. "_StudioSandbox"' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "studio sandbox shares production datastore"
 grep -q 'DevCommandCooldownSeconds' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "dev command rate limit missing"
 grep -q 'math.min(GameConfig.MaxDevStage, #self.world.stages)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "dynamic stage command cap missing"
 grep -q 'approvedForRelease' "$ROOT_DIR/src/shared/Config/AssetRegistry.lua" || fail "asset approval registry missing"
