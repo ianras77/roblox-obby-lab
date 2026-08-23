@@ -1528,3 +1528,11 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; live analytics delivery remains
   Studio-unverified.
+
+## 2026-08-23 — Raise responsive HUD touch targets
+
+- Completed: settings, mode, volume, practice, and reset controls now use the
+  shared minimum touch size, with a narrower minimum panel width and scrolling
+  layout for phone portrait use.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; device emulation remains Studio-unverified.

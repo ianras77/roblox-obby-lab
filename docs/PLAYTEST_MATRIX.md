@@ -42,3 +42,7 @@ this at moving platforms, carts, and hazards.
 
 The Results Replay action must return the player to the start without reducing
 saved unlock progress or collected keys.
+
+On a narrow phone portrait viewport, verify the settings panel remains usable
+through scrolling and that mode, setting, volume, and practice controls retain
+at least the shared 44px touch target height.

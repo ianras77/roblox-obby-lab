@@ -212,7 +212,7 @@ function UIController:createGui()
   local panel = Instance.new("ScrollingFrame")
   panel.Name = "SettingsPanel"
   panel.Visible = false
-  panel.Size = UDim2.fromScale(0.34, 0.34)
+  panel.Size = UDim2.fromScale(0.42, 0.42)
   panel.Position = UDim2.fromScale(0.02, 0.25)
   panel.BackgroundColor3 = Theme.Ink
   panel.BorderSizePixel = 0
@@ -221,7 +221,7 @@ function UIController:createGui()
   panel.ScrollBarThickness = 8
   panel.Parent = gui
   local panelConstraint = Instance.new("UISizeConstraint")
-  panelConstraint.MinSize = Vector2.new(220, 190)
+  panelConstraint.MinSize = Vector2.new(180, 200)
   panelConstraint.MaxSize = Vector2.new(420, 360)
   panelConstraint.Parent = panel
   local list = Instance.new("UIListLayout")
@@ -235,7 +235,7 @@ function UIController:createGui()
   padding.PaddingRight = UDim.new(0, Theme.Spacing)
   padding.Parent = panel
   local heading = Instance.new("TextLabel")
-  heading.Size = UDim2.new(1, 0, 0, 28)
+  heading.Size = UDim2.new(1, 0, 0, Theme.MinimumTouchSize)
   heading.BackgroundTransparency = 1
   heading.Text = "Travel Settings"
   heading.TextColor3 = Theme.Parchment
@@ -246,7 +246,7 @@ function UIController:createGui()
     local button = Instance.new("TextButton")
     button.Name = "Mode_" .. mode
     button.Selectable = true
-    button.Size = UDim2.new(1, 0, 0, 28)
+    button.Size = UDim2.new(1, 0, 0, Theme.MinimumTouchSize)
     button.BackgroundColor3 = Theme.Brass
     button.TextColor3 = Theme.Ink
     button.Font = Enum.Font.GothamBold
@@ -266,7 +266,7 @@ function UIController:createGui()
   practice.AutomaticCanvasSize = Enum.AutomaticSize.Y
   practice.Parent = gui
   local grid = Instance.new("UIGridLayout")
-  grid.CellSize = UDim2.fromOffset(58, 36)
+  grid.CellSize = UDim2.fromOffset(64, Theme.MinimumTouchSize)
   grid.CellPadding = UDim2.fromOffset(6, 6)
   grid.Parent = practice
   for stage = 1, GameConfig.Zones * GameConfig.StagesPerZone do
@@ -293,7 +293,7 @@ function UIController:createGui()
     toggle.Name = key
     toggle.Selectable = true
     toggle:SetAttribute("SettingKey", key)
-    toggle.Size = UDim2.new(1, 0, 0, 28)
+    toggle.Size = UDim2.new(1, 0, 0, Theme.MinimumTouchSize)
     toggle.BackgroundColor3 = Color3.fromRGB(62, 75, 95)
     toggle.TextColor3 = Color3.new(1, 1, 1)
     toggle.Font = Enum.Font.Gotham
@@ -312,7 +312,7 @@ function UIController:createGui()
     volume.Selectable = true
     volume:SetAttribute("VolumeKey", definition.key)
     volume:SetAttribute("VolumeLabel", definition.label)
-    volume.Size = UDim2.new(1, 0, 0, 28)
+    volume.Size = UDim2.new(1, 0, 0, Theme.MinimumTouchSize)
     volume.BackgroundColor3 = Color3.fromRGB(62, 75, 95)
     volume.TextColor3 = Color3.new(1, 1, 1)
     volume.Font = Enum.Font.Gotham
@@ -323,7 +323,7 @@ function UIController:createGui()
 
   local skip = Instance.new("TextButton")
   skip.Name = "SkipButton"
-  skip.Size = UDim2.fromOffset(120, 40)
+  skip.Size = UDim2.fromOffset(120, Theme.MinimumTouchSize)
   skip.Position = UDim2.fromScale(0.16, 0.12)
   skip.BackgroundColor3 = Color3.fromRGB(110, 130, 170)
   skip.TextColor3 = Color3.new(1, 1, 1)
