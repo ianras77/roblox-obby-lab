@@ -52,3 +52,10 @@
 - Completed: Practice completions remain excluded from personal-best updates.
 - Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
 - Unverified: real Studio timing, reset semantics, and leaderboard publication.
+
+## 2026-08-23 — CI build confidence
+
+- Completed: CI now installs pinned Rojo and builds a place artifact after
+  source checks, so project-tree/mapping failures fail the pipeline.
+- Tests: local storyboard, production contracts, Stylua, and whitespace checks
+  remain passing; CI execution and Rojo installation are not available locally.

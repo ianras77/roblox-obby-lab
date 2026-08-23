@@ -17,5 +17,8 @@ jobs:
         run: |
           cargo install stylua --version 2.3.1 --locked
           cargo install selene --version 0.29.0 --locked
+          cargo install rojo --version 7.4.4 --locked
       - name: Format & lint
         run: ./scripts/check.sh
+      - name: Build place artifact
+        run: rojo build default.project.json -o /tmp/toads-great-escape.rbxlx
