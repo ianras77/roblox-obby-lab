@@ -34,3 +34,7 @@ zone palette, but does not repeatedly overwrite global Lighting while building.
 World construction does not broadcast a fake Stage 0 state. A client requests
 its authoritative restored state through `GetObbyState`, then receives later
 server-owned progression events.
+
+Finale presentation is player-specific: the server sends only the completing
+player's finale event, while the client attaches local effects to that player's
+character. Shared checkpoint objects do not emit a finale burst for everyone.

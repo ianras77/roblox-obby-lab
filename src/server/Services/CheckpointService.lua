@@ -1,5 +1,4 @@
 local Players = game:GetService("Players")
-local Debris = game:GetService("Debris")
 local GameConfig = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("GameConfig"))
 local Maid = require(game:GetService("ReplicatedStorage"):WaitForChild("Util"):WaitForChild("Maid"))
 local DataStoreWrapper = require(script.Parent.DataStoreServiceWrapper)
@@ -178,14 +177,8 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
       })
     end
     if stageIndex == #self.stages then
-      local celebrator = Instance.new("ParticleEmitter")
-      celebrator.Texture = "rbxassetid://258128463"
-      celebrator.Lifetime = NumberRange.new(1, 1.4)
-      celebrator.Speed = NumberRange.new(28, 36)
-      celebrator.Rate = 80
-      celebrator.Parent = checkpoint
-      celebrator:Emit(80)
-      Debris:AddItem(celebrator, 2)
+      -- Finale presentation is sent to the completing player only. Shared
+      -- checkpoints do not emit a replicated burst for everyone.
       local finale = game:GetService("ReplicatedStorage"):FindFirstChild("SharedEvents")
       local evt = finale and finale:FindFirstChild(GameConfig.FinaleRemote)
       if evt then

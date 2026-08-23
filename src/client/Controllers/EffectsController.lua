@@ -47,6 +47,8 @@ end
 
 function EffectsController:finale()
   local reducedMotion = self.player:GetAttribute("Accessibility_reducedMotion")
+  local char = self.player.Character
+  local root = char and char:FindFirstChild("HumanoidRootPart")
   local blur = Instance.new("BlurEffect")
   blur.Size = 0
   blur.Parent = Lighting
@@ -61,7 +63,7 @@ function EffectsController:finale()
   spot.Brightness = 4
   spot.Angle = 90
   spot.Range = 40
-  spot.Parent = workspace.CurrentCamera
+  spot.Parent = root or workspace.Terrain
   TweenService:Create(spot, TweenInfo.new(2, Enum.EasingStyle.Quad), { Brightness = 0 }):Play()
   game.Debris:AddItem(spot, 3)
 
@@ -76,8 +78,6 @@ function EffectsController:finale()
   game.Debris:AddItem(shake, 2)
 
   -- Fireworks at the player
-  local char = self.player.Character
-  local root = char and char:FindFirstChild("HumanoidRootPart")
   if root then
     for _ = 1, 3 do
       local boom = Instance.new("ParticleEmitter")
