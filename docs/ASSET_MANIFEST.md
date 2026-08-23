@@ -5,6 +5,25 @@ configuration, checkpoint/key builders, and effects. They are unverified from
 this Linux environment: asset existence, permissions, moderation status, and
 ownership require Roblox Studio/Creator Hub verification.
 
+Current referenced IDs (all unverified):
+
+| ID | Type | Source/use |
+| --- | --- | --- |
+| `1846220524` | Sound | Zone 1 ambience |
+| `1837483576` | Sound | Zone 2 ambience |
+| `1837635151` | Sound | Zone 3 ambience |
+| `1843521234` | Sound | Legacy riverbank music candidate |
+| `1837468655` | Sound | Legacy trouble music candidate |
+| `12222152` | Sound | Checkpoint feedback |
+| `12222058` | Sound | Key pickup |
+| `241594419` | Particle texture | Spark/burst effects |
+| `260430117` | Particle texture | Sparkle/firefly effects |
+| `258128463` | Particle texture | Impact/firework effects |
+| `484084159` | Particle texture | Woodland leaves |
+| `12824333` | Particle texture | Confetti |
+| `148274626` | Decal | Legacy frog sign |
+| `138186576` | Sound | Client impact effect |
+
 No external art was uploaded by this work. Replace the current trial-and-error
 music fallback with approved assets before publication; keep empty fallbacks so
 missing audio cannot break gameplay.

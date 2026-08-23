@@ -2,7 +2,7 @@
 
 No Roblox MicroProfiler or device frame-time measurements are available in the
 current environment. The known high-cost paths are the global Heartbeat, rider
-`GetTouchingParts`, wind queries, pressure-pad queries, per-frame transforms,
+`GetTouchingParts`, bounded wind/pressure queries, per-frame transforms,
 and permanent particle emitters. Studio profiling must measure generation,
 join, chapters 10/12/13/15/18, and a two-player session before release.
 

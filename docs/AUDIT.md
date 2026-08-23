@@ -31,8 +31,9 @@ manual Studio comparison before either is treated as authoritative.
 - Persistence now has an explicit environment gate, versioned profile schema,
   bounded retry wrapper, autosave, and shutdown save. Migration coverage and
   live DataStore behavior still require Studio validation.
-- `ObbyService` uses a server Heartbeat with repeated `GetTouchingParts` calls
-  for wind and pressure pads, and directly edits moving-platform riders.
+- `ObbyService` uses a server Heartbeat for critical motion and bounded 10 Hz
+  queries for wind and pressure pads; moving-platform rider correction remains
+  a Studio physics validation item.
 - Lighting and ambience are applied globally during generation; decoration uses
   a fixed world coordinate for every zone.
 - Music and effects cycle through unverified hard-coded asset IDs.
@@ -40,7 +41,8 @@ manual Studio comparison before either is treated as authoritative.
   controls; responsive device and gamepad behavior remain unverified.
 - Server capacity configuration is now intentionally left to Creator Hub;
   unused Lua capacity knobs are not treated as effective settings.
-- Automated tests are currently a placeholder plus shell storyboard checks.
+- Automated confidence includes configuration, storyboard, production, Stylua,
+  Selene, and CI Rojo-build gates; runtime traversal still requires Studio.
 
 ## Not claimed as tested
 
