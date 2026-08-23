@@ -8,6 +8,16 @@ local ChapterConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForCh
 
 local StageBuilder = {}
 
+export type StageBuildResult = {
+  model: Model,
+  entrance: CFrame,
+  exit: CFrame,
+  checkpoint: BasePart,
+  safeSpawn: CFrame,
+  bounds: Vector3,
+  mechanics: { string },
+}
+
 function StageBuilder.buildStage(args)
   local stageType = args.stageType
   local template = StageTemplates[stageType]
@@ -101,7 +111,16 @@ function StageBuilder.buildStage(args)
     Build.cart(args.origin * CFrame.new(-4, 1.5, 0), model)
   end
 
-  return model, endCFrame, cp
+  local _, bounds = model:GetBoundingBox()
+  return {
+    model = model,
+    entrance = args.origin,
+    exit = endCFrame,
+    checkpoint = cp,
+    safeSpawn = cp.CFrame + Vector3.new(0, 4, 0),
+    bounds = bounds,
+    mechanics = { presentation.mechanic },
+  } :: StageBuildResult
 end
 
 return StageBuilder

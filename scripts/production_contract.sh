@@ -6,7 +6,7 @@ fail() { echo "FAIL: $*" >&2; exit 1; }
 
 grep -q 'Name = "GeneratedObby"' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "generated ownership root missing"
 grep -q 'GeneratorOwner' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "generator ownership marker missing"
-grep -q 'stageId = stageModel:GetAttribute("StageId")' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage manifest IDs missing"
+grep -q 'stageId = result.model:GetAttribute("StageId")' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage manifest IDs missing"
 grep -q 'stageIndex <= previous' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint regression guard missing"
 if grep -q 'part:Destroy()' "$ROOT_DIR/src/server/Services/ObbyService.lua"; then
   fail "collectible runtime must not globally destroy keys"
@@ -29,4 +29,5 @@ grep -q 'DevCommandCooldownSeconds' "$ROOT_DIR/src/server/Services/ObbyService.l
 grep -q 'approvedForRelease' "$ROOT_DIR/src/shared/Config/AssetRegistry.lua" || fail "asset approval registry missing"
 grep -q 'playFirstApprovedMusic' "$ROOT_DIR/src/server/ServerMain.server.lua" || fail "asset approval gate missing"
 grep -q 'ChapterFlavor' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "chapter presentation metadata missing"
+grep -q 'StageBuildResult' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "explicit stage build result missing"
 echo "production contracts ok"

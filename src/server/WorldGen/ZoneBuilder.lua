@@ -15,7 +15,7 @@ function ZoneBuilder.buildZone(args)
   for i = 1, args.stagesPerZone do
     local stageIndex = ((args.zoneIndex - 1) * args.stagesPerZone) + i
     local stageType = WorldGenConfig.StageTypes[((stageIndex - 1) % #WorldGenConfig.StageTypes) + 1]
-    local stageModel, endCFrame, checkpoint = StageBuilder.buildStage({
+    local result = StageBuilder.buildStage({
       parent = zoneModel,
       origin = currentCFrame,
       stageIndex = stageIndex,
@@ -24,15 +24,18 @@ function ZoneBuilder.buildZone(args)
       random = args.random,
     })
     table.insert(stages, {
-      model = stageModel,
-      checkpoint = checkpoint,
+      model = result.model,
+      checkpoint = result.checkpoint,
       stageIndex = stageIndex,
       stageType = stageType,
-      stageId = stageModel:GetAttribute("StageId"),
-      entrance = currentCFrame,
-      exit = endCFrame,
+      stageId = result.model:GetAttribute("StageId"),
+      entrance = result.entrance,
+      exit = result.exit,
+      safeSpawn = result.safeSpawn,
+      bounds = result.bounds,
+      mechanics = result.mechanics,
     })
-    currentCFrame = endCFrame * CFrame.new(0, args.elevationStep, 0)
+    currentCFrame = result.exit * CFrame.new(0, args.elevationStep, 0)
   end
 
   return zoneModel, stages, currentCFrame

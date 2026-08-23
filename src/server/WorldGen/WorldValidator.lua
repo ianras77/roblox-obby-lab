@@ -30,6 +30,9 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     if not stage.entrance or not stage.exit then
       table.insert(errors, string.format("stage %d missing entrance or exit", stage.stageIndex or -1))
     end
+    if not stage.safeSpawn or not stage.bounds or not stage.mechanics then
+      table.insert(errors, string.format("stage %d missing build result fields", stage.stageIndex or -1))
+    end
     if not stage.model:GetAttribute("PrimaryMechanic") then
       table.insert(errors, string.format("stage %d missing presentation metadata", stage.stageIndex or -1))
     end
