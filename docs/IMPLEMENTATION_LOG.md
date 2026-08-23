@@ -119,3 +119,12 @@
   pass locally.
 - Unverified: actual Roblox Studio traversal, physics, device layout, and
   multiplayer behavior.
+
+## 2026-08-23 — Checkpoint geometry validation
+
+- Completed: WorldValidator now rejects non-positive stage bounds, undersized
+  checkpoint standing areas, safe spawns that are not above their checkpoint,
+  and checkpoint/hazard overlap.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: physical jump feasibility and respawn feel still require Studio.
