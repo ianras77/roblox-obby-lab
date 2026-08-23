@@ -21,7 +21,13 @@ jobs:
         run: |
           cargo install stylua --version 2.3.1 --locked
           cargo install selene --version 0.29.0 --locked
-          cargo install rojo --version 7.4.4 --locked
+          mkdir -p "$HOME/.local/bin"
+          curl --fail --silent --show-error --location \
+            "https://github.com/rojo-rbx/rojo/releases/download/v7.4.4/rojo-7.4.4-linux-x86_64.zip" \
+            --output /tmp/rojo.zip
+          unzip -q /tmp/rojo.zip -d /tmp/rojo
+          install -m 0755 /tmp/rojo/rojo "$HOME/.local/bin/rojo"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Format & lint
         run: ./scripts/check.sh
       - name: Build place artifact
