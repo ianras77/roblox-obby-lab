@@ -9,6 +9,9 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
   local ids = {}
   local checkpoints = {}
   for _, stage in ipairs(stages) do
+    if stage.stageIndex ~= #checkpoints + 1 then
+      table.insert(errors, string.format("stage order gap or duplicate near %d", stage.stageIndex or -1))
+    end
     if not stage.stageId then
       table.insert(errors, "stage missing stable stageId")
     elseif ids[stage.stageId] then
