@@ -1157,3 +1157,12 @@
 - Tests: latest recorded GitHub CI run passes; local configuration, profile,
   storyboard, production, Stylua, and whitespace checks pass.
 - Unverified: all Roblox Studio and Creator Hub checklist items remain pending.
+
+## 2026-08-23 — Validate zone spatial presentation data
+
+- Completed: zone manifests now reject non-finite entrance/exit positions and
+  invalid centers before presentation systems consume them.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live streamed-zone presentation still requires Roblox Studio
+  testing.

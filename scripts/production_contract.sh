@@ -189,6 +189,8 @@ grep -q 'SoundGroup = SoundGroups.ensure("Music"' "$ROOT_DIR/src/server/ServerMa
 grep -q 'SoundGroup = SoundGroups.ensure("Ambience"' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "ambience is not routed through Ambience group"
 grep -q 'sound.SoundGroup = SoundGroups.ensure("SFX"' "$ROOT_DIR/src/shared/Util/Build.lua" || fail "gameplay feedback is not routed through SFX group"
 grep -q 'addLandmark(zoneModel, zoneConfig, zoneCFrame.Position, zoneSize)' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "zone-relative landmark layer is missing"
+grep -q 'non-finite entrance or exit' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "zone entrance/exit finiteness validation missing"
+grep -q 'invalid center' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "zone center validation missing"
 grep -q 'CanQuery = false' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "landmark collision/query budget is not disabled"
 grep -q 'hasNearbyPlayer(item.part.Position, 180)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "non-critical proximity activation is missing"
 grep -q 'TextChatCommand' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "modern developer command path is missing"

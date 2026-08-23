@@ -46,6 +46,11 @@ local function validateZones(zones, totalZones, root)
     end
     if typeof(zone.entrance) ~= "CFrame" or typeof(zone.exit) ~= "CFrame" then
       table.insert(errors, string.format("zone %s has invalid entrance or exit", tostring(zone.zoneIndex)))
+    elseif not finiteVector(zone.entrance.Position) or not finiteVector(zone.exit.Position) then
+      table.insert(errors, string.format("zone %s has non-finite entrance or exit", tostring(zone.zoneIndex)))
+    end
+    if typeof(zone.center) ~= "Vector3" or not finiteVector(zone.center) then
+      table.insert(errors, string.format("zone %s has invalid center", tostring(zone.zoneIndex)))
     end
     if
       typeof(zone.bounds) ~= "Vector3"
