@@ -15,13 +15,24 @@ function EnvironmentController.new()
   local self = setmetatable({}, EnvironmentController)
   self.player = Players.LocalPlayer
   self.event = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.ProgressRemote)
+  self.stateFunction = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild("GetObbyState")
   self.atmosphere = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere")
   self.atmosphere.Parent = Lighting
   self.colorCorrection = Lighting:FindFirstChildOfClass("ColorCorrectionEffect")
     or Instance.new("ColorCorrectionEffect")
   self.colorCorrection.Parent = Lighting
   self:bind()
+  self:syncInitialState()
   return self
+end
+
+function EnvironmentController:syncInitialState()
+  local ok, payload = pcall(function()
+    return self.stateFunction:InvokeServer()
+  end)
+  if ok and payload then
+    self:transition(payload.stage or 0)
+  end
 end
 
 function EnvironmentController:bind()

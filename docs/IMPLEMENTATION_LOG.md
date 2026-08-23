@@ -536,3 +536,13 @@
   whitespace checks pass locally.
 - Unverified: server cost and perceived motion quality require Studio
   profiling and playtesting.
+
+## 2026-08-23 — Synchronize initial environment presentation
+
+- Completed: the local environment controller now requests `GetObbyState` on
+  startup and applies the restored chapter's zone presentation before later
+  progress events arrive.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: visual transition quality and lighting replication require
+  Studio/device testing.
