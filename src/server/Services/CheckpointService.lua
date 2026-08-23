@@ -173,6 +173,9 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
   if not player then
     return
   end
+  if not self:isLoaded(player) then
+    return
+  end
   local humanoidRoot = hit.Parent:FindFirstChild("HumanoidRootPart")
   local humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
   if

@@ -414,6 +414,16 @@
 - Unverified: live migration of extreme counter values requires staging
   DataStore validation.
 
+## 2026-08-23 — Gate progression on profile readiness
+
+- Completed: checkpoint advancement now requires a successfully loaded player
+  profile before accepting touches, preventing early-join progression from
+  mutating session defaults during a DataStore load race.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: join/load timing under live DataStore latency requires Studio or
+  staging validation.
+
 ## 2026-08-23 — Guard invalid checkpoint instances
 
 - Completed: the world validator now inspects checkpoint geometry only after
