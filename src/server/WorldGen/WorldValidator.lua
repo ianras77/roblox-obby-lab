@@ -52,7 +52,7 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     if stage.bounds and (stage.bounds.X <= 0 or stage.bounds.Y <= 0 or stage.bounds.Z <= 0) then
       table.insert(errors, string.format("stage %d has invalid bounds", stage.stageIndex or -1))
     end
-    if stage.checkpoint then
+    if stage.checkpoint and stage.checkpoint:IsA("BasePart") then
       if stage.checkpoint.Size.X < 4 or stage.checkpoint.Size.Z < 4 then
         table.insert(
           errors,

@@ -404,6 +404,15 @@
 - Unverified: live migration of malicious or corrupt records requires staging
   DataStore validation.
 
+## 2026-08-23 — Guard invalid checkpoint instances
+
+- Completed: the world validator now inspects checkpoint geometry only after
+  confirming the checkpoint is a `BasePart`, so malformed checkpoint instances
+  return validation errors without crashing the build.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live malformed-instance coverage still requires Studio.
+
 ## 2026-08-23 — Bounded rider contact queries
 
 - Completed: moving-platform contact detection now samples `GetTouchingParts()`
