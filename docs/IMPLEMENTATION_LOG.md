@@ -1425,3 +1425,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; live remote construction remains
   Studio-unverified.
+
+## 2026-08-23 — Preserve session-owned settings on profile saves
+
+- Completed: concurrent profile writes retain monotonic progression while the
+  sanitized latest session supplies its own accessibility and audio settings;
+  stale stored preferences no longer overwrite an active session's changes.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live concurrent DataStore behavior remains
+  Studio-unverified.

@@ -90,7 +90,7 @@ function Wrapper:SetAsync(key, value)
             return
           end
           for keyId, collected in pairs(source) do
-            if keyCount >= 100 then
+            if keyCount >= ProfileSchema.MaxCollectedKeys then
               return
             end
             if type(keyId) == "string" and #keyId <= 100 and collected == true and not mergedKeys[keyId] then
@@ -116,7 +116,7 @@ function Wrapper:SetAsync(key, value)
               chapterNumber
               and chapterNumber % 1 == 0
               and chapterNumber >= 1
-              and chapterNumber <= 18
+              and chapterNumber <= ProfileSchema.MaxChapter
               and oldTime
               and oldTime > 0
               and oldTime < 86400000
@@ -126,22 +126,10 @@ function Wrapper:SetAsync(key, value)
             end
           end
         end
-        if type(current.settings) == "table" then
-          merged.settings = table.clone(value.settings or {})
-          for setting, enabled in pairs(current.settings) do
-            if type(enabled) == "boolean" and type(merged.settings[setting]) == "boolean" then
-              merged.settings[setting] = enabled
-            end
-          end
-          for _, setting in ipairs({ "masterVolume", "musicVolume", "sfxVolume", "uiScale" }) do
-            local numeric = tonumber(current.settings[setting])
-            local minimum = setting == "uiScale" and 0.8 or 0
-            local maximum = setting == "uiScale" and 1.5 or 1
-            if numeric and numeric >= minimum and numeric <= maximum then
-              merged.settings[setting] = numeric
-            end
-          end
-        end
+        -- Settings are session-owned preferences. The sanitized session
+        -- snapshot supplies this write; progression fields above use
+        -- monotonic merges because they must survive concurrent sessions.
+        merged.settings = table.clone(value.settings or {})
         return merged
       end)
     end)
