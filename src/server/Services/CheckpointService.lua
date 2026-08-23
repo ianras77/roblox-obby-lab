@@ -15,7 +15,30 @@ function CheckpointService.new(stages, progressEvent, runState)
   self.progressEvent = progressEvent
   self.runState = runState
   self.store = DataStoreWrapper.new(GameConfig.DataStoreName)
+  self.loaded = {}
   self:hookPlayers()
+  local autosaveActive = true
+  self.maid:Give(function()
+    autosaveActive = false
+  end)
+  task.spawn(function()
+    while true do
+      task.wait(GameConfig.AutosaveSeconds)
+      if not autosaveActive then
+        return
+      end
+      for _, player in ipairs(Players:GetPlayers()) do
+        if self.loaded[player] then
+          self:saveCheckpoint(player)
+        end
+      end
+    end
+  end)
+  game:BindToClose(function()
+    for _, player in ipairs(Players:GetPlayers()) do
+      self:saveCheckpoint(player)
+    end
+  end)
   for _, player in ipairs(Players:GetPlayers()) do
     task.spawn(function()
       self:initializePlayer(player)
@@ -45,11 +68,13 @@ function CheckpointService:hookPlayers()
 
   self.maid:Give(Players.PlayerRemoving:Connect(function(player)
     self:saveCheckpoint(player)
+    self.loaded[player] = nil
   end))
 end
 
 function CheckpointService:loadCheckpoint(player)
   local saved = self.store:GetAsync(player.UserId)
+  self.loaded[player] = true
   local profile = ProfileSchema.sanitize(saved)
   profile.highestChapter = math.clamp(profile.highestChapter, 0, #self.stages)
   if profile.highestChapter > 0 then

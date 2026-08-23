@@ -7,7 +7,11 @@ Wrapper.__index = Wrapper
 
 function Wrapper.new(name)
   local self = setmetatable({}, Wrapper)
-  self.enabled = GameConfig.UseDataStore and not RunService:IsStudio()
+  self.enabled = GameConfig.UseDataStore and GameConfig.Environment ~= "StudioDevelopment"
+  if RunService:IsStudio() and GameConfig.Environment == "Production" then
+    warn("[DataStore] Production environment is blocked in Studio")
+    self.enabled = false
+  end
   self.store = self.enabled and DataStoreService:GetDataStore(name or GameConfig.DataStoreName) or nil
   self.maxAttempts = 3
   return self

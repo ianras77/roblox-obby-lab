@@ -10,9 +10,11 @@ local GameConfig = {
   ElevationPerZone = 10,
   AllowlistUserIds = { 0 }, -- Kid Notes: add your userId here to unlock /reseed, /rebuild, /stage
   DevCommandsEnabled = true,
+  Environment = "StudioDevelopment", -- StudioDevelopment, StudioSandbox, Staging, Production
   SaveCheckpoints = false, -- Kid Notes: flip to true when testing DataStore saves
   UseDataStore = false, -- keep off in Studio to avoid errors
-  DataStoreName = "ObbyOfLegends_Checkpoints",
+  AutosaveSeconds = 120,
+  DataStoreName = "ToadsGreatEscape_Profile_v1",
   -- Cycle through these until one preloads; swap in your own IDs if they error.
   MusicIds = {
     "rbxassetid://1843521234",

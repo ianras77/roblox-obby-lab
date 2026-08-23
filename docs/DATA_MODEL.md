@@ -14,6 +14,11 @@ Before release, implement validated migrations, `UpdateAsync`, bounded retry
 backoff, autosave, `PlayerRemoving`, `BindToClose`, and separate Studio
 sandbox/private staging/production stores.
 
+`GameConfig.Environment` is an explicit deployment label. The development
+environment cannot write production data; staging and production must use
+distinct configured store names. The checkpoint service now autosaves on the
+configured interval and saves on shutdown/player removal.
+
 Run state is server-owned and distinguishes `Adventure`, `TimeTrial`, and
 `Practice`. Practice completion is deliberately ineligible for a time-trial
 score. Timing and leaderboard submission still require Studio validation.
