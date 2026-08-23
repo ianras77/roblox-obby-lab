@@ -457,6 +457,7 @@ function UIController:bind()
     self:updateTimerState(payload)
     self.highestChapter = math.max(self.highestChapter, stage)
     self.currentChapter = {
+      id = payload.chapterId,
       name = payload.chapterName,
       mechanic = payload.mechanic,
       flavor = payload.flavor,

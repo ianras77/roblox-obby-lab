@@ -364,6 +364,7 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
         bestRunMs = self:getProfile(player).bestRunMs,
         deaths = self:getProfile(player).totalDeaths,
         bestChapterMs = self:getProfile(player).bestChapterMs,
+        chapterId = stage.stageId,
         chapterName = stageModel:GetAttribute("ChapterName") or checkpoint:GetAttribute("StageId"),
         mechanic = stageModel:GetAttribute("PrimaryMechanic"),
         flavor = stageModel:GetAttribute("ChapterFlavor"),

@@ -72,6 +72,9 @@ World construction does not broadcast a fake Stage 0 state. A client requests
 its authoritative restored state through `GetObbyState`, then receives later
 server-owned progression events.
 
+Progression events include the stable chapter ID as well as display text, so UI
+and analytics consumers do not need to treat mutable labels as identity.
+
 Finale presentation is player-specific: the server sends only the completing
 player's finale event, while the client attaches local effects to that player's
 character. Shared checkpoint objects do not emit a finale burst for everyone.

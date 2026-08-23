@@ -1400,3 +1400,11 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; multi-client collision behavior remains
   Studio-unverified.
+
+## 2026-08-23 — Synchronize stable chapter identity
+
+- Completed: server progression payloads now include the canonical chapter ID;
+  the client stores it separately from display name and flavor text.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live payload observation remains
+  Studio-unverified.
