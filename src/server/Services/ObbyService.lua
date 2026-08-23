@@ -115,6 +115,9 @@ local function bindRunModes(self)
     end
     if mode == "TimeTrial" then
       self.checkpoints:resetForTimeTrial(player)
+      if self.world.startGate then
+        self.checkpoints:teleportToCFrame(player, self.world.startGate.CFrame * CFrame.new(-8, 0, 0))
+      end
     end
     self.world.progressEvent:FireClient(player, {
       stage = player:GetAttribute("Checkpoint") or 0,

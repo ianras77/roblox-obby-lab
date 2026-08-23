@@ -127,6 +127,7 @@ function WorldBuilder.buildWorld(seed)
   print(string.format("[Obby] Built %d zones, %d stages, seed=%s", GameConfig.Zones, totalStages, tostring(seed)))
   return {
     model = obbyModel,
+    startGate = startGate,
     stages = allStages,
     seed = seed,
     totalStages = totalStages,

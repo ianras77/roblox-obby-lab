@@ -811,3 +811,14 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally.
 - Unverified: visual smoothness and device performance require Studio testing.
+
+## 2026-08-23 — Return Time Trial players to the start gate
+
+- Completed: the generated start gate is exposed in the world result, and
+  selecting Time Trial clears progression and returns the live character to a
+  safe position behind the gate.
+- Tests: configuration, profile, storyboard, production, and Stylua checks
+  pass locally; the aggregate check is blocked here because `selene` is not
+  installed.
+- Unverified: the respawn/teleport presentation and gate crossing still
+  require Roblox Studio playtesting.

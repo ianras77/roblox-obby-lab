@@ -310,6 +310,19 @@ function CheckpointService:teleportToStage(player, targetStage)
   return false
 end
 
+function CheckpointService:teleportToCFrame(player, destination: CFrame)
+  local character = player.Character
+  local root = character and character:FindFirstChild("HumanoidRootPart")
+  if not root or not root:IsA("BasePart") then
+    return false
+  end
+  root.AssemblyLinearVelocity = Vector3.new()
+  root.AssemblyAngularVelocity = Vector3.new()
+  root.CFrame = destination
+  root:SetNetworkOwner(nil)
+  return true
+end
+
 function CheckpointService:teleportToSavedCheckpoint(player)
   local target = player:GetAttribute("Checkpoint")
   if not target then
