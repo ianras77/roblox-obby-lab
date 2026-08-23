@@ -66,14 +66,15 @@ roblox-obby-lab/
 ## Scripts
 
 - `scripts/dev.sh` prints the local tool versions and confirms the project file.
-- `scripts/check.sh` runs the storyboard contract, `stylua --check`, and `selene`.
+- `scripts/check.sh` runs the storyboard and production contracts, `stylua --check`, and `selene`.
 - `scripts/rojo_serve.sh` starts a Rojo server on the port declared in `default.project.json`.
 
 ## Notes
 
 - Kid-friendly tuning notes live in `README_KIDS.md`.
 - The original build spec for this project lives in `SPEC.md`.
-- CI runs formatting and lint checks from `.github/workflows/ci.yml` when present.
+- CI runs contracts, formatting, linting, and a pinned Rojo place build from
+  `.github/workflows/ci.yml`.
 - The generated world is owned by `Workspace.GeneratedObby`; the seed and
   generator version are recorded on that model. See `docs/AUDIT.md` and
   `docs/IMPLEMENTATION_LOG.md` for verified status and Studio-only checks.

@@ -86,3 +86,10 @@
   checks, and the pinned Rojo place build.
 - Evidence: GitHub Actions job completed successfully; this does not replace
   Roblox Studio playtesting or device/multiplayer validation.
+
+## 2026-08-23 — Operator documentation alignment
+
+- Completed: README and test documentation now describe the production contract
+  gate and Rojo artifact build rather than the original prototype-only checks.
+- Tests: no runtime code changed; prior local and GitHub validation remains the
+  evidence baseline.
