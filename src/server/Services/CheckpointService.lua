@@ -176,9 +176,9 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
     end
     player:SetAttribute("Checkpoint", stageIndex)
     player:SetAttribute("CheckpointId", checkpoint:GetAttribute("StageId"))
-    local profile = self:getProfile(player)
-    profile.highestChapter = math.max(profile.highestChapter, stageIndex)
-    self.profiles[player] = profile
+    local checkpointProfile = self:getProfile(player)
+    checkpointProfile.highestChapter = math.max(checkpointProfile.highestChapter, stageIndex)
+    self.profiles[player] = checkpointProfile
     if self.analytics then
       self.analytics:track(player, "chapter_completed", { stage = stageIndex })
     end
@@ -197,11 +197,11 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
       local run = self.runState:get(player)
       local split = run.chapterSplits[stageIndex - 1]
       if split and player:GetAttribute("RunMode") == "TimeTrial" then
-        local profile = self:getProfile(player)
+        local splitProfile = self:getProfile(player)
         local splitMs = math.floor(split * 1000)
         local splitKey = tostring(stageIndex - 1)
-        if not profile.bestChapterMs[splitKey] or splitMs < profile.bestChapterMs[splitKey] then
-          profile.bestChapterMs[splitKey] = splitMs
+        if not splitProfile.bestChapterMs[splitKey] or splitMs < splitProfile.bestChapterMs[splitKey] then
+          splitProfile.bestChapterMs[splitKey] = splitMs
         end
       end
     end
@@ -209,10 +209,10 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
       if self.analytics then
         self.analytics:track(player, "run_completed", { mode = player:GetAttribute("RunMode") })
       end
-      local profile = self:getProfile(player)
-      profile.completionCount += 1
-      if not profile.bestRunMs or elapsed * 1000 < profile.bestRunMs then
-        profile.bestRunMs = math.floor(elapsed * 1000)
+      local completionProfile = self:getProfile(player)
+      completionProfile.completionCount += 1
+      if not completionProfile.bestRunMs or elapsed * 1000 < completionProfile.bestRunMs then
+        completionProfile.bestRunMs = math.floor(elapsed * 1000)
       end
     end
     if self.progressEvent then
@@ -236,20 +236,20 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
       local finale = game:GetService("ReplicatedStorage"):FindFirstChild("SharedEvents")
       local evt = finale and finale:FindFirstChild(GameConfig.FinaleRemote)
       if evt then
-        local profile = self:getProfile(player)
+        local finaleProfile = self:getProfile(player)
         local foundKeys = 0
-        for _ in pairs(profile.collectedKeys) do
+        for _ in pairs(finaleProfile.collectedKeys) do
           foundKeys += 1
         end
         evt:FireClient(player, {
           stage = stageIndex,
           mode = player:GetAttribute("RunMode") or "Adventure",
           elapsedMs = elapsed and math.floor(elapsed * 1000) or nil,
-          bestRunMs = profile.bestRunMs,
-          deaths = profile.totalDeaths,
+          bestRunMs = finaleProfile.bestRunMs,
+          deaths = finaleProfile.totalDeaths,
           keys = foundKeys,
           totalKeys = self.totalKeysProvider and self.totalKeysProvider() or nil,
-          bestChapterMs = profile.bestChapterMs,
+          bestChapterMs = finaleProfile.bestChapterMs,
         })
       end
     end

@@ -393,7 +393,7 @@ function UIController:showResults(payload)
     or ""
   result.Text =
     string.format("Toad Hall reached!\n%s run complete%s%s%s%s\nCompletion: 100%%", mode, elapsed, best, deaths, keys)
-  local function addAction(name, text, mode, position)
+  local function addAction(name, text, actionMode, position)
     local button = Instance.new("TextButton")
     button.Name = name
     button.Size = UDim2.fromScale(0.29, 0.18)
@@ -405,7 +405,7 @@ function UIController:showResults(payload)
     button.Text = text
     button.Parent = card
     button.Activated:Connect(function()
-      self.modeEvent:FireServer(mode)
+      self.modeEvent:FireServer(actionMode)
       card:Destroy()
     end)
   end

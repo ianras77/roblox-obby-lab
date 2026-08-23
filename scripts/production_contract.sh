@@ -52,7 +52,7 @@ if grep -q 'MaxPlayersPerServer' "$ROOT_DIR/src/shared/Config/GameConfig.lua"; t
 grep -q 'player:" .. tostring(player.UserId)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "string datastore key missing"
 grep -q 'local saved, loadSucceeded' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "datastore load outcome is not distinguished"
 grep -q 'not self:isLoaded(player)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "failed profile loads can still be saved"
-grep -q 'profile.highestChapter = math.max(profile.highestChapter, stageIndex)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint profile state is stale"
+grep -q 'checkpointProfile.highestChapter = math.max' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint profile state is stale"
 grep -q 'GetRequestBudgetForRequestType' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "datastore request budget is not checked"
 grep -q 'DevCommandCooldownSeconds' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "dev command rate limit missing"
 grep -q 'math.min(GameConfig.MaxDevStage, #self.world.stages)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "dynamic stage command cap missing"
