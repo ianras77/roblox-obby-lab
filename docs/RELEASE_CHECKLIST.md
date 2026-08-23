@@ -1,6 +1,8 @@
 # Release checklist
 
-- [ ] Rojo build, Stylua, Selene, validator, and pure tests pass.
+- [x] Local configuration, storyboard, production, and Stylua checks pass.
+- [ ] Selene and pure runtime tests pass in a local toolchain; Selene is not
+      installed in this environment.
 - [ ] CI produces a valid Rojo place artifact from `default.project.json` using
       the pinned official Rojo release binary.
 - [ ] CI uses pinned official release binaries for Stylua and Selene.
@@ -13,5 +15,5 @@
 - [ ] Production DataStore name and environment separation are verified.
 - [ ] `GameConfig.Environment` and `UseDataStore` match the intended place;
       Studio production writes are blocked.
-- [ ] No serious Output errors; no unverified asset IDs remain.
+- [ ] No serious Output errors; asset IDs are Creator Hub-verified and approved.
 - [ ] Branch reviewed and merged by an owner; Roblox publication remains manual.
