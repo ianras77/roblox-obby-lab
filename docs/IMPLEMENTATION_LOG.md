@@ -1,5 +1,15 @@
 # Implementation log
 
+## 2026-08-23 — Gate cart motion on riders
+
+- Completed: generated carts now remain stationary until their server-owned
+  seat has an occupant, stop while empty, and reset after five seconds of
+  abandonment or after the existing route timeout/fall recovery.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: seat boarding, dismount, and multiplayer cart behavior require
+  Studio playtesting.
+
 ## 2026-08-23 — Reject non-finite stage geometry
 
 - Completed: world validation now rejects NaN/infinite bounds and stage

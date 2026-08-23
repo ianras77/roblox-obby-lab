@@ -440,6 +440,7 @@ function ObbyService:scanBehaviors()
       force = part:FindFirstChildOfClass("LinearVelocity"),
       origin = part.CFrame,
       elapsed = 0,
+      emptyTime = 0,
     })
   end)
 
@@ -687,18 +688,25 @@ function ObbyService:startHeartbeat()
     end
 
     for _, item in ipairs(self.behaviors.carts) do
-      if item.base and item.base.Parent then
-        item.elapsed += dt
-      end
-      if item.force and item.base and item.base.Parent then
-        item.force.VectorVelocity = item.base.CFrame.LookVector * 40
+      if item.base and item.base.Parent and item.force then
+        local occupied = item.seat and item.seat.Occupant ~= nil
+        if occupied then
+          item.emptyTime = 0
+          item.elapsed += dt
+          item.force.VectorVelocity = item.base.CFrame.LookVector * 40
+        else
+          item.emptyTime += dt
+          item.force.VectorVelocity = Vector3.new()
+        end
         local fellAway = item.base.Position.Y < item.origin.Position.Y - 30
         local timedOut = item.elapsed > 45
-        if fellAway or timedOut then
+        local abandoned = item.elapsed > 0 and item.emptyTime > 5
+        if fellAway or timedOut or abandoned then
           item.base.AssemblyLinearVelocity = Vector3.new()
           item.base.AssemblyAngularVelocity = Vector3.new()
           item.base.CFrame = item.origin
           item.elapsed = 0
+          item.emptyTime = 0
         end
       end
     end
