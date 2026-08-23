@@ -129,6 +129,14 @@ function Wrapper:SetAsync(key, value)
               merged.settings[setting] = enabled
             end
           end
+          for _, setting in ipairs({ "masterVolume", "musicVolume", "sfxVolume", "uiScale" }) do
+            local numeric = tonumber(current.settings[setting])
+            local minimum = setting == "uiScale" and 0.8 or 0
+            local maximum = setting == "uiScale" and 1.5 or 1
+            if numeric and numeric >= minimum and numeric <= maximum then
+              merged.settings[setting] = numeric
+            end
+          end
         end
         return merged
       end)

@@ -55,6 +55,7 @@ the profile.
 
 `masterVolume`, `musicVolume`, and `sfxVolume` are validated numbers from 0 to
 1. They change only the local SoundGroup mix and never alter shared gameplay.
+Concurrent saves preserve valid numeric settings from the existing record.
 
 Fresh profiles initialize all six supported accessibility booleans; legacy
 profiles preserve only validated boolean values and a bounded UI scale.

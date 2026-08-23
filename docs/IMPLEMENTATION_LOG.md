@@ -980,3 +980,12 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: actual device mixing, mute ergonomics, and persistence in a live
   profile require Studio testing.
+
+## 2026-08-23 — Preserve numeric settings during concurrent saves
+
+- Completed: `UpdateAsync` now retains bounded numeric volume and UI-scale
+  settings from the existing profile record instead of merging booleans only.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: real concurrent-session conflict behavior requires a staging
+  DataStore test.
