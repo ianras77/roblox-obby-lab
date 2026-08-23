@@ -1,4 +1,5 @@
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
@@ -28,6 +29,7 @@ function UIController.new()
   self.modeEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(RemoteContracts.SetMode.name)
   self.practiceEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(RemoteContracts.PracticeStage.name)
   self.highestChapter = 0
+  self.timerStartedAt = nil
   self:bind()
   self:syncInitialState()
   return self
@@ -39,6 +41,7 @@ function UIController:syncInitialState()
   end)
   if ok and payload then
     self.highestChapter = payload.highestChapter or 0
+    self:updateTimerState(payload)
     self:updateProgress(payload.stage or 0, payload.total or 1)
     self:updateKeys(payload.keys or 0, payload.totalKeys or 0)
     for key, enabled in pairs(payload.settings or {}) do
@@ -260,6 +263,18 @@ function UIController:createGui()
   keyHud.Text = "Keys 0/0"
   keyHud.Parent = gui
 
+  local timer = Instance.new("TextLabel")
+  timer.Name = "Timer"
+  timer.Size = UDim2.fromScale(0.16, 0.05)
+  timer.Position = UDim2.fromScale(0.62, 0.06)
+  timer.BackgroundColor3 = Theme.Ink
+  timer.TextColor3 = Theme.Parchment
+  timer.Font = Enum.Font.GothamBold
+  timer.TextScaled = true
+  timer.Text = "Time 00:00.00"
+  timer.Visible = false
+  timer.Parent = gui
+
   return gui
 end
 
@@ -329,6 +344,7 @@ function UIController:bind()
   self.progressEvent.OnClientEvent:Connect(function(payload)
     local stage = payload.stage or 0
     local total = payload.total or 1
+    self:updateTimerState(payload)
     self.highestChapter = math.max(self.highestChapter, stage)
     self.currentChapter = {
       name = payload.chapterName,
@@ -347,6 +363,30 @@ function UIController:bind()
   local finaleEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.FinaleRemote)
   finaleEvent.OnClientEvent:Connect(function(payload)
     self:showResults(payload)
+  end)
+end
+
+function UIController:updateTimerState(payload)
+  local timer = self.gui:FindFirstChild("Timer")
+  if not timer then
+    return
+  end
+  if payload.mode == "TimeTrial" and payload.runStarted then
+    local elapsed = (payload.elapsedMs or 0) / 1000
+    self.timerStartedAt = os.clock() - elapsed
+    timer.Visible = true
+  elseif payload.mode then
+    self.timerStartedAt = nil
+    timer.Visible = false
+  end
+  if self.timerConnection then
+    return
+  end
+  self.timerConnection = RunService.RenderStepped:Connect(function()
+    if self.timerStartedAt and timer.Visible then
+      local elapsed = math.max(0, os.clock() - self.timerStartedAt)
+      timer.Text = string.format("Time %02d:%05.2f", math.floor(elapsed / 60), elapsed % 60)
+    end
   end)
 end
 

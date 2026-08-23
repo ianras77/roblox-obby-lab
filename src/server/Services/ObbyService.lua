@@ -101,6 +101,8 @@ local function bindRunModes(self)
       total = self.world.totalStages,
       highestChapter = self.checkpoints and self.checkpoints:getProfile(player).highestChapter or 0,
       mode = mode,
+      runStarted = mode ~= "TimeTrial",
+      elapsedMs = 0,
     })
   end))
 end
@@ -151,6 +153,7 @@ function ObbyService.new()
   self.riderQueryClock = 0
   self.world = WorldBuilder.buildWorld(GameConfig.Seed)
   self.world.stateFunction.OnServerInvoke = function(player)
+    local run = self.runState and self.runState:get(player)
     return {
       stage = player:GetAttribute("Checkpoint") or 0,
       total = self.world.totalStages,
@@ -159,6 +162,8 @@ function ObbyService.new()
       totalKeys = self.totalKeys,
       collectedKeys = self.checkpoints and self.checkpoints:getProfile(player).collectedKeys or {},
       settings = self.checkpoints and self.checkpoints:getProfile(player).settings or {},
+      runStarted = run and run.running or false,
+      elapsedMs = self.runState and math.floor(self.runState:getElapsed(player) * 1000) or 0,
     }
   end
   self.runState = RunStateService.new(self.world.totalStages, GameConfig.MinimumTimeTrialSeconds)
@@ -444,6 +449,7 @@ function ObbyService:scanBehaviors()
           total = self.world.totalStages,
           mode = "TimeTrial",
           runStarted = true,
+          elapsedMs = 0,
         })
       end
     end))
@@ -700,6 +706,7 @@ function ObbyService:rebuild(seed)
   self.world = WorldBuilder.buildWorld(seed)
   self.riderQueryClock = 0
   self.world.stateFunction.OnServerInvoke = function(player)
+    local run = self.runState and self.runState:get(player)
     return {
       stage = player:GetAttribute("Checkpoint") or 0,
       total = self.world.totalStages,
@@ -708,6 +715,8 @@ function ObbyService:rebuild(seed)
       totalKeys = self.totalKeys,
       collectedKeys = self.checkpoints and self.checkpoints:getProfile(player).collectedKeys or {},
       settings = self.checkpoints and self.checkpoints:getProfile(player).settings or {},
+      runStarted = run and run.running or false,
+      elapsedMs = self.runState and math.floor(self.runState:getElapsed(player) * 1000) or 0,
     }
   end
   self.checkpoints:destroy()

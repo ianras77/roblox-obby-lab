@@ -355,6 +355,15 @@
   pass locally.
 - Unverified: live migration of oversized legacy records remains pending.
 
+## 2026-08-23 — Live Time Trial HUD timer
+
+- Completed: added a client-rendered Time Trial timer synchronized from server
+  mode/start events; it displays elapsed time only and does not participate in
+  eligibility, completion, or record decisions.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: clock presentation, drift, and device layout require Studio.
+
 ## 2026-08-23 — Bounded rider contact queries
 
 - Completed: moving-platform contact detection now samples `GetTouchingParts()`

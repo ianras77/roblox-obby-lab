@@ -74,10 +74,14 @@ function CheckpointService:initializePlayer(player)
     end
   end))
   if self.progressEvent then
+    local run = self.runState and self.runState:get(player)
     self.progressEvent:FireClient(player, {
       stage = player:GetAttribute("Checkpoint") or 0,
       total = #self.stages,
       initialized = true,
+      mode = player:GetAttribute("RunMode") or "Adventure",
+      runStarted = run and run.running or false,
+      elapsedMs = self.runState and math.floor(self.runState:getElapsed(player) * 1000) or 0,
     })
   end
 end
@@ -223,11 +227,13 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
       end
     end
     if self.progressEvent then
+      local run = self.runState and self.runState:get(player)
       self.progressEvent:FireClient(player, {
         stage = stageIndex,
         total = #self.stages,
         mode = player:GetAttribute("RunMode") or "Adventure",
         elapsedMs = elapsed and math.floor(elapsed * 1000) or nil,
+        runStarted = run and run.running or false,
         timeTrialEligible = eligible,
         bestRunMs = self:getProfile(player).bestRunMs,
         deaths = self:getProfile(player).totalDeaths,
