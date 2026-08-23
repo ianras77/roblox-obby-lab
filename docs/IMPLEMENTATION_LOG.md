@@ -1287,3 +1287,12 @@
   pending.
 - Unverified: live physics behavior and generated-world traversal still require
   Roblox Studio testing.
+
+## 2026-08-23 — Validate generated seed provenance
+
+- Completed: `WorldValidator` now applies the same finite, integer, nonnegative,
+  and bounded seed contract as `WorldBuilder`.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Roblox Studio traversal remains unverified.
+- Unverified: malformed-root behavior against a live DataModel requires Studio
+  or a standalone Luau test runner.

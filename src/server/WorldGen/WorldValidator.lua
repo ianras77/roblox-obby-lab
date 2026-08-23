@@ -85,8 +85,9 @@ local function validateRoot(root)
   if root:GetAttribute("GeneratorVersion") ~= WorldGenConfig.GeneratorVersion then
     table.insert(errors, "generated root has unsupported generator version")
   end
-  if type(root:GetAttribute("Seed")) ~= "number" then
-    table.insert(errors, "generated root is missing a numeric seed")
+  local seed = root:GetAttribute("Seed")
+  if type(seed) ~= "number" or not finite(seed) or seed % 1 ~= 0 or seed < 0 or seed > GameConfig.MaxDevSeed then
+    table.insert(errors, "generated root has an invalid seed")
   end
   return errors
 end
