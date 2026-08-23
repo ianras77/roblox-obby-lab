@@ -35,6 +35,9 @@ Qualifying final-chapter completion updates `completionCount` and the smallest
 `bestRunMs` on the server. Character deaths increment `totalDeaths`; Practice
 completion never updates the personal best.
 
+Time Trial chapter splits update `bestChapterMs` only when they improve the
+stored split; Adventure and Practice do not submit leaderboard-style splits.
+
 Keys are authored deterministically at chapter locations (one per chapter in
 the current configuration), and the client requests initial HUD state through
 `GetObbyState` instead of depending solely on a startup event.

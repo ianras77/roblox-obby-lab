@@ -173,6 +173,16 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
     local elapsed, eligible
     if self.runState then
       elapsed, eligible = self.runState:onChapterReached(player, stageIndex)
+      local run = self.runState:get(player)
+      local split = run.chapterSplits[stageIndex - 1]
+      if split and player:GetAttribute("RunMode") == "TimeTrial" then
+        local profile = self:getProfile(player)
+        local splitMs = math.floor(split * 1000)
+        local splitKey = tostring(stageIndex - 1)
+        if not profile.bestChapterMs[splitKey] or splitMs < profile.bestChapterMs[splitKey] then
+          profile.bestChapterMs[splitKey] = splitMs
+        end
+      end
     end
     if elapsed and eligible then
       if self.analytics then
@@ -193,6 +203,7 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
         timeTrialEligible = eligible,
         bestRunMs = self:getProfile(player).bestRunMs,
         deaths = self:getProfile(player).totalDeaths,
+        bestChapterMs = self:getProfile(player).bestChapterMs,
         chapterName = stageModel:GetAttribute("ChapterName") or checkpoint:GetAttribute("StageId"),
         mechanic = stageModel:GetAttribute("PrimaryMechanic"),
         flavor = stageModel:GetAttribute("ChapterFlavor"),

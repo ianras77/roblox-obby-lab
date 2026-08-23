@@ -24,6 +24,7 @@ grep -q 'SetRunMode' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail 
 grep -q 'completionCount < 1' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "time trial unlock guard missing"
 grep -q 'lowParticles = false' "$ROOT_DIR/src/shared/Config/ProfileSchema.lua" || fail "complete accessibility profile defaults missing"
 grep -q 'AnalyticsService' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "analytics service wiring missing"
+grep -q 'bestChapterMs\[splitKey\]' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "chapter split persistence missing"
 grep -q 'merged.collectedKeys' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent key merge missing"
 grep -q 'showResults' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results presentation missing"
 grep -q 'applyAccessibility' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "accessibility application missing"
