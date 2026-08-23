@@ -43,6 +43,7 @@ grep -q 'TimeTrialButton' "$ROOT_DIR/src/client/Controllers/UIController.lua" ||
 grep -q 'Golden Keys' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results key metric missing"
 grep -q 'showPracticeSelector' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "practice selector missing"
 grep -q 'AutomaticCanvasSize = Enum.AutomaticSize.Y' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "settings panel is not responsive"
+if rg -q 'MouseButton1Click' "$ROOT_DIR/src/client/Controllers/UIController.lua"; then fail "HUD controls use mouse-only activation"; fi
 grep -q 'math.max(self.highestChapter, stage)' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "practice unlock state is not live-synchronized"
 grep -q 'highestChapter = self.checkpoints' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "completed chapter state missing"
 grep -q 'applyAccessibility' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "accessibility application missing"

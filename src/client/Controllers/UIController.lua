@@ -260,7 +260,7 @@ end
 
 function UIController:bind()
   local reset = self.gui:FindFirstChild("ResetButton")
-  reset.MouseButton1Click:Connect(function()
+  reset.Activated:Connect(function()
     local character = self.player.Character or self.player.CharacterAdded:Wait()
     local humanoid = character:FindFirstChildOfClass("Humanoid")
     if humanoid then
@@ -270,12 +270,12 @@ function UIController:bind()
 
   local settingsButton = self.gui:FindFirstChild("SettingsButton")
   local panel = self.gui:FindFirstChild("SettingsPanel")
-  settingsButton.MouseButton1Click:Connect(function()
+  settingsButton.Activated:Connect(function()
     panel.Visible = not panel.Visible
   end)
   for _, toggle in ipairs(panel:GetChildren()) do
     if toggle:IsA("TextButton") and toggle:GetAttribute("SettingKey") then
-      toggle.MouseButton1Click:Connect(function()
+      toggle.Activated:Connect(function()
         local key = toggle:GetAttribute("SettingKey")
         self.settings[key] = not self.settings[key]
         self.player:SetAttribute("Accessibility_" .. key, self.settings[key])
@@ -293,7 +293,7 @@ function UIController:bind()
       end)
     end
     if toggle:IsA("TextButton") and toggle:GetAttribute("RunMode") then
-      toggle.MouseButton1Click:Connect(function()
+      toggle.Activated:Connect(function()
         local mode = toggle:GetAttribute("RunMode")
         if mode == "Practice" then
           self:showPracticeSelector()

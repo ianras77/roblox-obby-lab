@@ -404,6 +404,15 @@
 - Unverified: threshold tuning against real movement and latency requires
   Studio playtesting.
 
+## 2026-08-23 — Cross-input HUD activation
+
+- Completed: reset, settings, mode, and accessibility controls now use the
+  cross-input `Activated` event, matching the intended touch/gamepad/desktop
+  surface.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: actual gamepad focus order and device ergonomics require Studio.
+
 ## 2026-08-23 — Canonical Time Trial start
 
 - Completed: crossing the validated Time Trial gate now clears the player's
