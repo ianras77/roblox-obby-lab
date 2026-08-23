@@ -890,8 +890,9 @@ function ObbyService:rebuild(seed)
   self.world = WorldBuilder.buildWorld(seed)
   self.world.stateFunction.OnServerInvoke = function(player)
     local run = self.runState and self.runState:get(player)
+    local stage = player:GetAttribute("Checkpoint") or 0
     return {
-      stage = player:GetAttribute("Checkpoint") or 0,
+      stage = stage,
       total = self.world.totalStages,
       mode = player:GetAttribute("RunMode") or "Adventure",
       highestChapter = self.checkpoints and self.checkpoints:getProfile(player).highestChapter or 0,
@@ -901,6 +902,7 @@ function ObbyService:rebuild(seed)
       settings = self.checkpoints and self.checkpoints:getProfile(player).settings or {},
       runStarted = run and run.running or false,
       elapsedMs = self.runState and math.floor(self.runState:getElapsed(player) * 1000) or 0,
+      chapter = getChapterPresentation(self.world.stages, stage),
     }
   end
   self.runState = RunStateService.new(self.world.totalStages, GameConfig.MinimumTimeTrialSeconds)

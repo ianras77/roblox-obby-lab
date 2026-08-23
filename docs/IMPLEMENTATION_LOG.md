@@ -1460,3 +1460,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; live DataModel collision behavior remains
   Studio-unverified.
+
+## 2026-08-23 — Preserve chapter state after development rebuilds
+
+- Completed: the rebuilt world's `GetObbyState` handler now returns the same
+  restored chapter presentation as the initial world, avoiding a rebuild-only
+  HUD regression.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live rebuild and client resynchronization
+  remain Studio-unverified.

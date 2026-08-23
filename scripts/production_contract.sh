@@ -238,6 +238,7 @@ grep -q 'highestChapter = self:getProfile(player).highestChapter' "$ROOT_DIR/src
 grep -q 'highestChapter = self.checkpoints and self.checkpoints:getProfile(player).highestChapter' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "state highest chapter sync missing"
 grep -q 'chapterId = stage.stageId' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "stable chapter ID is not synchronized"
 grep -q 'chapter = getChapterPresentation(self.world.stages, stage)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "initial chapter presentation is not synchronized"
+test "$(grep -c 'chapter = getChapterPresentation(self.world.stages, stage)' "$ROOT_DIR/src/server/Services/ObbyService.lua")" -ge 2 || fail "rebuild state sync omits chapter presentation"
 grep -q 'RemoteContracts.State.name' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "state function name is not contract-owned"
 grep -q 'folder:FindFirstChild(RemoteContracts.Progress.name)' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "progress remote lookup is not contract-owned"
 grep -q 'RemoteContracts.Finale.name' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "finale remote lookup is not contract-owned"
