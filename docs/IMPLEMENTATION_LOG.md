@@ -516,3 +516,13 @@
   checks pass locally.
 - Unverified: dynamic Luau execution and live DataStore migration still require
   Studio/production-like testing.
+
+## 2026-08-23 — Reconcile persistence and performance documentation
+
+- Completed: corrected release documentation to describe the implemented
+  versioned profile/persistence path and the actual 10 Hz wind/pad and 20 Hz
+  moving-platform query cadence.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: Roblox DataStore behavior and runtime performance still require
+  staging/Studio measurement.

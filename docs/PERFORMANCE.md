@@ -6,9 +6,10 @@ current environment. The known high-cost paths are the global Heartbeat, rider
 and permanent particle emitters. Studio profiling must measure generation,
 join, chapters 10/12/13/15/18, and a two-player session before release.
 
-Wind and pressure-pad contact queries are now bounded to a 10 Hz server tick;
-the remaining moving-platform rider query is still per-frame and needs Studio
-profiling before replacement.
+Wind and pressure-pad contact queries are bounded to a 10 Hz server tick, and
+moving-platform rider sampling is bounded to a 20 Hz server tick. The obstacle
+transforms themselves still run from the centralized Heartbeat and need Studio
+profiling before proximity sleeping or a component split is declared safe.
 
 Planned work: proximity activation, bounded spatial checks, sleeping distant
 mechanics, pooled effects, anchored scenery, and explicit collision/query

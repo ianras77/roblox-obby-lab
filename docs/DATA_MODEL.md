@@ -1,8 +1,6 @@
 # Data model
 
-The current release still uses checkpoint-only persistence and is intentionally
-not claimed as production-ready. The target profile is versioned and server
-owned:
+The current profile is versioned and server-owned:
 
 ```lua
 { schemaVersion = 1, highestChapter = 0, collectedKeys = {},
@@ -10,9 +8,10 @@ owned:
   completionCount = 0, settings = {} }
 ```
 
-Before release, implement validated migrations, `UpdateAsync`, bounded retry
+The implementation includes validated migrations, `UpdateAsync`, bounded retry
 backoff, autosave, `PlayerRemoving`, `BindToClose`, and separate Studio
-sandbox/private staging/production stores.
+sandbox/private staging/production store naming. Live Roblox verification is
+still required before release.
 
 `GameConfig.Environment` is an explicit deployment label. The development
 environment cannot write production data; staging and production must use
