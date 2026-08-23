@@ -148,6 +148,7 @@ function ObbyService.new()
   self.clock = 0
   self.analytics = AnalyticsService.new(GameConfig.EnableAnalytics)
   self.queryClock = 0
+  self.riderQueryClock = 0
   self.world = WorldBuilder.buildWorld(GameConfig.Seed)
   self.world.stateFunction.OnServerInvoke = function(player)
     return {
@@ -312,6 +313,7 @@ function ObbyService:scanBehaviors()
       phase = part:GetAttribute("Phase") or 0,
       carryPlayers = part:GetAttribute("CarryPlayers") ~= false,
       lastPos = part.Position,
+      riders = {},
     })
   end)
 
@@ -488,8 +490,7 @@ function ObbyService:scanBehaviors()
 end
 
 -- Move any players riding on a platform by the same translation vector so they don't get left behind.
-function ObbyService:carryRiders(platform, translation, dt)
-  local touching = platform:GetTouchingParts()
+function ObbyService:carryRiders(touching, translation, dt)
   if #touching == 0 then
     return
   end
@@ -515,7 +516,16 @@ function ObbyService:startHeartbeat()
   self.maid:Give(RunService.Heartbeat:Connect(function(dt)
     self.clock = self.clock + dt
     self.queryClock = self.queryClock + dt
+    self.riderQueryClock = self.riderQueryClock + dt
     local tickNow = self.clock
+    if self.riderQueryClock >= 0.05 then
+      self.riderQueryClock = 0
+      for _, item in ipairs(self.behaviors.movingPlatforms) do
+        if item.part and item.part.Parent then
+          item.riders = item.part:GetTouchingParts()
+        end
+      end
+    end
     for _, item in ipairs(self.behaviors.movingPlatforms) do
       if item.part and item.part.Parent then
         local offsetScalar = math.sin(tickNow * item.speed + item.phase) * item.amplitude
@@ -527,7 +537,7 @@ function ObbyService:startHeartbeat()
 
         local translation = item.lastPos - lastPos
         if item.carryPlayers and translation.Magnitude > 0.01 then
-          self:carryRiders(item.part, translation, dt)
+          self:carryRiders(item.riders, translation, dt)
         end
       end
     end
@@ -688,6 +698,7 @@ function ObbyService:rebuild(seed)
     self.runState:destroy()
   end
   self.world = WorldBuilder.buildWorld(seed)
+  self.riderQueryClock = 0
   self.world.stateFunction.OnServerInvoke = function(player)
     return {
       stage = player:GetAttribute("Checkpoint") or 0,

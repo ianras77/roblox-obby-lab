@@ -355,6 +355,16 @@
   pass locally.
 - Unverified: live migration of oversized legacy records remains pending.
 
+## 2026-08-23 — Bounded rider contact queries
+
+- Completed: moving-platform contact detection now samples `GetTouchingParts()`
+  at 20 Hz and reuses the contact list for per-frame translation, while still
+  deduplicating characters and preserving vertical velocity.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: contact freshness and ride feel under latency require Studio
+  multiplayer testing.
+
 ## 2026-08-23 — Scrollable settings panel
 
 - Completed: the settings/mode panel now uses automatic vertical canvas sizing
