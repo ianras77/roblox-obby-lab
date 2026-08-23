@@ -17,6 +17,11 @@ Planned work: proximity activation, bounded spatial checks, sleeping distant
 mechanics, pooled effects, anchored scenery, and explicit collision/query
 flags. No frame-rate claim is made here.
 
+Non-critical rotators, gavel presentation, timed-tile visuals, and beacons now
+activate only within 180 studs of a live player. Timed-tile phase still advances
+while asleep so reactivation is deterministic; critical hazards and transport
+remain active and server-authoritative.
+
 The world validator also reports unanchored generated environment parts, while
 allowing intentional cart ride assemblies. Static scenery should remain
 anchored to avoid accidental server physics and replication cost.

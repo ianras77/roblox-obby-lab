@@ -881,3 +881,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: landmark composition, occlusion, and mobile render cost require
   Studio/device inspection.
+
+## 2026-08-23 — Sleep distant cosmetic mechanics
+
+- Completed: non-critical rotators, gavel presentation, timed-tile visuals, and
+  beacons now use a bounded 180-stud proximity check; critical hazards,
+  moving-platform transforms, and transport authority remain active.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: actual server frame-time savings and wake-up presentation require
+  Roblox MicroProfiler and multi-player Studio testing.

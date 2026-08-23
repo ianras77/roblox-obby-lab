@@ -57,6 +57,18 @@ local function getLivePlayerRoot(hit)
   return nil
 end
 
+local function hasNearbyPlayer(position, radius)
+  local radiusSquared = radius * radius
+  for _, player in ipairs(Players:GetPlayers()) do
+    local character = player.Character
+    local root = character and character:FindFirstChild("HumanoidRootPart")
+    if root and root:IsA("BasePart") and (root.Position - position).Magnitude ^ 2 <= radiusSquared then
+      return true
+    end
+  end
+  return false
+end
+
 local function bindSettings(self)
   local events = ReplicatedStorage:FindFirstChild("SharedEvents")
   local event = events and events:FindFirstChild(RemoteContracts.SetSettings.name)
@@ -632,13 +644,13 @@ function ObbyService:startHeartbeat()
       local cosmeticDt = self.cosmeticClock
       self.cosmeticClock = 0
       for _, item in ipairs(self.behaviors.rotators) do
-        if item.part and item.part.Parent then
+        if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, 180) then
           item.part.CFrame = item.part.CFrame * CFrame.Angles(0, item.speed * cosmeticDt, 0)
         end
       end
 
       for _, item in ipairs(self.behaviors.bossGavels) do
-        if item.part and item.part.Parent then
+        if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, 180) then
           local t = math.sin(tickNow * item.speed)
           local pitch = t * item.angle
           item.part.CFrame = item.origin * CFrame.Angles(pitch, 0, 0)
@@ -648,9 +660,11 @@ function ObbyService:startHeartbeat()
       for _, item in ipairs(self.behaviors.timedTiles) do
         if item.part and item.part.Parent then
           item.t = item.t + cosmeticDt
-          local on = (item.t % item.cycle) > (item.cycle / 2)
-          item.part.Transparency = on and 0 or 0.8
-          item.part.CanCollide = on
+          if hasNearbyPlayer(item.part.Position, 180) then
+            local on = (item.t % item.cycle) > (item.cycle / 2)
+            item.part.Transparency = on and 0 or 0.8
+            item.part.CanCollide = on
+          end
         end
       end
     end
@@ -730,7 +744,7 @@ function ObbyService:startHeartbeat()
     end
 
     for _, item in ipairs(self.behaviors.beacons) do
-      if item.part and item.part.Parent then
+      if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, 180) then
         local bob = math.sin(tickNow * 1.5) * 0.5
         item.part.CFrame = item.origin * CFrame.new(0, bob, 0) * CFrame.Angles(0, dt * 1.2, 0)
       end
