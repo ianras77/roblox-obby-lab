@@ -47,10 +47,10 @@ the current configuration), and the client requests initial HUD state through
 Accessibility settings use the validated `SetAccessibilitySettings` contract;
 this includes `showTimer`, which only changes local timer presentation and
 never changes server-owned timing.
-only five boolean keys are accepted and writes are rate-limited before entering
+six boolean keys are accepted and writes are rate-limited before entering
 the profile.
 
-Fresh profiles initialize all five supported accessibility booleans; legacy
+Fresh profiles initialize all six supported accessibility booleans; legacy
 profiles preserve only validated boolean values and a bounded UI scale.
 
 Profile sanitization migrates the original `checkpoint` field into

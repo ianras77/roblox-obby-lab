@@ -930,3 +930,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: end-to-end PB preservation across real profile saves requires
   Studio sandbox DataStore testing.
+
+## 2026-08-23 — Correct settings and test-status documentation
+
+- Completed: documentation now reflects six supported boolean accessibility
+  settings, including `showTimer`, and no longer implies that a missing Luau
+  test runner exists locally.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: runtime test execution still requires Roblox Studio or a chosen
+  Luau runner.
