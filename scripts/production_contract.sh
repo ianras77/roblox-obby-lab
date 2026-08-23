@@ -223,6 +223,7 @@ grep -q 'lastCall\[player\] = nil' "$ROOT_DIR/src/server/Services/ObbyService.lu
 grep -q 'currentVelocity.Y' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "moving platform vertical velocity preservation missing"
 grep -q 'Players:GetPlayerFromCharacter(character)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "hazard interaction is not player-context validated"
 grep -q 'lastHit\[humanoid\]' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "hazard touch debounce missing"
+grep -q '__mode = "k"' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "hazard debounce table can retain dead humanoids"
 grep -q 'function CheckpointService:isLoaded' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile readiness check missing"
 grep -q 'ProfileLoadStatus' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile load status visibility missing"
 grep -q 'ToadsPlayers' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "multiplayer player collision group missing"

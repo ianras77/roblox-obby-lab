@@ -1337,6 +1337,14 @@
   whitespace checks pass locally; multi-client collision behavior remains
   Studio-unverified.
 
+## 2026-08-23 — Bound hazard debounce lifetime
+
+- Completed: kill-brick debounce tables now use weak Humanoid keys, avoiding
+  retention of defeated character instances during long server sessions.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; long-lived server soak behavior remains
+  Studio-unverified.
+
 ## 2026-08-23 — Keep high-contrast hazards stream-safe
 
 - Completed: hazards added after UI initialization now receive the active

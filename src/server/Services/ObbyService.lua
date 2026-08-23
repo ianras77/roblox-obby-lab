@@ -586,7 +586,9 @@ function ObbyService:scanBehaviors()
   end)
 
   add("KillBrick", function(part)
-    local lastHit = {}
+    -- Humanoids are instance keys so defeated/removed characters do not keep
+    -- a permanent entry in the debounce table.
+    local lastHit = setmetatable({}, { __mode = "k" })
     self.maid:Give(part.Touched:Connect(function(hit)
       local character = hit.Parent
       local player = character and Players:GetPlayerFromCharacter(character)

@@ -29,6 +29,8 @@ anchored to avoid accidental server physics and replication cost.
 Humanoid death connections are tracked per player and replaced on each new
 character, preventing respawn cycles from accumulating listeners in the service
 Maid.
+Kill-brick debounce tables use weak Humanoid keys so defeated character
+instances do not accumulate indefinitely in long-lived obstacle connections.
 
 Cart behavior now has a 45-second timeout and below-course recovery reset;
 boarding, dismounting, multiplayer interaction, and high-latency behavior still
