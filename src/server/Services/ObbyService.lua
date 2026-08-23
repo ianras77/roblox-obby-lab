@@ -102,6 +102,7 @@ function ObbyService.new()
   self.maid = Maid.new()
   self.behaviors = {}
   self.clock = 0
+  self.queryClock = 0
   self.world = WorldBuilder.buildWorld(GameConfig.Seed)
   self.world.stateFunction.OnServerInvoke = function(player)
     return {
@@ -404,6 +405,7 @@ end
 function ObbyService:startHeartbeat()
   self.maid:Give(RunService.Heartbeat:Connect(function(dt)
     self.clock = self.clock + dt
+    self.queryClock = self.queryClock + dt
     local tickNow = self.clock
     for _, item in ipairs(self.behaviors.movingPlatforms) do
       if item.part and item.part.Parent then
@@ -438,11 +440,49 @@ function ObbyService:startHeartbeat()
       item.part.CanCollide = on
     end
 
-    for _, item in ipairs(self.behaviors.windZones) do
-      for _, touch in ipairs(item.part:GetTouchingParts()) do
-        local hrp = touch.Parent and touch.Parent:FindFirstChild("HumanoidRootPart")
-        if hrp then
-          hrp.AssemblyLinearVelocity = hrp.AssemblyLinearVelocity + item.part.CFrame.RightVector * item.force * dt
+    if self.queryClock >= 0.1 then
+      local queryDt = self.queryClock
+      self.queryClock = 0
+      for _, item in ipairs(self.behaviors.windZones) do
+        for _, touch in ipairs(item.part:GetTouchingParts()) do
+          local hrp = touch.Parent and touch.Parent:FindFirstChild("HumanoidRootPart")
+          if hrp then
+            hrp.AssemblyLinearVelocity = hrp.AssemblyLinearVelocity
+              + item.part.CFrame.RightVector * item.force * queryDt
+          end
+        end
+      end
+      local gateActiveCount = {}
+      for _, pad in ipairs(self.behaviors.pads) do
+        pad.active = false
+        for _, p in ipairs(pad.part:GetTouchingParts()) do
+          if p.Parent and p.Parent:FindFirstChild("HumanoidRootPart") then
+            pad.active = true
+            break
+          end
+        end
+        if pad.active and pad.gateId then
+          gateActiveCount[pad.gateId] = (gateActiveCount[pad.gateId] or 0) + 1
+        end
+      end
+      local playerCount = #Players:GetPlayers()
+      for gateId, gate in pairs(self.behaviors.gates) do
+        local hits = gateActiveCount[gateId] or 0
+        if hits >= 2 then
+          self.gateTimers[gateId] = 0
+          gate.Transparency = 0.9
+          gate.CanCollide = false
+          gate.Color = Color3.fromRGB(120, 255, 120)
+        else
+          if hits >= 1 and playerCount <= 1 then
+            self.gateTimers[gateId] = (self.gateTimers[gateId] or 0) + queryDt
+          else
+            self.gateTimers[gateId] = 0
+          end
+          local soloOpen = (self.gateTimers[gateId] or 0) >= 6
+          gate.Transparency = soloOpen and 0.9 or 0
+          gate.CanCollide = not soloOpen
+          gate.Color = soloOpen and Color3.fromRGB(200, 255, 200) or Color3.fromRGB(255, 120, 120)
         end
       end
     end
@@ -496,43 +536,6 @@ function ObbyService:startHeartbeat()
             item.timer = 0
           end
         end
-      end
-    end
-
-    local gateActiveCount = {}
-    for _, pad in ipairs(self.behaviors.pads) do
-      local touching = pad.part:GetTouchingParts()
-      pad.active = false
-      for _, p in ipairs(touching) do
-        local hrp = p.Parent and p.Parent:FindFirstChild("HumanoidRootPart")
-        if hrp then
-          pad.active = true
-          break
-        end
-      end
-      if pad.active and pad.gateId then
-        gateActiveCount[pad.gateId] = (gateActiveCount[pad.gateId] or 0) + 1
-      end
-    end
-    local playerCount = #Players:GetPlayers()
-    for gateId, gate in pairs(self.behaviors.gates) do
-      local hits = gateActiveCount[gateId] or 0
-      -- Co-op: 2 pads needed; solo fallback after dwell time
-      if hits >= 2 then
-        self.gateTimers[gateId] = 0
-        gate.Transparency = 0.9
-        gate.CanCollide = false
-        gate.Color = Color3.fromRGB(120, 255, 120)
-      else
-        if hits >= 1 and playerCount <= 1 then
-          self.gateTimers[gateId] = (self.gateTimers[gateId] or 0) + dt
-        else
-          self.gateTimers[gateId] = 0
-        end
-        local soloOpen = (self.gateTimers[gateId] or 0) >= 6
-        gate.Transparency = soloOpen and 0.9 or 0
-        gate.CanCollide = not soloOpen
-        gate.Color = soloOpen and Color3.fromRGB(200, 255, 200) or Color3.fromRGB(255, 120, 120)
       end
     end
   end))

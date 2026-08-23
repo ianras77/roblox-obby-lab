@@ -64,6 +64,8 @@ function DecorBuilder.decorateZone(zoneModel, zoneConfig)
     end
   end
 
+  local zoneCFrame, zoneSize = zoneModel:GetBoundingBox()
+
   -- Floating confetti emitter high above the zone for motion and brightness
   local confetti = Instance.new("Part")
   confetti.Name = "SkyConfetti"
@@ -71,7 +73,7 @@ function DecorBuilder.decorateZone(zoneModel, zoneConfig)
   confetti.CanCollide = false
   confetti.Transparency = 1
   confetti.Size = Vector3.new(4, 1, 4)
-  confetti.CFrame = CFrame.new(0, 90, 0)
+  confetti.CFrame = CFrame.new(zoneCFrame.Position + Vector3.new(0, zoneSize.Y / 2 + 35, 0))
   confetti.Parent = zoneModel
 
   local emitter = Instance.new("ParticleEmitter")
@@ -85,6 +87,15 @@ function DecorBuilder.decorateZone(zoneModel, zoneConfig)
   emitter.Parent = confetti
 
   -- Gentle fireflies near ground for added sparkle
+  local fireflyAnchor = Instance.new("Part")
+  fireflyAnchor.Name = "FireflyAnchor"
+  fireflyAnchor.Anchored = true
+  fireflyAnchor.CanCollide = false
+  fireflyAnchor.CanTouch = false
+  fireflyAnchor.Transparency = 1
+  fireflyAnchor.Size = Vector3.new(1, 1, 1)
+  fireflyAnchor.Position = zoneCFrame.Position + Vector3.new(0, 4, 0)
+  fireflyAnchor.Parent = zoneModel
   for _ = 1, 4 do
     local firefly = Instance.new("ParticleEmitter")
     firefly.Texture = "rbxassetid://260430117"
@@ -94,7 +105,7 @@ function DecorBuilder.decorateZone(zoneModel, zoneConfig)
     firefly.SpreadAngle = Vector2.new(180, 180)
     firefly.Size = NumberSequence.new(0.35)
     firefly.Color = ColorSequence.new(zoneConfig.ThemeColor:Lerp(Color3.new(1, 1, 1), 0.4))
-    firefly.Parent = zoneModel
+    firefly.Parent = fireflyAnchor
   end
 end
 
