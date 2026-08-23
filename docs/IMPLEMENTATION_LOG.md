@@ -1329,6 +1329,14 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; live DataModel validation remains pending.
 
+## 2026-08-23 — Reduce multiplayer body blocking
+
+- Completed: server-created player collision isolation prevents player
+  characters from body-blocking one another while preserving obby collision.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; multi-client collision behavior remains
+  Studio-unverified.
+
 ## 2026-08-23 — Bound mode teleport startup timing
 
 - Completed: mode resets now wait briefly for a character root before applying

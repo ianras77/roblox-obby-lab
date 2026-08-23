@@ -1,4 +1,5 @@
 local Players = game:GetService("Players")
+local PhysicsService = game:GetService("PhysicsService")
 local GameConfig = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("GameConfig"))
 local Maid = require(game:GetService("ReplicatedStorage"):WaitForChild("Util"):WaitForChild("Maid"))
 local DataStoreWrapper = require(script.Parent.DataStoreServiceWrapper)
@@ -8,6 +9,21 @@ local ProgressionRules =
 
 local activeService = nil
 local shutdownBound = false
+local PLAYER_COLLISION_GROUP = "ToadsPlayers"
+
+local function configurePlayerCollision(character)
+  pcall(function()
+    PhysicsService:RegisterCollisionGroup(PLAYER_COLLISION_GROUP)
+  end)
+  pcall(function()
+    PhysicsService:CollisionGroupSetCollidable(PLAYER_COLLISION_GROUP, PLAYER_COLLISION_GROUP, false)
+  end)
+  for _, descendant in ipairs(character:GetDescendants()) do
+    if descendant:IsA("BasePart") then
+      descendant.CollisionGroup = PLAYER_COLLISION_GROUP
+    end
+  end
+end
 
 local CheckpointService = {}
 CheckpointService.__index = CheckpointService
@@ -74,8 +90,12 @@ function CheckpointService:initializePlayer(player)
     self.analytics:track(player, "joined")
   end
   self.maid:Give(player.CharacterAdded:Connect(function()
+    local character = player.Character
+    if character then
+      configurePlayerCollision(character)
+    end
     self:teleportToSavedCheckpoint(player)
-    local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
     if humanoid then
       if self.deathConnections[player] then
         self.deathConnections[player]:Disconnect()
@@ -86,6 +106,9 @@ function CheckpointService:initializePlayer(player)
       end)
     end
   end))
+  if player.Character then
+    configurePlayerCollision(player.Character)
+  end
   if self.progressEvent then
     local run = self.runState and self.runState:get(player)
     self.progressEvent:FireClient(player, {
