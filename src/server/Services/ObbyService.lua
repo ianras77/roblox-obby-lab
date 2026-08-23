@@ -508,6 +508,24 @@ function ObbyService:scanBehaviors()
   end)
 
   add("Beacon", function(part)
+    local gameplayTags = {
+      MovingPlatform = true,
+      BouncePad = true,
+      FallingPlatform = true,
+      Conveyor = true,
+      TimedTile = true,
+      Laser = true,
+      KillBrick = true,
+      WindZone = true,
+      PressurePad = true,
+      Gate = true,
+      Cart = true,
+    }
+    for tag in pairs(gameplayTags) do
+      if CollectionService:HasTag(part, tag) or part:GetAttribute("PhysicsDecor") == true then
+        return
+      end
+    end
     table.insert(self.behaviors.beacons, {
       part = part,
       origin = part.CFrame,

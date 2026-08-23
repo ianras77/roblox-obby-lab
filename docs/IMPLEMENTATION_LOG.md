@@ -1296,3 +1296,12 @@
   whitespace checks pass locally; Roblox Studio traversal remains unverified.
 - Unverified: malformed-root behavior against a live DataModel requires Studio
   or a standalone Luau test runner.
+
+## 2026-08-23 — Isolate cosmetic beacon animation
+
+- Completed: beacon bobbing now excludes gameplay-tagged and constrained physics
+  parts, preventing the cosmetic loop from overwriting authoritative obstacle
+  motion.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Roblox Studio traversal remains unverified.
+- Unverified: moving-platform and rope-physics behavior still requires Studio.

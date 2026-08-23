@@ -205,6 +205,7 @@ grep -q 'hasNearbyPlayer(item.part.Position, 180)' "$ROOT_DIR/src/server/Service
 grep -q 'TextChatCommand' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "modern developer command path is missing"
 grep -q 'PrimaryAlias = definition.alias' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "developer command aliases are not explicit"
 grep -q 'self.cosmeticClock >= 1 / 30' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "cosmetic obstacle updates are not bounded"
+grep -q 'gameplayTags' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "cosmetic beacons can move gameplay parts"
 grep -q 'self.checkpoints:destroy()' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "rebuild checkpoint teardown missing"
 grep -q 'self.queryClock = 0' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "rebuild runtime clocks are not reset"
 grep -q 'movedCharacters' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "moving platform rider deduplication missing"

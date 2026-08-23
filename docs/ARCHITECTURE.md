@@ -64,6 +64,10 @@ Approved music, zone ambience, and client finale feedback route through those
 buses, as do checkpoint and Golden Key feedback sounds, so future volume
 controls do not require rewriting individual sounds.
 
+Beacon bobbing is cosmetic-only: the runtime excludes parts carrying gameplay
+tags or the explicit `PhysicsDecor` marker, so presentation animation cannot
+fight moving-platform, hazard, gate, or constrained-physics systems.
+
 World construction does not broadcast a fake Stage 0 state. A client requests
 its authoritative restored state through `GetObbyState`, then receives later
 server-owned progression events.
