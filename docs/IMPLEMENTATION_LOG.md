@@ -1229,3 +1229,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: cross-version rebuild behavior in Roblox Studio remains pending.
+
+## 2026-08-23 — Extract pure progression rules
+
+- Completed: contiguous checkpoint sequencing and malformed-value normalization
+  now live in a shared pure module used by the server checkpoint service.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: standalone Luau execution and live multiplayer checkpoint timing
+  require the project toolchain and Roblox Studio respectively.

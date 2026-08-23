@@ -3,6 +3,8 @@ local GameConfig = require(game:GetService("ReplicatedStorage"):WaitForChild("Co
 local Maid = require(game:GetService("ReplicatedStorage"):WaitForChild("Util"):WaitForChild("Maid"))
 local DataStoreWrapper = require(script.Parent.DataStoreServiceWrapper)
 local ProfileSchema = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("ProfileSchema"))
+local ProgressionRules =
+  require(game:GetService("ReplicatedStorage"):WaitForChild("Util"):WaitForChild("ProgressionRules"))
 
 local activeService = nil
 local shutdownBound = false
@@ -251,10 +253,7 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
     and (humanoidRoot.Position - checkpoint.Position).Magnitude <= 18
   then
     local previous = player:GetAttribute("Checkpoint")
-    if type(previous) ~= "number" or previous % 1 ~= 0 then
-      previous = 0
-    end
-    if stageIndex <= previous or stageIndex ~= previous + 1 then
+    if not ProgressionRules.canAdvance(previous, stageIndex, #self.stages) then
       return
     end
     player:SetAttribute("Checkpoint", stageIndex)

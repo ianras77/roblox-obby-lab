@@ -48,6 +48,11 @@ Network names and payload direction are documented in
 `src/shared/Network/RemoteContracts.lua`. Progress, keys, and finale messages
 are server-to-client only; the client cannot award progression.
 
+Pure checkpoint sequencing is isolated in `Util/ProgressionRules.lua`; the
+server service supplies the authoritative current checkpoint and stage count.
+This keeps the security rule independent of Roblox services and makes it
+appropriate for a small standalone Luau test runner when one is available.
+
 `EnvironmentController` owns local zone presentation and smoothly transitions
 Lighting from chapter progress. The server still builds geometry and stores the
 zone palette, but does not repeatedly overwrite global Lighting while building.
