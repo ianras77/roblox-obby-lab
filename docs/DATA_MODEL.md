@@ -55,7 +55,8 @@ Split keys are bounded to the canonical 18-chapter route during profile
 sanitization and concurrent datastore merging.
 
 Keys are authored deterministically at chapter locations (one per chapter in
-the current configuration), and the client requests initial HUD state through
+the current configuration); their lane offsets do not depend on decorative
+seed variation. The client requests initial HUD state through
 `GetObbyState` instead of depending solely on a startup event.
 
 The server exposes non-authoritative diagnostics through player attributes:

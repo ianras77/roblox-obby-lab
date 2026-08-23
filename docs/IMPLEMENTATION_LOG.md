@@ -1520,6 +1520,14 @@
 - Tests: documentation consistency reviewed against current runtime code;
   MicroProfiler and device measurements remain Studio-unverified.
 
+## 2026-08-23 — Make Golden Key lanes authored
+
+- Completed: chapter key positions now use a stable authored lane pattern,
+  independent of decorative seed variation, while retaining per-player server
+  collection and optional-route intent.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; key reachability remains Studio-unverified.
+
 ## 2026-08-23 — Add original local vector art sources
 
 - Completed: added source-ready storybook railway-ticket branding and a Golden

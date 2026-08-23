@@ -110,7 +110,10 @@ function StageBuilder.buildStage(args)
 
   -- One deliberate exploration key per chapter; keys never gate the required route.
   if GameConfig.AuthoredKeysPerChapter > 0 then
-    local keyOffset = args.random:NextNumber(-6, 6)
+    -- Keep the collectible route authored and reproducible. Decorative seed
+    -- variation must not move a progression-adjacent key into an accidental
+    -- hazard or change its intended exploration lane.
+    local keyOffset = ((args.stageIndex - 1) % 3 - 1) * 6
     local key = Build.collectibleKey(args.origin * CFrame.new(10, 6, keyOffset), model)
     key:SetAttribute("KeyId", string.format("%s_key_01", stageId))
     key:SetAttribute("StageIndex", args.stageIndex)

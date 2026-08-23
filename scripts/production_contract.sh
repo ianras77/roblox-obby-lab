@@ -55,6 +55,7 @@ if grep -q 'part:Destroy()' "$ROOT_DIR/src/server/Services/ObbyService.lua"; the
 fi
 grep -q 'GeneratorVersion' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "generator version missing"
 grep -q 'AuthoredKeysPerChapter = 1' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "authored key contract missing"
+grep -q 'local keyOffset = ((args.stageIndex - 1) % 3 - 1) \* 6' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "key placement is not authored"
 grep -q 'RemoteContracts.State.name' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "initial state request missing"
 if grep -q 'progressEvent:FireAllClients' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua"; then fail "startup state must not broadcast globally"; fi
 if grep -q 'celebrator.Parent = checkpoint' "$ROOT_DIR/src/server/Services/CheckpointService.lua"; then fail "finale burst must not be shared"; fi
