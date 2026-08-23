@@ -3,6 +3,7 @@
 - [ ] Rojo build, Stylua, Selene, validator, and pure tests pass.
 - [ ] CI produces a valid Rojo place artifact from `default.project.json` using
       the pinned official Rojo release binary.
+- [ ] CI uses pinned official release binaries for Stylua and Selene.
 - [ ] Superseded branch CI runs are cancelled by workflow concurrency.
 - [ ] Studio full run and multiplayer run have evidence.
 - [ ] Creator Hub max players, supported devices, icon, thumbnails, badges,
