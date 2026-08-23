@@ -119,7 +119,8 @@ function CheckpointService:saveCheckpoint(player)
     return
   end
   local profile = self.profiles[player] or ProfileSchema.default()
-  profile.highestChapter = player:GetAttribute("Checkpoint") or 0
+  profile.highestChapter = math.max(profile.highestChapter, player:GetAttribute("Checkpoint") or 0)
+  self.profiles[player] = profile
   self.store:SetAsync("player:" .. tostring(player.UserId), profile)
 end
 

@@ -593,6 +593,15 @@
   whitespace checks pass locally.
 - Unverified: live malformed-record migration requires staging DataStore tests.
 
+## 2026-08-23 — Preserve monotonic progress on save
+
+- Completed: profile saves now retain the greater of stored session progress and
+  the current checkpoint attribute, so Time Trial resets cannot lower a
+  player's saved Adventure progression before `UpdateAsync` runs.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: leave-during-trial and live save ordering require Studio/staging.
+
 ## 2026-08-23 — Submit allowlisted analytics events
 
 - Completed: the server analytics wrapper now submits allowlisted events to
