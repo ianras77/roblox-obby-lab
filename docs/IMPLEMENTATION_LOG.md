@@ -259,6 +259,16 @@
 - Unverified: Studio rebuild behavior with user-authored Workspace content
   remains pending.
 
+## 2026-08-23 — World seed boundary validation
+
+- Completed: the world-generation entry point now accepts only finite,
+  non-negative integer seeds within the configured developer range, preventing
+  direct callers from bypassing reseed input limits.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: Studio rebuild behavior with extreme but valid seeds remains
+  pending.
+
 ## 2026-08-23 — Canonical Time Trial start
 
 - Completed: crossing the validated Time Trial gate now clears the player's

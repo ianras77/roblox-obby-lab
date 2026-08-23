@@ -56,6 +56,9 @@ end
 
 function WorldBuilder.buildWorld(seed)
   seed = seed or GameConfig.Seed
+  if type(seed) ~= "number" or seed ~= seed or seed % 1 ~= 0 or seed < 0 or seed > GameConfig.MaxDevSeed then
+    error(string.format("Invalid world seed: %s", tostring(seed)))
+  end
   clearExisting()
   local progressEvent, keyEvent, finaleEvent, stateFunction = ensureFolders()
 
