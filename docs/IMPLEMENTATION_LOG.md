@@ -1337,6 +1337,13 @@
   whitespace checks pass locally; multi-client collision behavior remains
   Studio-unverified.
 
+## 2026-08-23 — Keep high-contrast hazards stream-safe
+
+- Completed: hazards added after UI initialization now receive the active
+  high-contrast color/material treatment, including streamed or rebuilt parts.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; device presentation remains Studio-unverified.
+
 ## 2026-08-23 — Bound mode teleport startup timing
 
 - Completed: mode resets now wait briefly for a character root before applying

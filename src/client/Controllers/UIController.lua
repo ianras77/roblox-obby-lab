@@ -91,18 +91,23 @@ end
 
 function UIController:applyAccessibility()
   for _, part in ipairs(CollectionService:GetTagged("KillBrick")) do
-    if part:IsA("BasePart") then
-      self.originalHazardColors[part] = self.originalHazardColors[part] or part.Color
-      self.originalHazardMaterials[part] = self.originalHazardMaterials[part] or part.Material
-      part.Color = self.settings.highContrast and Color3.fromRGB(255, 255, 255) or self.originalHazardColors[part]
-      part.Material = self.settings.highContrast and Enum.Material.Neon or self.originalHazardMaterials[part]
-    end
+    self:applyAccessibilityToHazard(part)
   end
   for _, emitter in ipairs(workspace:GetDescendants()) do
     if emitter:IsA("ParticleEmitter") and emitter:GetAttribute("GameplayCritical") ~= true then
       emitter.Enabled = not self.settings.lowParticles
     end
   end
+end
+
+function UIController:applyAccessibilityToHazard(part)
+  if not part:IsA("BasePart") then
+    return
+  end
+  self.originalHazardColors[part] = self.originalHazardColors[part] or part.Color
+  self.originalHazardMaterials[part] = self.originalHazardMaterials[part] or part.Material
+  part.Color = self.settings.highContrast and Color3.fromRGB(255, 255, 255) or self.originalHazardColors[part]
+  part.Material = self.settings.highContrast and Enum.Material.Neon or self.originalHazardMaterials[part]
 end
 
 function UIController:hideCollectedKey(keyId)
@@ -474,6 +479,10 @@ function UIController:bind()
     if self.collectedKeys[keyId] then
       self:hideCollectedKey(keyId)
     end
+  end)
+
+  CollectionService:GetInstanceAddedSignal("KillBrick"):Connect(function(part)
+    self:applyAccessibilityToHazard(part)
   end)
 
   local finaleEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.FinaleRemote)
