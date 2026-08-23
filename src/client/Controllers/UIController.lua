@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
+local Theme = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("Theme"))
 
 local UIController = {}
 UIController.__index = UIController
@@ -8,6 +9,13 @@ UIController.__index = UIController
 function UIController.new()
   local self = setmetatable({}, UIController)
   self.player = Players.LocalPlayer
+  self.settings = {
+    reducedMotion = false,
+    reduceFlashes = false,
+    highContrast = false,
+    largeText = false,
+    lowParticles = false,
+  }
   self.gui = self:createGui()
   self.progressEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.ProgressRemote)
   self.keyEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.KeyRemote)
@@ -20,6 +28,10 @@ function UIController:createGui()
   gui.Name = "ObbyHUD"
   gui.ResetOnSpawn = false
   gui.Parent = self.player:WaitForChild("PlayerGui")
+  local uiScale = Instance.new("UIScale")
+  uiScale.Name = "AccessibilityScale"
+  uiScale.Scale = 1
+  uiScale.Parent = gui
 
   local title = Instance.new("TextLabel")
   title.Name = "Title"
@@ -61,7 +73,7 @@ function UIController:createGui()
 
   local reset = Instance.new("TextButton")
   reset.Name = "ResetButton"
-  reset.Size = UDim2.fromOffset(120, 40)
+  reset.Size = UDim2.fromOffset(Theme.MinimumTouchSize + 76, Theme.MinimumTouchSize)
   reset.Position = UDim2.fromScale(0.02, 0.12)
   reset.BackgroundColor3 = Color3.fromRGB(240, 150, 110)
   reset.TextColor3 = Color3.new(1, 1, 1)
@@ -69,6 +81,65 @@ function UIController:createGui()
   reset.TextScaled = true
   reset.Text = "Reset"
   reset.Parent = gui
+
+  local settings = Instance.new("TextButton")
+  settings.Name = "SettingsButton"
+  settings.Size = UDim2.fromOffset(Theme.MinimumTouchSize, Theme.MinimumTouchSize)
+  settings.Position = UDim2.fromScale(0.02, 0.18)
+  settings.BackgroundColor3 = Theme.Ink
+  settings.TextColor3 = Theme.Parchment
+  settings.Font = Enum.Font.GothamBold
+  settings.TextScaled = true
+  settings.Text = "⚙"
+  settings.Parent = gui
+
+  local panel = Instance.new("Frame")
+  panel.Name = "SettingsPanel"
+  panel.Visible = false
+  panel.Size = UDim2.fromScale(0.34, 0.34)
+  panel.Position = UDim2.fromScale(0.02, 0.25)
+  panel.BackgroundColor3 = Theme.Ink
+  panel.Parent = gui
+  local panelConstraint = Instance.new("UISizeConstraint")
+  panelConstraint.MinSize = Vector2.new(220, 190)
+  panelConstraint.MaxSize = Vector2.new(420, 360)
+  panelConstraint.Parent = panel
+  local list = Instance.new("UIListLayout")
+  list.Padding = UDim.new(0, Theme.Spacing)
+  list.SortOrder = Enum.SortOrder.LayoutOrder
+  list.Parent = panel
+  local padding = Instance.new("UIPadding")
+  padding.PaddingTop = UDim.new(0, Theme.Spacing)
+  padding.PaddingBottom = UDim.new(0, Theme.Spacing)
+  padding.PaddingLeft = UDim.new(0, Theme.Spacing)
+  padding.PaddingRight = UDim.new(0, Theme.Spacing)
+  padding.Parent = panel
+  local heading = Instance.new("TextLabel")
+  heading.Size = UDim2.new(1, 0, 0, 28)
+  heading.BackgroundTransparency = 1
+  heading.Text = "Travel Settings"
+  heading.TextColor3 = Theme.Parchment
+  heading.Font = Enum.Font.GothamBold
+  heading.TextScaled = true
+  heading.Parent = panel
+  for key, labelText in pairs({
+    reducedMotion = "Reduced motion",
+    reduceFlashes = "Reduce flashes",
+    highContrast = "High contrast hazards",
+    largeText = "Larger text",
+    lowParticles = "Lower particles",
+  }) do
+    local toggle = Instance.new("TextButton")
+    toggle.Name = key
+    toggle:SetAttribute("SettingKey", key)
+    toggle.Size = UDim2.new(1, 0, 0, 28)
+    toggle.BackgroundColor3 = Color3.fromRGB(62, 75, 95)
+    toggle.TextColor3 = Color3.new(1, 1, 1)
+    toggle.Font = Enum.Font.Gotham
+    toggle.TextScaled = true
+    toggle.Text = labelText .. ": OFF"
+    toggle.Parent = panel
+  end
 
   local skip = Instance.new("TextButton")
   skip.Name = "SkipButton"
@@ -107,6 +178,28 @@ function UIController:bind()
       humanoid.Health = 0
     end
   end)
+
+  local settingsButton = self.gui:FindFirstChild("SettingsButton")
+  local panel = self.gui:FindFirstChild("SettingsPanel")
+  settingsButton.MouseButton1Click:Connect(function()
+    panel.Visible = not panel.Visible
+  end)
+  for _, toggle in ipairs(panel:GetChildren()) do
+    if toggle:IsA("TextButton") and toggle:GetAttribute("SettingKey") then
+      toggle.MouseButton1Click:Connect(function()
+        local key = toggle:GetAttribute("SettingKey")
+        self.settings[key] = not self.settings[key]
+        self.player:SetAttribute("Accessibility_" .. key, self.settings[key])
+        if key == "largeText" then
+          local scale = self.gui:FindFirstChild("AccessibilityScale")
+          if scale then
+            scale.Scale = self.settings[key] and 1.15 or 1
+          end
+        end
+        toggle.Text = string.gsub(toggle.Text, ": %u+", ": " .. (self.settings[key] and "ON" or "OFF"))
+      end)
+    end
+  end
 
   self.progressEvent.OnClientEvent:Connect(function(payload)
     local stage = payload.stage or 0

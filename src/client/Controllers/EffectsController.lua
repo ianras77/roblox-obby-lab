@@ -27,6 +27,12 @@ function EffectsController:bind()
 end
 
 function EffectsController:flash()
+  if
+    self.player:GetAttribute("Accessibility_reduceFlashes")
+    or self.player:GetAttribute("Accessibility_reducedMotion")
+  then
+    return
+  end
   local gui = Instance.new("Frame")
   gui.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
   gui.Size = UDim2.fromScale(1, 1)
@@ -40,10 +46,15 @@ function EffectsController:flash()
 end
 
 function EffectsController:finale()
+  local reducedMotion = self.player:GetAttribute("Accessibility_reducedMotion")
   local blur = Instance.new("BlurEffect")
   blur.Size = 0
   blur.Parent = Lighting
-  TweenService:Create(blur, TweenInfo.new(1.6, Enum.EasingStyle.Quad), { Size = 10 }):Play()
+  TweenService:Create(
+    blur,
+    TweenInfo.new(reducedMotion and 0.1 or 1.6, Enum.EasingStyle.Quad),
+    { Size = reducedMotion and 0 or 10 }
+  ):Play()
   game.Debris:AddItem(blur, 2.5)
 
   local spot = Instance.new("SpotLight")
@@ -57,7 +68,11 @@ function EffectsController:finale()
   local shake = Instance.new("ColorCorrectionEffect")
   shake.TintColor = Color3.fromRGB(255, 240, 210)
   shake.Parent = Lighting
-  TweenService:Create(shake, TweenInfo.new(0.8, Enum.EasingStyle.Quad), { Brightness = 0.25, Saturation = 0.3 }):Play()
+  TweenService:Create(
+    shake,
+    TweenInfo.new(reducedMotion and 0.1 or 0.8, Enum.EasingStyle.Quad),
+    { Brightness = 0.25, Saturation = 0.3 }
+  ):Play()
   game.Debris:AddItem(shake, 2)
 
   -- Fireworks at the player
@@ -69,7 +84,7 @@ function EffectsController:finale()
       boom.Texture = "rbxassetid://258128463"
       boom.Lifetime = NumberRange.new(1, 1.6)
       boom.Speed = NumberRange.new(32, 38)
-      boom.Rate = 200
+      boom.Rate = self.player:GetAttribute("Accessibility_lowParticles") and 40 or 200
       boom.SpreadAngle = Vector2.new(360, 360)
       boom.Parent = root
       boom:Emit(200)
