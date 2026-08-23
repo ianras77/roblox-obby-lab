@@ -1408,3 +1408,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; live payload observation remains
   Studio-unverified.
+
+## 2026-08-23 — Synchronize restored chapter presentation
+
+- Completed: `GetObbyState` and initialized progression now include the
+  canonical chapter presentation for restored players, not only numeric
+  checkpoint state.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live state-function observation remains
+  Studio-unverified.

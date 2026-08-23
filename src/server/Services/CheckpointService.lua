@@ -123,12 +123,17 @@ function CheckpointService:initializePlayer(player)
   end
   if self.progressEvent then
     local run = self.runState and self.runState:get(player)
+    local currentStage = self.stages[player:GetAttribute("Checkpoint") or 0]
     self.progressEvent:FireClient(player, {
       stage = player:GetAttribute("Checkpoint") or 0,
       total = #self.stages,
       initialized = true,
       mode = player:GetAttribute("RunMode") or "Adventure",
       highestChapter = self:getProfile(player).highestChapter,
+      chapterId = currentStage and currentStage.stageId or nil,
+      chapterName = currentStage and currentStage.model:GetAttribute("ChapterName") or nil,
+      mechanic = currentStage and currentStage.model:GetAttribute("PrimaryMechanic") or nil,
+      flavor = currentStage and currentStage.model:GetAttribute("ChapterFlavor") or nil,
       runStarted = run and run.running or false,
       elapsedMs = self.runState and math.floor(self.runState:getElapsed(player) * 1000) or 0,
     })

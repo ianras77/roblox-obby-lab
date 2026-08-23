@@ -46,6 +46,19 @@ local function countKeys(profile)
   return count
 end
 
+local function getChapterPresentation(stages, stageIndex)
+  local stage = stages[stageIndex]
+  if not stage or not stage.model then
+    return {}
+  end
+  return {
+    chapterId = stage.stageId,
+    chapterName = stage.model:GetAttribute("ChapterName"),
+    mechanic = stage.model:GetAttribute("PrimaryMechanic"),
+    flavor = stage.model:GetAttribute("ChapterFlavor"),
+  }
+end
+
 local function getLivePlayerRoot(hit)
   local character = hit.Parent
   local player = character and Players:GetPlayerFromCharacter(character)
@@ -228,8 +241,9 @@ function ObbyService.new()
   self.world = WorldBuilder.buildWorld(GameConfig.Seed)
   self.world.stateFunction.OnServerInvoke = function(player)
     local run = self.runState and self.runState:get(player)
+    local stage = player:GetAttribute("Checkpoint") or 0
     return {
-      stage = player:GetAttribute("Checkpoint") or 0,
+      stage = stage,
       total = self.world.totalStages,
       mode = player:GetAttribute("RunMode") or "Adventure",
       highestChapter = self.checkpoints and self.checkpoints:getProfile(player).highestChapter or 0,
@@ -239,6 +253,7 @@ function ObbyService.new()
       settings = self.checkpoints and self.checkpoints:getProfile(player).settings or {},
       runStarted = run and run.running or false,
       elapsedMs = self.runState and math.floor(self.runState:getElapsed(player) * 1000) or 0,
+      chapter = getChapterPresentation(self.world.stages, stage),
     }
   end
   self.runState = RunStateService.new(self.world.totalStages, GameConfig.MinimumTimeTrialSeconds)

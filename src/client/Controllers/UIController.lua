@@ -48,6 +48,9 @@ function UIController:syncInitialState()
   end)
   if ok and payload then
     self.highestChapter = payload.highestChapter or 0
+    if type(payload.chapter) == "table" then
+      self.currentChapter = payload.chapter
+    end
     for key, enabled in pairs(payload.settings or {}) do
       if self.settings[key] ~= nil and (type(enabled) == "boolean" or type(enabled) == "number") then
         self.settings[key] = enabled

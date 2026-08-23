@@ -235,6 +235,7 @@ grep -q 'CharacterAdded:Connect(function(character)' "$ROOT_DIR/src/server/Servi
 grep -q 'highestChapter = self:getProfile(player).highestChapter' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "initial highest chapter sync missing"
 grep -q 'highestChapter = self.checkpoints and self.checkpoints:getProfile(player).highestChapter' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "state highest chapter sync missing"
 grep -q 'chapterId = stage.stageId' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "stable chapter ID is not synchronized"
+grep -q 'chapter = getChapterPresentation(self.world.stages, stage)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "initial chapter presentation is not synchronized"
 grep -q 'ProfileSaveStatus' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile save status visibility missing"
 grep -q 'ephemeral profile' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "datastore failure playability path missing"
 grep -q 'persistenceAllowed' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "failed reads are not write-gated"

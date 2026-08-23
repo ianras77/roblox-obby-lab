@@ -74,6 +74,9 @@ server-owned progression events.
 
 Progression events include the stable chapter ID as well as display text, so UI
 and analytics consumers do not need to treat mutable labels as identity.
+The initial `GetObbyState` response carries the same presentation bundle, which
+prevents restored players from waiting for a new checkpoint to populate HUD
+chapter context.
 
 Finale presentation is player-specific: the server sends only the completing
 player's finale event, while the client attaches local effects to that player's

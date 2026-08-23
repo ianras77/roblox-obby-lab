@@ -35,6 +35,11 @@ local RemoteContracts = {
     payload = "{ stage: integer }",
     rateLimitSeconds = 1,
   },
+  State = {
+    name = "GetObbyState",
+    direction = "client_to_server_function",
+    payload = "{ stage: number, total: number, mode: string, highestChapter: number, keys: number, totalKeys: number, collectedKeys: table, settings: table, runStarted: boolean, elapsedMs: number, chapter: table }",
+  },
 }
 
 return RemoteContracts
