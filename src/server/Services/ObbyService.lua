@@ -170,7 +170,8 @@ function ObbyService:hookCommands()
         self:rebuild(newSeed)
       elseif command == "stage" then
         local target = tonumber(arg)
-        if target and target % 1 == 0 and target >= 1 and target <= GameConfig.MaxDevStage then
+        local maxStage = math.min(GameConfig.MaxDevStage, #self.world.stages)
+        if target and target % 1 == 0 and target >= 1 and target <= maxStage then
           lastCommand = now
           self.checkpoints:teleportToStage(player, target)
         end
