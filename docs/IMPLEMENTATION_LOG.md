@@ -1469,3 +1469,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; live rebuild and client resynchronization
   remain Studio-unverified.
+
+## 2026-08-23 — Sleep distant moving-platform mechanics
+
+- Completed: moving platforms skip transform and rider-contact work outside
+  the configured activation radius, while remaining server-authoritative when
+  a player is nearby.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; platform reactivation and server load remain
+  Studio-unverified.

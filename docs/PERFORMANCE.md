@@ -22,6 +22,11 @@ activate only within 180 studs of a live player. Timed-tile phase still advances
 while asleep so reactivation is deterministic; critical hazards and transport
 remain active and server-authoritative.
 
+Moving platforms now update and query riders only while a player is within the
+configured `GameConfig.ActiveMechanicRadius`; distant platforms retain their
+last transform until reactivated. This reduces idle server work without
+delegating movement authority to clients.
+
 The world validator also reports unanchored generated environment parts, while
 allowing intentional cart ride assemblies. Static scenery should remain
 anchored to avoid accidental server physics and replication cost.

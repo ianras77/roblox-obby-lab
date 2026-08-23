@@ -680,13 +680,15 @@ function ObbyService:startHeartbeat()
     if self.riderQueryClock >= 0.05 then
       self.riderQueryClock = 0
       for _, item in ipairs(self.behaviors.movingPlatforms) do
-        if item.part and item.part.Parent then
+        if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, GameConfig.ActiveMechanicRadius) then
           item.riders = item.part:GetTouchingParts()
+        else
+          item.riders = {}
         end
       end
     end
     for _, item in ipairs(self.behaviors.movingPlatforms) do
-      if item.part and item.part.Parent then
+      if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, GameConfig.ActiveMechanicRadius) then
         local offsetScalar = math.sin(tickNow * item.speed + item.phase) * item.amplitude
         local offset = item.direction * offsetScalar
         local cf = item.origin * CFrame.new(offset)
