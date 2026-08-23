@@ -38,6 +38,8 @@ grep -q 'lowParticles = false' "$ROOT_DIR/src/shared/Config/ProfileSchema.lua" |
 grep -q 'AnalyticsService' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "analytics service wiring missing"
 grep -q 'bestChapterMs\[splitKey\]' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "chapter split persistence missing"
 grep -q 'merged.collectedKeys' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent key merge missing"
+grep -q 'merged.bestChapterMs' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent chapter split merge missing"
+grep -q 'merged.settings' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent settings merge missing"
 grep -q 'showResults' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results presentation missing"
 grep -q 'TimeTrialButton' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results replay actions missing"
 grep -q 'Golden Keys' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results key metric missing"

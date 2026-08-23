@@ -364,6 +364,16 @@
   pass locally.
 - Unverified: clock presentation, drift, and device layout require Studio.
 
+## 2026-08-23 — Merge chapter splits and settings safely
+
+- Completed: concurrent profile updates now preserve the best chapter split and
+  boolean settings from the existing record, while retaining bounded key-state
+  merging.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: concurrent live DataStore conflict behavior requires a staging
+  Roblox environment.
+
 ## 2026-08-23 — Bounded rider contact queries
 
 - Completed: moving-platform contact detection now samples `GetTouchingParts()`

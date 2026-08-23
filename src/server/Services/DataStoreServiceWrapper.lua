@@ -71,15 +71,35 @@ function Wrapper:SetAsync(key, value)
         merged.completionCount = math.max(tonumber(current.completionCount) or 0, value.completionCount or 0)
         if type(current.collectedKeys) == "table" then
           merged.collectedKeys = table.clone(value.collectedKeys or {})
+          local keyCount = 0
           for keyId, collected in pairs(current.collectedKeys) do
-            if collected == true then
+            if collected == true and keyCount < 100 then
               merged.collectedKeys[keyId] = true
+              keyCount += 1
             end
           end
         end
         local currentBest = tonumber(current.bestRunMs)
         if currentBest and currentBest > 0 and (not merged.bestRunMs or currentBest < merged.bestRunMs) then
           merged.bestRunMs = currentBest
+        end
+        if type(current.bestChapterMs) == "table" then
+          merged.bestChapterMs = table.clone(value.bestChapterMs or {})
+          for chapter, timeMs in pairs(current.bestChapterMs) do
+            local oldTime = tonumber(timeMs)
+            local newTime = tonumber(merged.bestChapterMs[chapter])
+            if oldTime and oldTime > 0 and (not newTime or oldTime < newTime) then
+              merged.bestChapterMs[chapter] = math.floor(oldTime)
+            end
+          end
+        end
+        if type(current.settings) == "table" then
+          merged.settings = table.clone(value.settings or {})
+          for setting, enabled in pairs(current.settings) do
+            if type(enabled) == "boolean" and type(merged.settings[setting]) == "boolean" then
+              merged.settings[setting] = enabled
+            end
+          end
         end
         return merged
       end)
