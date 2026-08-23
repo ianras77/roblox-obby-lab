@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: ["*"]
 
+concurrency:
+  group: obby-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
