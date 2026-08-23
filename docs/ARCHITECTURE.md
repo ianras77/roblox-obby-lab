@@ -37,8 +37,10 @@ bounded by seed/stage limits, and rate-limited. They are not a player
 progression or reward API.
 
 Checkpoint and key touches additionally require a live HumanoidRootPart,
-positive Humanoid health, and a short server-side distance bound. These are
-sanity checks for authority, not a latency-punishing anti-cheat system.
+positive Humanoid health, a short server-side distance bound, and contiguous
+chapter order. These are sanity checks for authority, not a latency-punishing
+anti-cheat system; Practice establishes its selected chapter as the temporary
+starting point before the same forward sequence resumes.
 
 Network names and payload direction are documented in
 `src/shared/Network/RemoteContracts.lua`. Progress, keys, and finale messages

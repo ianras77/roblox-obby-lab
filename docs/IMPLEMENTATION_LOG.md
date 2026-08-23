@@ -1212,3 +1212,12 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: live touch behavior and multiplayer timing still require Roblox
   Studio/private staging testing.
+
+## 2026-08-23 — Enforce contiguous checkpoint progression
+
+- Completed: the server now rejects forward checkpoint skips while preserving
+  monotonic saved progress and Practice's selected starting chapter.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live traversal and multiplayer checkpoint timing still require
+  Roblox Studio/private staging testing.

@@ -250,8 +250,11 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
     and humanoid.Health > 0
     and (humanoidRoot.Position - checkpoint.Position).Magnitude <= 18
   then
-    local previous = player:GetAttribute("Checkpoint") or 0
-    if stageIndex <= previous then
+    local previous = player:GetAttribute("Checkpoint")
+    if type(previous) ~= "number" or previous % 1 ~= 0 then
+      previous = 0
+    end
+    if stageIndex <= previous or stageIndex ~= previous + 1 then
       return
     end
     player:SetAttribute("Checkpoint", stageIndex)
