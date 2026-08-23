@@ -93,7 +93,38 @@ local function bindRunModes(self)
     self.world.progressEvent:FireClient(player, {
       stage = player:GetAttribute("Checkpoint") or 0,
       total = self.world.totalStages,
+      highestChapter = self.checkpoints and self.checkpoints:getProfile(player).highestChapter or 0,
       mode = mode,
+    })
+  end))
+end
+
+local function bindPracticeStage(self)
+  local events = ReplicatedStorage:FindFirstChild("SharedEvents")
+  local event = events and events:FindFirstChild(RemoteContracts.PracticeStage.name)
+  if not event then
+    return
+  end
+  local lastCall = {}
+  self.maid:Give(event.OnServerEvent:Connect(function(player, stage)
+    if type(stage) ~= "number" or stage % 1 ~= 0 or stage < 1 or stage > self.world.totalStages then
+      return
+    end
+    if os.clock() - (lastCall[player] or 0) < 1 then
+      return
+    end
+    local profile = self.checkpoints:getProfile(player)
+    if not self.checkpoints:isLoaded(player) or profile.highestChapter < stage then
+      return
+    end
+    lastCall[player] = os.clock()
+    self.runState:setMode(player, "Practice")
+    self.checkpoints:teleportToStage(player, stage)
+    self.world.progressEvent:FireClient(player, {
+      stage = stage,
+      total = self.world.totalStages,
+      highestChapter = self.checkpoints and self.checkpoints:getProfile(player).highestChapter or 0,
+      mode = "Practice",
     })
   end))
 end
@@ -136,6 +167,7 @@ function ObbyService.new()
   self.totalKeys = 0
   bindSettings(self)
   bindRunModes(self)
+  bindPracticeStage(self)
   self:scanBehaviors()
   self:hookCommands()
   self:startHeartbeat()
@@ -663,6 +695,7 @@ function ObbyService:rebuild(seed)
   self.totalKeys = 0
   bindSettings(self)
   bindRunModes(self)
+  bindPracticeStage(self)
   self:scanBehaviors()
   self:hookCommands()
   self:startHeartbeat()

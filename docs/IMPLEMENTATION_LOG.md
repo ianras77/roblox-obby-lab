@@ -208,3 +208,14 @@
   pass locally.
 - Unverified: responsive layout and gamepad focus still require Studio device
   testing.
+
+## 2026-08-23 — Authorized practice-stage selection
+
+- Completed: Practice now has a server-validated stage-selection contract that
+  accepts only integer chapters already reached by the player's loaded profile,
+  resets the run state to Practice, and teleports through the existing safe
+  checkpoint path.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: selector presentation and multiplayer practice transitions still
+  require Studio testing.

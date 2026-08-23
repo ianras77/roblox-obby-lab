@@ -29,6 +29,12 @@ local RemoteContracts = {
     payload = "{ mode: Adventure | TimeTrial | Practice }",
     rateLimitSeconds = 1,
   },
+  PracticeStage = {
+    name = "SetPracticeStage",
+    direction = "client_to_server",
+    payload = "{ stage: integer }",
+    rateLimitSeconds = 1,
+  },
 }
 
 return RemoteContracts

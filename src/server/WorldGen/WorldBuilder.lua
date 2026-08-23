@@ -30,6 +30,7 @@ local function ensureFolders()
     RemoteContracts.Finale.name,
     RemoteContracts.SetSettings.name,
     RemoteContracts.SetMode.name,
+    RemoteContracts.PracticeStage.name,
   }
   for _, name in ipairs(events) do
     if not folder:FindFirstChild(name) then

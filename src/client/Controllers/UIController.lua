@@ -25,6 +25,8 @@ function UIController.new()
   self.stateFunction = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild("GetObbyState")
   self.settingsEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(RemoteContracts.SetSettings.name)
   self.modeEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(RemoteContracts.SetMode.name)
+  self.practiceEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(RemoteContracts.PracticeStage.name)
+  self.highestChapter = 0
   self:bind()
   self:syncInitialState()
   return self
@@ -35,6 +37,7 @@ function UIController:syncInitialState()
     return self.stateFunction:InvokeServer()
   end)
   if ok and payload then
+    self.highestChapter = payload.highestChapter or 0
     self:updateProgress(payload.stage or 0, payload.total or 1)
     self:updateKeys(payload.keys or 0, payload.totalKeys or 0)
     for key, enabled in pairs(payload.settings or {}) do
@@ -177,6 +180,31 @@ function UIController:createGui()
     button:SetAttribute("RunMode", mode)
     button.Parent = panel
   end
+  local practice = Instance.new("ScrollingFrame")
+  practice.Name = "PracticeSelector"
+  practice.Visible = false
+  practice.Size = UDim2.fromScale(0.42, 0.28)
+  practice.Position = UDim2.fromScale(0.54, 0.25)
+  practice.BackgroundColor3 = Theme.Ink
+  practice.BorderSizePixel = 0
+  practice.CanvasSize = UDim2.fromScale(0, 0)
+  practice.AutomaticCanvasSize = Enum.AutomaticSize.Y
+  practice.Parent = gui
+  local grid = Instance.new("UIGridLayout")
+  grid.CellSize = UDim2.fromOffset(58, 36)
+  grid.CellPadding = UDim2.fromOffset(6, 6)
+  grid.Parent = practice
+  for stage = 1, GameConfig.Zones * GameConfig.StagesPerZone do
+    local button = Instance.new("TextButton")
+    button.Name = "Stage_" .. stage
+    button.Text = "Chapter " .. stage
+    button.TextScaled = true
+    button.Font = Enum.Font.GothamBold
+    button.BackgroundColor3 = Theme.Brass
+    button.TextColor3 = Theme.Ink
+    button:SetAttribute("PracticeStage", stage)
+    button.Parent = practice
+  end
   for key, labelText in pairs({
     reducedMotion = "Reduced motion",
     reduceFlashes = "Reduce flashes",
@@ -260,9 +288,30 @@ function UIController:bind()
     end
     if toggle:IsA("TextButton") and toggle:GetAttribute("RunMode") then
       toggle.MouseButton1Click:Connect(function()
-        self.modeEvent:FireServer(toggle:GetAttribute("RunMode"))
-        panel.Visible = false
+        local mode = toggle:GetAttribute("RunMode")
+        if mode == "Practice" then
+          self:showPracticeSelector()
+        else
+          self.modeEvent:FireServer(mode)
+          panel.Visible = false
+        end
       end)
+    end
+  end
+
+  local selector = self.gui:FindFirstChild("PracticeSelector")
+  if selector then
+    for _, button in ipairs(selector:GetChildren()) do
+      if button:IsA("TextButton") then
+        button.Activated:Connect(function()
+          local stage = button:GetAttribute("PracticeStage")
+          if stage and stage <= self.highestChapter then
+            self.practiceEvent:FireServer(stage)
+            selector.Visible = false
+            panel.Visible = false
+          end
+        end)
+      end
     end
   end
 
@@ -287,6 +336,21 @@ function UIController:bind()
   finaleEvent.OnClientEvent:Connect(function(payload)
     self:showResults(payload)
   end)
+end
+
+function UIController:showPracticeSelector()
+  local selector = self.gui:FindFirstChild("PracticeSelector")
+  if not selector then
+    return
+  end
+  for _, child in ipairs(selector:GetChildren()) do
+    if child:IsA("TextButton") then
+      local stage = child:GetAttribute("PracticeStage")
+      child.Visible = stage <= self.highestChapter
+      child.Text = child.Visible and ("Chapter " .. stage) or ("Locked " .. stage)
+    end
+  end
+  selector.Visible = true
 end
 
 function UIController:showResults(payload)
