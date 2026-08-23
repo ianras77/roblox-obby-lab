@@ -283,7 +283,11 @@ function ObbyService:registerKey(part)
       sound:Play()
     end
     if self.world.keyEvent then
-      self.world.keyEvent:FireClient(player, { found = self.keyProgress[player], total = self.totalKeys })
+      self.world.keyEvent:FireClient(player, {
+        found = self.keyProgress[player],
+        total = self.totalKeys,
+        keyId = keyId,
+      })
     end
   end))
 end

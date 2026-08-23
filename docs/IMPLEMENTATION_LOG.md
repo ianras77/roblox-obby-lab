@@ -453,6 +453,15 @@
 - Unverified: remote timing under live DataStore latency requires Studio or
   staging validation.
 
+## 2026-08-23 — Align live network payload contracts
+
+- Completed: progress contracts now document server-synchronized timer fields,
+  and Golden Key pickup feedback includes the stable server-assigned key ID.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live client compatibility and multiplayer pickup presentation
+  require Studio testing.
+
 ## 2026-08-23 — Guard invalid checkpoint instances
 
 - Completed: the world validator now inspects checkpoint geometry only after

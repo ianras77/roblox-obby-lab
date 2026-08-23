@@ -23,6 +23,8 @@ grep -q 'GetObbyState' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail 
 if grep -q 'progressEvent:FireAllClients' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua"; then fail "startup state must not broadcast globally"; fi
 if grep -q 'celebrator.Parent = checkpoint' "$ROOT_DIR/src/server/Services/CheckpointService.lua"; then fail "finale burst must not be shared"; fi
 grep -q 'SetAccessibilitySettings' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "settings contract missing"
+grep -q 'runStarted: boolean?' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "progress timer contract missing"
+grep -q 'keyId = keyId' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "key feedback identity missing"
 grep -q 'reducedMotion = true' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "settings allowlist missing"
 grep -q 'if not self.checkpoints:isLoaded(player) then' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "remote profile readiness guard missing"
 grep -q 'Magnitude <= 18' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint distance validation missing"
