@@ -5,6 +5,7 @@ local RandomUtil = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("
 local ZoneBuilder = require(script.Parent.ZoneBuilder)
 local DecorBuilder = require(script.Parent.DecorBuilder)
 local WorldValidator = require(script.Parent.WorldValidator)
+local RemoteContracts = require(ReplicatedStorage:WaitForChild("Network"):WaitForChild("RemoteContracts"))
 
 local WorldBuilder = {}
 
@@ -22,7 +23,11 @@ local function ensureFolders()
     folder.Name = "SharedEvents"
     folder.Parent = ReplicatedStorage
   end
-  local events = { GameConfig.ProgressRemote, GameConfig.KeyRemote, GameConfig.FinaleRemote }
+  local events = {
+    RemoteContracts.Progress.name,
+    RemoteContracts.Keys.name,
+    RemoteContracts.Finale.name,
+  }
   for _, name in ipairs(events) do
     if not folder:FindFirstChild(name) then
       local evt = Instance.new("RemoteEvent")

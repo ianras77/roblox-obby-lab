@@ -11,3 +11,7 @@ Analytics is not enabled yet. The planned server-only, no-op-safe event set is:
 | `run_completed` | Final checkpoint once per run | Finish and replay rate |
 
 Do not log chat, raw payloads, or high-cardinality personal data.
+
+Implementation status: the event catalog is documented, but the runtime
+analytics sink is intentionally still a no-op until a Roblox-approved
+telemetry policy and destination are selected.
