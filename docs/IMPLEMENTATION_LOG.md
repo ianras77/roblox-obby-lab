@@ -1305,3 +1305,11 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; Roblox Studio traversal remains unverified.
 - Unverified: moving-platform and rope-physics behavior still requires Studio.
+
+## 2026-08-23 — Add the Laundry Cart signature ride
+
+- Completed: Chapter 10 now includes a server-controlled guided cart with a
+  safe floor recovery route, instead of relying only on moving laundry baskets.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; cart boarding and multiplayer physics remain
+  unverified without Roblox Studio.

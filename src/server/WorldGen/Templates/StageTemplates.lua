@@ -1109,6 +1109,10 @@ function StageTemplates.LaundryCartEscape(ctx)
   )
   floor.Material = Enum.Material.WoodPlanks
 
+  -- This chapter's signature ride is a guided, server-controlled cart. The
+  -- floor gives players a safe recovery route if they miss the boarding seat.
+  Build.cart(ctx.origin * CFrame.new(5, 1.5, 0), model)
+
   for i = 1, 4 do
     local sheet = Build.part({
       Name = "FlutteringSheet",
