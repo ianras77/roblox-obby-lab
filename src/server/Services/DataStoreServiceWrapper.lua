@@ -7,7 +7,9 @@ Wrapper.__index = Wrapper
 
 function Wrapper.new(name)
   local self = setmetatable({}, Wrapper)
-  self.enabled = GameConfig.UseDataStore and GameConfig.Environment ~= "StudioDevelopment"
+  self.enabled = GameConfig.UseDataStore
+    and GameConfig.SaveCheckpoints
+    and GameConfig.Environment ~= "StudioDevelopment"
   if RunService:IsStudio() and GameConfig.Environment == "Production" then
     warn("[DataStore] Production environment is blocked in Studio")
     self.enabled = false

@@ -20,6 +20,7 @@ grep -q 'reducedMotion = true' "$ROOT_DIR/src/server/Services/ObbyService.lua" |
 grep -q 'SetRunMode' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "run mode contract missing"
 grep -q 'showResults' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results presentation missing"
 grep -q 'MaxDevSeed' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "dev seed cap missing"
+grep -q 'SaveCheckpoints = true' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "production persistence default missing"
 grep -q 'DevCommandCooldownSeconds' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "dev command rate limit missing"
 grep -q 'approvedForRelease' "$ROOT_DIR/src/shared/Config/AssetRegistry.lua" || fail "asset approval registry missing"
 grep -q 'playFirstApprovedMusic' "$ROOT_DIR/src/server/ServerMain.server.lua" || fail "asset approval gate missing"

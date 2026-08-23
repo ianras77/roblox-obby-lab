@@ -19,6 +19,10 @@ environment cannot write production data; staging and production must use
 distinct configured store names. The checkpoint service now autosaves on the
 configured interval and saves on shutdown/player removal.
 
+Persistence is enabled by default. `StudioDevelopment` remains fail-closed in
+the wrapper; use a distinct `StudioSandbox` store name and a deliberate place
+configuration when testing persistence in Studio.
+
 Run state is server-owned and distinguishes `Adventure`, `TimeTrial`, and
 `Practice`. Practice completion is deliberately ineligible for a time-trial
 score. Timing and leaderboard submission still require Studio validation.
