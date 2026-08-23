@@ -384,6 +384,16 @@
 - Unverified: live DataStore conflict and migration behavior still require
   staging Roblox validation.
 
+## 2026-08-23 — Make world validation fail closed
+
+- Completed: malformed stage manifests with missing or non-Model instances now
+  produce validation errors instead of crashing during attribute, hazard, or
+  descendant inspection.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: validator execution against live generated instances remains a
+  Studio-only check.
+
 ## 2026-08-23 — Bounded rider contact queries
 
 - Completed: moving-platform contact detection now samples `GetTouchingParts()`

@@ -10,6 +10,8 @@ grep -q 'Refusing to delete Workspace.GeneratedObby' "$ROOT_DIR/src/server/World
 grep -q 'Invalid world seed' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "world seed boundary validation missing"
 grep -q 'seed ~= seed' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "NaN seed rejection missing"
 grep -q 'stageId = result.model:GetAttribute("StageId")' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage manifest IDs missing"
+grep -q 'if not stageModel or not stageModel:IsA("Model")' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator model guard missing"
+grep -q 'if stage.model and stage.model:IsA("Model")' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator descendant guard missing"
 grep -q 'stageIndex <= previous' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint regression guard missing"
 if grep -q 'part:Destroy()' "$ROOT_DIR/src/server/Services/ObbyService.lua"; then
   fail "collectible runtime must not globally destroy keys"

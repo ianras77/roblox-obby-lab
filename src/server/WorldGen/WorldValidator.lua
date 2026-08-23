@@ -19,6 +19,7 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
   local indexes = {}
   local previousExit = nil
   for expectedIndex, stage in ipairs(stages) do
+    local stageModel = stage.model
     if stage.stageIndex ~= expectedIndex then
       table.insert(errors, string.format("stage order gap or duplicate near %d", stage.stageIndex or -1))
     end
@@ -64,12 +65,14 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
           table.insert(errors, string.format("stage %d safe spawn is not above checkpoint", stage.stageIndex or -1))
         end
       end
-      for _, hazard in ipairs(CollectionService:GetTagged("KillBrick")) do
-        if hazard:IsDescendantOf(stage.model) and hazard:IsA("BasePart") and overlaps(stage.checkpoint, hazard) then
-          table.insert(
-            errors,
-            string.format("stage %d checkpoint overlaps hazard %s", stage.stageIndex or -1, hazard.Name)
-          )
+      if stageModel and stageModel:IsA("Model") then
+        for _, hazard in ipairs(CollectionService:GetTagged("KillBrick")) do
+          if hazard:IsDescendantOf(stageModel) and hazard:IsA("BasePart") and overlaps(stage.checkpoint, hazard) then
+            table.insert(
+              errors,
+              string.format("stage %d checkpoint overlaps hazard %s", stage.stageIndex or -1, hazard.Name)
+            )
+          end
         end
       end
     end
@@ -86,7 +89,9 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
       end
       previousExit = stage.exit
     end
-    if not stage.model:GetAttribute("PrimaryMechanic") then
+    if not stageModel or not stageModel:IsA("Model") then
+      table.insert(errors, string.format("stage %d missing model", stage.stageIndex or -1))
+    elseif not stageModel:GetAttribute("PrimaryMechanic") then
       table.insert(errors, string.format("stage %d missing presentation metadata", stage.stageIndex or -1))
     end
   end
@@ -112,12 +117,14 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     end
   end
   for _, stage in ipairs(stages) do
-    for _, descendant in ipairs(stage.model:GetDescendants()) do
-      if descendant:IsA("BasePart") and not descendant.Anchored then
-        local intentionalRide = descendant:FindFirstAncestorWhichIsA("Model")
-        local isCartPart = intentionalRide and intentionalRide:FindFirstChild("Seat") ~= nil
-        if not isCartPart then
-          table.insert(errors, "unanchored environment part: " .. descendant:GetFullName())
+    if stage.model and stage.model:IsA("Model") then
+      for _, descendant in ipairs(stage.model:GetDescendants()) do
+        if descendant:IsA("BasePart") and not descendant.Anchored then
+          local intentionalRide = descendant:FindFirstAncestorWhichIsA("Model")
+          local isCartPart = intentionalRide and intentionalRide:FindFirstChild("Seat") ~= nil
+          if not isCartPart then
+            table.insert(errors, "unanchored environment part: " .. descendant:GetFullName())
+          end
         end
       end
     end
