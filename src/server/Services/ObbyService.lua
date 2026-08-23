@@ -385,9 +385,18 @@ function ObbyService:scanBehaviors()
   end)
 
   add("KillBrick", function(part)
+    local lastHit = {}
     self.maid:Give(part.Touched:Connect(function(hit)
-      local humanoid = hit.Parent and hit.Parent:FindFirstChildOfClass("Humanoid")
-      if humanoid then
+      local character = hit.Parent
+      local player = character and Players:GetPlayerFromCharacter(character)
+      local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+      local root = character and character:FindFirstChild("HumanoidRootPart")
+      if player and humanoid and root and humanoid.Health > 0 then
+        local now = os.clock()
+        if now - (lastHit[humanoid] or 0) < 0.25 then
+          return
+        end
+        lastHit[humanoid] = now
         humanoid.Health = 0
       end
     end))

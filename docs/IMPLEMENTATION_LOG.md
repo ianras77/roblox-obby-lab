@@ -147,3 +147,12 @@
 - Tests: configuration, storyboard, production, Stylua, and whitespace checks
   pass locally.
 - Unverified: Studio-only geometry traversal remains pending.
+
+## 2026-08-23 — Contextual hazard authority
+
+- Completed: kill hazards now require a live player character with a root part
+  and use a short server-side humanoid debounce before applying death.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: latency behavior and full failure/respawn feel still require
+  Studio playtesting.

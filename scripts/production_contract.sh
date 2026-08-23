@@ -51,4 +51,6 @@ grep -q 'shutdownBound' "$ROOT_DIR/src/server/Services/CheckpointService.lua" ||
 grep -q 'local direction = part.CFrame.LookVector' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "conveyor vertical velocity handling missing"
 grep -q 'if item.part and item.part.Parent then' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "obstacle lifecycle guards missing"
 grep -q 'part:SetNetworkOwner(nil)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "cart network ownership is not server-controlled"
+grep -q 'Players:GetPlayerFromCharacter(character)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "hazard interaction is not player-context validated"
+grep -q 'lastHit\[humanoid\]' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "hazard touch debounce missing"
 echo "production contracts ok"
