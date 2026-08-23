@@ -336,6 +336,16 @@
 - Unverified: touch scrolling and gamepad focus order require Studio device
   testing.
 
+## 2026-08-23 — Time Trial plausibility guard
+
+- Completed: server-owned Time Trial completion now requires a conservative
+  minimum elapsed duration before updating personal-best data; implausibly fast
+  runs still complete for the player but are ineligible for record updates.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: threshold tuning against real movement and latency requires
+  Studio playtesting.
+
 ## 2026-08-23 — Canonical Time Trial start
 
 - Completed: crossing the validated Time Trial gate now clears the player's

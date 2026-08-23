@@ -151,7 +151,7 @@ function ObbyService.new()
       settings = self.checkpoints and self.checkpoints:getProfile(player).settings or {},
     }
   end
-  self.runState = RunStateService.new(self.world.totalStages)
+  self.runState = RunStateService.new(self.world.totalStages, GameConfig.MinimumTimeTrialSeconds)
   self.checkpoints = CheckpointService.new(
     self.world.stages,
     self.world.progressEvent,
@@ -691,7 +691,7 @@ function ObbyService:rebuild(seed)
     }
   end
   self.checkpoints:destroy()
-  self.runState = RunStateService.new(self.world.totalStages)
+  self.runState = RunStateService.new(self.world.totalStages, GameConfig.MinimumTimeTrialSeconds)
   self.checkpoints = CheckpointService.new(
     self.world.stages,
     self.world.progressEvent,

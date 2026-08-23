@@ -13,6 +13,7 @@ local GameConfig = {
   MaxDevSeed = 2147483647,
   MaxDevStage = 18,
   DevCommandCooldownSeconds = 2,
+  MinimumTimeTrialSeconds = 30,
   Environment = "StudioDevelopment", -- StudioDevelopment, StudioSandbox, Staging, Production
   SaveCheckpoints = true, -- Environment controls whether the store can write.
   UseDataStore = true, -- StudioDevelopment is blocked by DataStoreServiceWrapper.

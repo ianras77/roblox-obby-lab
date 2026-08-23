@@ -15,10 +15,11 @@ export type RunState = {
   chapterSplits: { [number]: number },
 }
 
-function RunStateService.new(totalStages: number)
+function RunStateService.new(totalStages: number, minimumTimeTrialSeconds: number)
   local self = setmetatable({}, RunStateService)
   self.maid = Maid.new()
   self.totalStages = totalStages
+  self.minimumTimeTrialSeconds = math.max(0, minimumTimeTrialSeconds or 0)
   self.states = {} :: { [Player]: RunState }
   for _, player in ipairs(Players:GetPlayers()) do
     self:initialize(player)
@@ -105,7 +106,11 @@ function RunStateService:onChapterReached(player: Player, stageIndex: number): (
     if state.mode == "Practice" then
       return nil, false
     end
-    return state.completedAt - state.startedAt, true
+    local elapsed = state.completedAt - state.startedAt
+    if state.mode == "TimeTrial" and elapsed < self.minimumTimeTrialSeconds then
+      return elapsed, false
+    end
+    return elapsed, true
   end
   return nil, false
 end
