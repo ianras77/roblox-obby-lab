@@ -26,6 +26,7 @@ grep -q 'lowParticles = false' "$ROOT_DIR/src/shared/Config/ProfileSchema.lua" |
 grep -q 'AnalyticsService' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "analytics service wiring missing"
 grep -q 'merged.collectedKeys' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent key merge missing"
 grep -q 'showResults' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results presentation missing"
+grep -q 'applyAccessibility' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "accessibility application missing"
 grep -q 'MaxDevSeed' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "dev seed cap missing"
 grep -q 'SaveCheckpoints = true' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "production persistence default missing"
 if grep -q 'MaxPlayersPerServer' "$ROOT_DIR/src/shared/Config/GameConfig.lua"; then fail "fake server capacity knob remains"; fi

@@ -10,6 +10,10 @@ The settings panel is now present in the client HUD. Verify each toggle changes
 the corresponding effect, survives respawn, and is migrated into the server
 profile before release.
 
+High contrast must visibly distinguish tagged hazards from the safe route, and
+Low particles must leave gameplay-critical readability intact while disabling
+ambient emitters.
+
 Replay controls now expose Adventure, Time Trial, and Practice from the HUD;
 verify mode reset timing, checkpoint semantics, completion results, and that no
 Practice run can qualify for a leaderboard.

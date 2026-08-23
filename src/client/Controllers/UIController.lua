@@ -1,4 +1,5 @@
 local Players = game:GetService("Players")
+local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
 local Theme = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("Theme"))
@@ -17,6 +18,7 @@ function UIController.new()
     largeText = false,
     lowParticles = false,
   }
+  self.originalHazardColors = {}
   self.gui = self:createGui()
   self.progressEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.ProgressRemote)
   self.keyEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.KeyRemote)
@@ -44,6 +46,22 @@ function UIController:syncInitialState()
     local scale = self.gui:FindFirstChild("AccessibilityScale")
     if scale then
       scale.Scale = self.settings.largeText and 1.15 or 1
+    end
+    self:applyAccessibility()
+  end
+end
+
+function UIController:applyAccessibility()
+  for _, part in ipairs(CollectionService:GetTagged("KillBrick")) do
+    if part:IsA("BasePart") then
+      self.originalHazardColors[part] = self.originalHazardColors[part] or part.Color
+      part.Color = self.settings.highContrast and Color3.fromRGB(255, 255, 255) or self.originalHazardColors[part]
+      part.Material = self.settings.highContrast and Enum.Material.Neon or part.Material
+    end
+  end
+  for _, emitter in ipairs(workspace:GetDescendants()) do
+    if emitter:IsA("ParticleEmitter") and emitter:GetAttribute("GameplayCritical") ~= true then
+      emitter.Enabled = not self.settings.lowParticles
     end
   end
 end
@@ -233,6 +251,9 @@ function UIController:bind()
           if scale then
             scale.Scale = self.settings[key] and 1.15 or 1
           end
+        end
+        if key == "highContrast" or key == "lowParticles" then
+          self:applyAccessibility()
         end
         toggle.Text = string.gsub(toggle.Text, ": %u+", ": " .. (self.settings[key] and "ON" or "OFF"))
       end)
