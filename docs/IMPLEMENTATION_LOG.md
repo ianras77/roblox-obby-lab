@@ -1,5 +1,13 @@
 # Implementation log
 
+## 2026-08-23 — Remove misleading placeholder test
+
+- Completed: removed the unused always-pass `tests/placeholder.lua`; executable
+  confidence gates remain explicitly maintained under `scripts/` and CI.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: dynamic Luau runtime tests still require a Roblox/Luau runner.
+
 ## 2026-08-23 — Scope collectible validation to generated stages
 
 - Completed: validator duplicate/missing-key checks now inspect only
