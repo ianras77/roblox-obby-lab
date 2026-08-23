@@ -79,6 +79,7 @@ grep -q 'player:" .. tostring(player.UserId)' "$ROOT_DIR/src/server/Services/Che
 grep -q 'local saved, loadSucceeded' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "datastore load outcome is not distinguished"
 grep -q 'player:SetAttribute("Checkpoint", 0)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile load does not establish zero checkpoint state"
 grep -q 'if player.Character then' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile load does not repair existing character position"
+grep -q 'if not player.Parent then' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile load lacks leave guard"
 grep -q 'not self:isLoaded(player)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "failed profile loads can still be saved"
 grep -q 'checkpointProfile.highestChapter = math.max' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint profile state is stale"
 grep -q 'profile.highestChapter = math.max(profile.highestChapter' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "save path can regress profile progress"

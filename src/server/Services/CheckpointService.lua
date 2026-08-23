@@ -60,6 +60,11 @@ end
 
 function CheckpointService:initializePlayer(player)
   self:loadCheckpoint(player)
+  if not player.Parent then
+    self.loaded[player] = nil
+    self.profiles[player] = nil
+    return
+  end
   if self.analytics then
     self.analytics:track(player, "joined")
   end
@@ -102,6 +107,9 @@ function CheckpointService:loadCheckpoint(player)
   player:SetAttribute("Checkpoint", 0)
   player:SetAttribute("CheckpointId", nil)
   local saved, loadSucceeded = self.store:GetAsync("player:" .. tostring(player.UserId))
+  if not player.Parent then
+    return
+  end
   self.loaded[player] = loadSucceeded == true
   local profile = ProfileSchema.sanitize(saved)
   self.profiles[player] = profile

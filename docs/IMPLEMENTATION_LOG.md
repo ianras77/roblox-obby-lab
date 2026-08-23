@@ -1,5 +1,14 @@
 # Implementation log
 
+## 2026-08-23 — Guard profile loads after player departure
+
+- Completed: profile-load coroutines now stop and clear session tables when a
+  player leaves while `GetAsync` is yielding, preventing late event-handler
+  installation and stale in-memory profiles.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live leave-during-load behavior requires staging DataStore tests.
+
 ## 2026-08-23 — Bind developer commands across service lifecycle
 
 - Completed: allowlisted developer command handlers now bind both existing and
