@@ -20,7 +20,7 @@ local RemoteContracts = {
   SetSettings = {
     name = "SetAccessibilitySettings",
     direction = "client_to_server",
-    payload = "{ key: string, enabled: boolean }",
+    payload = "{ key: string, enabled: boolean | number }",
     rateLimitSeconds = 0.2,
   },
   SetMode = {

@@ -33,6 +33,9 @@ function ProfileSchema.default(): PlayerProfile
       largeText = false,
       lowParticles = false,
       showTimer = true,
+      masterVolume = 1,
+      musicVolume = 1,
+      sfxVolume = 1,
       uiScale = 1,
     },
   }
@@ -93,6 +96,12 @@ function ProfileSchema.sanitize(raw: any): PlayerProfile
     local uiScale = tonumber(raw.settings.uiScale)
     if uiScale and uiScale >= 0.8 and uiScale <= 1.5 then
       profile.settings.uiScale = uiScale
+    end
+    for _, key in ipairs({ "masterVolume", "musicVolume", "sfxVolume" }) do
+      local volume = tonumber(raw.settings[key])
+      if volume and volume >= 0 and volume <= 1 then
+        profile.settings[key] = volume
+      end
     end
   end
   return profile

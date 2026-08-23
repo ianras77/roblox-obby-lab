@@ -5,6 +5,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
 local Theme = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("Theme"))
 local RemoteContracts = require(ReplicatedStorage:WaitForChild("Network"):WaitForChild("RemoteContracts"))
+local SoundGroups = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("SoundGroups"))
 
 local UIController = {}
 UIController.__index = UIController
@@ -19,6 +20,9 @@ function UIController.new()
     largeText = false,
     lowParticles = false,
     showTimer = true,
+    masterVolume = 1,
+    musicVolume = 1,
+    sfxVolume = 1,
   }
   self.originalHazardColors = {}
   self.originalHazardMaterials = {}
@@ -48,7 +52,7 @@ function UIController:syncInitialState()
     self:updateKeys(payload.keys or 0, payload.totalKeys or 0)
     self:applyCollectedKeys(payload.collectedKeys)
     for key, enabled in pairs(payload.settings or {}) do
-      if self.settings[key] ~= nil and type(enabled) == "boolean" then
+      if self.settings[key] ~= nil and (type(enabled) == "boolean" or type(enabled) == "number") then
         self.settings[key] = enabled
         self.player:SetAttribute("Accessibility_" .. key, enabled)
       end
@@ -58,6 +62,25 @@ function UIController:syncInitialState()
       scale.Scale = self.settings.largeText and 1.15 or 1
     end
     self:applyAccessibility()
+    self:applyAudioVolumes()
+    self:refreshVolumeLabels()
+  end
+end
+
+function UIController:applyAudioVolumes()
+  local master = self.settings.masterVolume or 1
+  SoundGroups.ensure("Music", 0.45 * master * (self.settings.musicVolume or 1))
+  SoundGroups.ensure("Ambience", 0.35 * master)
+  SoundGroups.ensure("SFX", 0.8 * master * (self.settings.sfxVolume or 1))
+  SoundGroups.ensure("UI", 0.8 * master * (self.settings.sfxVolume or 1))
+end
+
+function UIController:refreshVolumeLabels()
+  for _, child in ipairs(self.gui:FindFirstChild("SettingsPanel"):GetChildren()) do
+    local key = child:GetAttribute("VolumeKey")
+    if child:IsA("TextButton") and key then
+      child.Text = string.format("%s: %d%%", child:GetAttribute("VolumeLabel"), (self.settings[key] or 1) * 100)
+    end
   end
 end
 
@@ -265,6 +288,24 @@ function UIController:createGui()
     toggle.Text = labelText .. ": OFF"
     toggle.Parent = panel
   end
+  for _, definition in ipairs({
+    { key = "masterVolume", label = "Master volume" },
+    { key = "musicVolume", label = "Music volume" },
+    { key = "sfxVolume", label = "Effects volume" },
+  }) do
+    local volume = Instance.new("TextButton")
+    volume.Name = definition.key
+    volume.Selectable = true
+    volume:SetAttribute("VolumeKey", definition.key)
+    volume:SetAttribute("VolumeLabel", definition.label)
+    volume.Size = UDim2.new(1, 0, 0, 28)
+    volume.BackgroundColor3 = Color3.fromRGB(62, 75, 95)
+    volume.TextColor3 = Color3.new(1, 1, 1)
+    volume.Font = Enum.Font.Gotham
+    volume.TextScaled = true
+    volume.Text = definition.label .. ": 100%"
+    volume.Parent = panel
+  end
 
   local skip = Instance.new("TextButton")
   skip.Name = "SkipButton"
@@ -358,6 +399,16 @@ function UIController:bind()
           self.modeEvent:FireServer(mode)
           panel.Visible = false
         end
+      end)
+    end
+    if toggle:IsA("TextButton") and toggle:GetAttribute("VolumeKey") then
+      toggle.Activated:Connect(function()
+        local key = toggle:GetAttribute("VolumeKey")
+        local nextValue = ((self.settings[key] or 1) - 0.25) % 1.25
+        self.settings[key] = nextValue
+        self.settingsEvent:FireServer(key, nextValue)
+        self:applyAudioVolumes()
+        self:refreshVolumeLabels()
       end)
     end
   end

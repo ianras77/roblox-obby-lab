@@ -970,3 +970,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: Studio script scheduling and final device mix still require
   Roblox testing.
+
+## 2026-08-23 — Add persistent local audio controls
+
+- Completed: players can cycle master, music, and effects volume from the
+  responsive settings panel; values are range-validated, persisted in the
+  profile, and applied locally to the shared SoundGroup buses.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: actual device mixing, mute ergonomics, and persistence in a live
+  profile require Studio testing.

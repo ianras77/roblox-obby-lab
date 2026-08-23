@@ -53,6 +53,9 @@ never changes server-owned timing.
 six boolean keys are accepted and writes are rate-limited before entering
 the profile.
 
+`masterVolume`, `musicVolume`, and `sfxVolume` are validated numbers from 0 to
+1. They change only the local SoundGroup mix and never alter shared gameplay.
+
 Fresh profiles initialize all six supported accessibility booleans; legacy
 profiles preserve only validated boolean values and a bounded UI scale.
 
