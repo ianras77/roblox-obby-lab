@@ -1,5 +1,13 @@
 # Implementation log
 
+## 2026-08-23 — Reject non-finite stage geometry
+
+- Completed: world validation now rejects NaN/infinite bounds and stage
+  entrance, exit, or safe-spawn positions before geometry arithmetic.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: malformed numeric values in live Studio remain unverified.
+
 ## 2026-08-23 — Validate structured stage result types
 
 - Completed: world validation now checks CFrame, Vector3, and mechanics-table

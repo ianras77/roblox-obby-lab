@@ -6,6 +6,14 @@ local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild
 
 local WorldValidator = {}
 
+local function finite(value)
+  return value == value and math.abs(value) < math.huge
+end
+
+local function finiteVector(vector)
+  return finite(vector.X) and finite(vector.Y) and finite(vector.Z)
+end
+
 local function overlaps(a, b)
   local delta = a.Position - b.Position
   local reach = (a.Size + b.Size) * 0.5
@@ -52,8 +60,20 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     if not validSafeSpawn or typeof(stage.bounds) ~= "Vector3" or type(stage.mechanics) ~= "table" then
       table.insert(errors, string.format("stage %d missing build result fields", stage.stageIndex or -1))
     end
-    if stage.bounds and (stage.bounds.X <= 0 or stage.bounds.Y <= 0 or stage.bounds.Z <= 0) then
+    if
+      stage.bounds
+      and (not finiteVector(stage.bounds) or stage.bounds.X <= 0 or stage.bounds.Y <= 0 or stage.bounds.Z <= 0)
+    then
       table.insert(errors, string.format("stage %d has invalid bounds", stage.stageIndex or -1))
+    end
+    if validEntrance and not finiteVector(stage.entrance.Position) then
+      table.insert(errors, string.format("stage %d has invalid entrance position", stage.stageIndex or -1))
+    end
+    if validExit and not finiteVector(stage.exit.Position) then
+      table.insert(errors, string.format("stage %d has invalid exit position", stage.stageIndex or -1))
+    end
+    if validSafeSpawn and not finiteVector(stage.safeSpawn.Position) then
+      table.insert(errors, string.format("stage %d has invalid safe spawn position", stage.stageIndex or -1))
     end
     if stage.checkpoint and stage.checkpoint:IsA("BasePart") then
       if stage.checkpoint.Size.X < 4 or stage.checkpoint.Size.Z < 4 then
