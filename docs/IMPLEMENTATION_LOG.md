@@ -288,6 +288,16 @@
 - Unverified: actual rider comfort, edge standing, latency, and multi-client
   physics require Studio testing.
 
+## 2026-08-23 — Feedback asset approval boundary
+
+- Completed: checkpoint and Golden Key feedback sounds now resolve through
+  AssetRegistry and remain silent until an asset is both verified and approved
+  for release.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: Roblox asset ownership, moderation, and playback require Creator
+  Hub/Studio verification.
+
 ## 2026-08-23 — Canonical Time Trial start
 
 - Completed: crossing the validated Time Trial gate now clears the player's

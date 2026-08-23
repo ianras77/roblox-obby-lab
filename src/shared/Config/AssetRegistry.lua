@@ -12,7 +12,27 @@ export type AssetDefinition = {
 
 -- IDs remain visible for auditability, but unverified assets are not selected
 -- by production code. Replace verified=false only after Creator Hub review.
-return {
+local registry = {
+  effects = {
+    {
+      key = "checkpoint_feedback",
+      type = "Sound",
+      id = "rbxassetid://12222152",
+      verified = false,
+      approvedForRelease = false,
+      source = "legacy checkpoint builder",
+      note = "Verify ownership and moderation before release.",
+    },
+    {
+      key = "key_pickup",
+      type = "Sound",
+      id = "rbxassetid://12222058",
+      verified = false,
+      approvedForRelease = false,
+      source = "legacy collectible builder",
+      note = "Verify ownership and moderation before release.",
+    },
+  },
   music = {
     {
       key = "riverbank_theme",
@@ -34,3 +54,16 @@ return {
     },
   },
 }
+
+function registry.getApprovedId(key: string): string
+  for _, group in ipairs({ registry.effects, registry.music }) do
+    for _, asset in ipairs(group) do
+      if asset.key == key and asset.verified and asset.approvedForRelease then
+        return asset.id
+      end
+    end
+  end
+  return ""
+end
+
+return registry

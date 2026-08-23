@@ -1,4 +1,6 @@
 local CollectionService = game:GetService("CollectionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
 
 local Build = {}
 
@@ -85,7 +87,7 @@ function Build.checkpoint(name, cframe, size, parent)
   text.Parent = gui
 
   local sound = Instance.new("Sound")
-  sound.SoundId = "rbxassetid://12222152"
+  sound.SoundId = AssetRegistry.getApprovedId("checkpoint_feedback")
   sound.Volume = 0.4
   sound.Parent = cp
 
@@ -119,7 +121,7 @@ function Build.collectibleKey(cframe, parent)
   spark.Parent = key
 
   local sound = Instance.new("Sound")
-  sound.SoundId = "rbxassetid://12222058"
+  sound.SoundId = AssetRegistry.getApprovedId("key_pickup")
   sound.Volume = 0.6
   sound.Parent = key
 
