@@ -13,3 +13,6 @@ profile before release.
 Replay controls now expose Adventure, Time Trial, and Practice from the HUD;
 verify mode reset timing, checkpoint semantics, completion results, and that no
 Practice run can qualify for a leaderboard.
+
+Also verify a new player cannot activate Time Trial, and that it becomes
+available only after an Adventure completion.

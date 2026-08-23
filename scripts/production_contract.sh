@@ -21,6 +21,7 @@ grep -q 'reducedMotion = true' "$ROOT_DIR/src/server/Services/ObbyService.lua" |
 grep -q 'Magnitude <= 18' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint distance validation missing"
 grep -q 'Magnitude > 18' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "key distance validation missing"
 grep -q 'SetRunMode' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "run mode contract missing"
+grep -q 'completionCount < 1' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "time trial unlock guard missing"
 grep -q 'showResults' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results presentation missing"
 grep -q 'MaxDevSeed' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "dev seed cap missing"
 grep -q 'SaveCheckpoints = true' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "production persistence default missing"

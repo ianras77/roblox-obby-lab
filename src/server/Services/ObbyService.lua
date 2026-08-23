@@ -78,6 +78,9 @@ local function bindRunModes(self)
     if type(mode) ~= "string" then
       return
     end
+    if mode == "TimeTrial" and self.checkpoints:getProfile(player).completionCount < 1 then
+      return
+    end
     local now = os.clock()
     if now - (lastCall[player] or 0) < 1 then
       return
