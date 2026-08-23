@@ -22,3 +22,7 @@ configured interval and saves on shutdown/player removal.
 Run state is server-owned and distinguishes `Adventure`, `TimeTrial`, and
 `Practice`. Practice completion is deliberately ineligible for a time-trial
 score. Timing and leaderboard submission still require Studio validation.
+
+Keys are authored deterministically at chapter locations (one per chapter in
+the current configuration), and the client requests initial HUD state through
+`GetObbyState` instead of depending solely on a startup event.

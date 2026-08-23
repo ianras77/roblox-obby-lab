@@ -25,7 +25,7 @@ local GameConfig = {
   ProgressRemote = "ObbyProgress",
   KeyRemote = "KeyProgress",
   FinaleRemote = "FinaleSpotlight",
-  KeySpawnChance = 0.6,
+  AuthoredKeysPerChapter = 1,
 }
 
 return GameConfig

@@ -81,8 +81,8 @@ function StageBuilder.buildStage(args)
   arrowLabel.TextColor3 = Color3.fromRGB(255, 255, 200)
   arrowLabel.Parent = arrow
 
-  -- Optional key spawn
-  if args.random:NextNumber() < GameConfig.KeySpawnChance then
+  -- One deliberate exploration key per chapter; keys never gate the required route.
+  if GameConfig.AuthoredKeysPerChapter > 0 then
     local keyOffset = args.random:NextNumber(-6, 6)
     local key = Build.collectibleKey(args.origin * CFrame.new(10, 6, keyOffset), model)
     key:SetAttribute("KeyId", string.format("%s_key_01", stageId))

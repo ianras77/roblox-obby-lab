@@ -44,6 +44,15 @@ function ObbyService.new()
   self.behaviors = {}
   self.clock = 0
   self.world = WorldBuilder.buildWorld(GameConfig.Seed)
+  self.world.stateFunction.OnServerInvoke = function(player)
+    return {
+      stage = player:GetAttribute("Checkpoint") or 0,
+      total = self.world.totalStages,
+      mode = player:GetAttribute("RunMode") or "Adventure",
+      keys = self.keyProgress[player] or 0,
+      totalKeys = self.totalKeys,
+    }
+  end
   self.runState = RunStateService.new(self.world.totalStages)
   self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent, self.runState)
   self.checkpoints:bindCheckpoints()
@@ -472,6 +481,15 @@ function ObbyService:rebuild(seed)
     self.runState:destroy()
   end
   self.world = WorldBuilder.buildWorld(seed)
+  self.world.stateFunction.OnServerInvoke = function(player)
+    return {
+      stage = player:GetAttribute("Checkpoint") or 0,
+      total = self.world.totalStages,
+      mode = player:GetAttribute("RunMode") or "Adventure",
+      keys = self.keyProgress[player] or 0,
+      totalKeys = self.totalKeys,
+    }
+  end
   self.checkpoints:destroy()
   self.runState = RunStateService.new(self.world.totalStages)
   self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent, self.runState)

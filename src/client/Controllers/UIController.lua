@@ -19,8 +19,20 @@ function UIController.new()
   self.gui = self:createGui()
   self.progressEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.ProgressRemote)
   self.keyEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.KeyRemote)
+  self.stateFunction = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild("GetObbyState")
   self:bind()
+  self:syncInitialState()
   return self
+end
+
+function UIController:syncInitialState()
+  local ok, payload = pcall(function()
+    return self.stateFunction:InvokeServer()
+  end)
+  if ok and payload then
+    self:updateProgress(payload.stage or 0, payload.total or 1)
+    self:updateKeys(payload.keys or 0, payload.totalKeys or 0)
+  end
 end
 
 function UIController:createGui()

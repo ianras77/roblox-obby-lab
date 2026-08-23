@@ -35,6 +35,12 @@ local function ensureFolders()
       evt.Parent = folder
     end
   end
+  local stateFunction = folder:FindFirstChild("GetObbyState")
+  if not stateFunction then
+    stateFunction = Instance.new("RemoteFunction")
+    stateFunction.Name = "GetObbyState"
+    stateFunction.Parent = folder
+  end
   return folder:FindFirstChild(GameConfig.ProgressRemote),
     folder:FindFirstChild(GameConfig.KeyRemote),
     folder:FindFirstChild(GameConfig.FinaleRemote)
@@ -103,6 +109,7 @@ function WorldBuilder.buildWorld(seed)
     progressEvent = progressEvent,
     keyEvent = keyEvent,
     finaleEvent = finaleEvent,
+    stateFunction = folder:FindFirstChild("GetObbyState"),
     validationErrors = validationErrors,
   }
 end
