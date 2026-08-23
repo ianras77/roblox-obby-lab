@@ -1267,3 +1267,12 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: live DataStore outage and shutdown-save behavior still require
   Roblox Studio/private staging testing.
+
+## 2026-08-23 — Make production contracts runner-portable
+
+- Completed: CI contracts no longer depend on `rg`, which is absent from the
+  pinned GitHub runner image; recursive asset and UI scans now use portable
+  `grep` equivalents.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; current-SHA GitHub CI verification is pending.
+- Unverified: Roblox Studio and Creator Hub checks remain pending.

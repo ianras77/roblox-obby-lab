@@ -110,7 +110,7 @@ grep -q 'if actionMode == "Practice" then' "$ROOT_DIR/src/client/Controllers/UIC
 grep -q 'function UIController:updateTimerState' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "time trial HUD timer missing"
 grep -q 'runStarted = mode ~= "TimeTrial"' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "timer start state not synchronized"
 grep -q 'AutomaticCanvasSize = Enum.AutomaticSize.Y' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "settings panel is not responsive"
-if rg -q 'MouseButton1Click' "$ROOT_DIR/src/client/Controllers/UIController.lua"; then fail "HUD controls use mouse-only activation"; fi
+if grep -q 'MouseButton1Click' "$ROOT_DIR/src/client/Controllers/UIController.lua"; then fail "HUD controls use mouse-only activation"; fi
 grep -q 'reset.Selectable = true' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "reset button gamepad selection missing"
 grep -q 'button.Selectable = true' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "replay button gamepad selection missing"
 grep -q 'math.max(self.highestChapter, stage)' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "practice unlock state is not live-synchronized"
@@ -150,8 +150,8 @@ grep -q 'getApprovedId("checkpoint_feedback")' "$ROOT_DIR/src/shared/Util/Build.
 grep -q 'getApprovedId("key_pickup")' "$ROOT_DIR/src/shared/Util/Build.lua" || fail "key sound bypasses asset registry"
 grep -q 'getApprovedId("finale_firework")' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale particle bypasses asset registry"
 grep -q 'getApprovedId("finale_chime")' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale sound bypasses asset registry"
-if rg -q 'rbxassetid://' "$ROOT_DIR/src/server/WorldGen" "$ROOT_DIR/src/shared/Util"; then fail "generated visual assets bypass registry"; fi
-if rg -q 'AmbientSoundId' "$ROOT_DIR/src"; then fail "zone ambience bypasses asset registry"; fi
+if grep -R -q 'rbxassetid://' "$ROOT_DIR/src/server/WorldGen" "$ROOT_DIR/src/shared/Util"; then fail "generated visual assets bypass registry"; fi
+if grep -R -q 'AmbientSoundId' "$ROOT_DIR/src"; then fail "zone ambience bypasses asset registry"; fi
 grep -q 'getApprovedId(zoneConfig.AmbientSoundKey)' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "zone ambience is not approval-gated"
 grep -q 'checkpointPulse' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "checkpoint feedback pulse missing"
 if grep -q 'Size = UDim2.fromScale(1, 1)' "$ROOT_DIR/src/client/Controllers/EffectsController.lua"; then fail "ordinary checkpoint feedback must not full-screen flash"; fi
