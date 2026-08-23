@@ -153,7 +153,8 @@ function CheckpointService:saveCheckpoint(player)
     return
   end
   local profile = self.profiles[player] or ProfileSchema.default()
-  profile.highestChapter = math.max(profile.highestChapter, player:GetAttribute("Checkpoint") or 0)
+  local liveCheckpoint = ProgressionRules.normalizeCheckpoint(player:GetAttribute("Checkpoint"))
+  profile.highestChapter = math.clamp(math.max(profile.highestChapter, liveCheckpoint), 0, #self.stages)
   self.profiles[player] = profile
   local snapshot = ProfileSchema.sanitize(profile)
   local saved = self.store:SetAsync("player:" .. tostring(player.UserId), snapshot)

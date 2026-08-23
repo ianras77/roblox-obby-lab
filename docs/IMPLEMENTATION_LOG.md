@@ -1257,3 +1257,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: live DataStore outage recovery and reconnect behavior still
   require Roblox Studio/private staging testing.
+
+## 2026-08-23 — Normalize persisted checkpoint state
+
+- Completed: saves now normalize and clamp the live checkpoint attribute before
+  merging it into the profile, preventing malformed runtime state from
+  breaking persistence.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live DataStore outage and shutdown-save behavior still require
+  Roblox Studio/private staging testing.
