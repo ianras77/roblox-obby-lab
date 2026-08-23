@@ -1,5 +1,14 @@
 # Implementation log
 
+## 2026-08-23 — Scope collectible validation to generated stages
+
+- Completed: validator duplicate/missing-key checks now inspect only
+  `KeyCollectible` instances inside generated stage models, matching the
+  ownership scope used by runtime registration.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: coexistence with tagged user content requires Studio testing.
+
 ## 2026-08-23 — Scope obstacle discovery to owned world
 
 - Completed: CollectionService-tagged obstacle, cart, and collectible scans

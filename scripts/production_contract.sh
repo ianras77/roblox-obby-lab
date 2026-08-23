@@ -16,6 +16,7 @@ grep -q 'if stage.checkpoint and stage.checkpoint:IsA("BasePart")' "$ROOT_DIR/sr
 grep -q 'typeof(stage.entrance) == "CFrame"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator CFrame type guards missing"
 grep -q 'finiteVector(stage.bounds)' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator finite geometry guard missing"
 grep -q 'typeof(stageModel) == "Instance"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator instance type guards missing"
+grep -q 'local owned = false' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator collectible ownership scope missing"
 grep -q 'stageIndex <= previous' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint regression guard missing"
 if grep -q 'part:Destroy()' "$ROOT_DIR/src/server/Services/ObbyService.lua"; then
   fail "collectible runtime must not globally destroy keys"

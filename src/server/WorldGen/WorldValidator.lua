@@ -132,13 +132,22 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     end
   end
   for _, key in ipairs(CollectionService:GetTagged("KeyCollectible")) do
-    local keyId = key:GetAttribute("KeyId")
-    if not keyId then
-      table.insert(errors, "collectible missing KeyId: " .. key:GetFullName())
-    elseif ids[keyId] then
-      table.insert(errors, "duplicate collectible id: " .. keyId)
-    else
-      ids[keyId] = true
+    local owned = false
+    for _, stage in ipairs(stages) do
+      if stage.model and typeof(stage.model) == "Instance" and key:IsDescendantOf(stage.model) then
+        owned = true
+        break
+      end
+    end
+    if owned then
+      local keyId = key:GetAttribute("KeyId")
+      if not keyId then
+        table.insert(errors, "collectible missing KeyId: " .. key:GetFullName())
+      elseif ids[keyId] then
+        table.insert(errors, "duplicate collectible id: " .. keyId)
+      else
+        ids[keyId] = true
+      end
     end
   end
   for _, stage in ipairs(stages) do
