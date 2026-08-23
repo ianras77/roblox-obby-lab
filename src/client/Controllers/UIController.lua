@@ -454,8 +454,12 @@ function UIController:showResults(payload)
     button.Text = text
     button.Parent = card
     button.Activated:Connect(function()
-      self.modeEvent:FireServer(actionMode)
       card:Destroy()
+      if actionMode == "Practice" then
+        self:showPracticeSelector()
+      else
+        self.modeEvent:FireServer(actionMode)
+      end
     end)
   end
   addAction("AdventureButton", "Replay", "Adventure", UDim2.fromScale(0.04, 0.77))

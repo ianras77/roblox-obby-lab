@@ -66,6 +66,7 @@ grep -q 'showResults' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fai
 grep -q 'TimeTrialButton' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results replay actions missing"
 grep -q 'Golden Keys' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results key metric missing"
 grep -q 'showPracticeSelector' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "practice selector missing"
+grep -q 'if actionMode == "Practice" then' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results practice action bypasses selector"
 grep -q 'function UIController:updateTimerState' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "time trial HUD timer missing"
 grep -q 'runStarted = mode ~= "TimeTrial"' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "timer start state not synchronized"
 grep -q 'AutomaticCanvasSize = Enum.AutomaticSize.Y' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "settings panel is not responsive"

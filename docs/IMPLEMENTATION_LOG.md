@@ -1,5 +1,14 @@
 # Implementation log
 
+## 2026-08-23 — Route results Practice through chapter selection
+
+- Completed: the completion-card Practice action now opens the existing
+  server-validated chapter selector instead of switching to Practice without a
+  target stage.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: results-to-practice interaction and device layout require Studio.
+
 ## 2026-08-23 — Remove misleading placeholder test
 
 - Completed: removed the unused always-pass `tests/placeholder.lua`; executable
