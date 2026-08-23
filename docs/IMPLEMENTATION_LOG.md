@@ -249,6 +249,16 @@
 - Unverified: live budget values and outage recovery require production-like
   Roblox testing.
 
+## 2026-08-23 — Owned rebuild deletion guard
+
+- Completed: rebuild cleanup now verifies the generated root's
+  `GeneratorOwner` attribute before deleting it and fails closed for an
+  unknown or user-created `GeneratedObby` model.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: Studio rebuild behavior with user-authored Workspace content
+  remains pending.
+
 ## 2026-08-23 — Canonical Time Trial start
 
 - Completed: crossing the validated Time Trial gate now clears the player's

@@ -13,6 +13,9 @@ local WorldBuilder = {}
 local function clearExisting()
   local existing = workspace:FindFirstChild("GeneratedObby")
   if existing then
+    if existing:GetAttribute("GeneratorOwner") ~= "ToadsGreatEscape" then
+      error("Refusing to delete Workspace.GeneratedObby without generator ownership")
+    end
     existing:Destroy()
   end
 end

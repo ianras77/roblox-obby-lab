@@ -6,6 +6,7 @@ fail() { echo "FAIL: $*" >&2; exit 1; }
 
 grep -q 'Name = "GeneratedObby"' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "generated ownership root missing"
 grep -q 'GeneratorOwner' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "generator ownership marker missing"
+grep -q 'Refusing to delete Workspace.GeneratedObby' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "rebuild ownership guard missing"
 grep -q 'stageId = result.model:GetAttribute("StageId")' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage manifest IDs missing"
 grep -q 'stageIndex <= previous' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint regression guard missing"
 if grep -q 'part:Destroy()' "$ROOT_DIR/src/server/Services/ObbyService.lua"; then
