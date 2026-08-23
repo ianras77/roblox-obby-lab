@@ -34,6 +34,7 @@ grep -q 'showResults' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fai
 grep -q 'TimeTrialButton' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results replay actions missing"
 grep -q 'Golden Keys' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results key metric missing"
 grep -q 'showPracticeSelector' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "practice selector missing"
+grep -q 'math.max(self.highestChapter, stage)' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "practice unlock state is not live-synchronized"
 grep -q 'highestChapter = self.checkpoints' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "completed chapter state missing"
 grep -q 'applyAccessibility' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "accessibility application missing"
 grep -q 'MaxDevSeed' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "dev seed cap missing"

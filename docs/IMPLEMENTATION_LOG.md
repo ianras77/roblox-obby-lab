@@ -219,3 +219,12 @@
   pass locally.
 - Unverified: selector presentation and multiplayer practice transitions still
   require Studio testing.
+
+## 2026-08-23 — Live Practice unlock synchronization
+
+- Completed: the client now advances its unlocked Practice chapter state from
+  monotonic progress events, so a newly reached chapter becomes selectable in
+  the current session.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: device layout and multiplayer UI behavior remain pending Studio.

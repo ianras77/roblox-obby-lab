@@ -318,6 +318,7 @@ function UIController:bind()
   self.progressEvent.OnClientEvent:Connect(function(payload)
     local stage = payload.stage or 0
     local total = payload.total or 1
+    self.highestChapter = math.max(self.highestChapter, stage)
     self.currentChapter = {
       name = payload.chapterName,
       mechanic = payload.mechanic,
