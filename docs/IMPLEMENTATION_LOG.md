@@ -72,3 +72,10 @@
   source checks, so project-tree/mapping failures fail the pipeline.
 - Tests: local storyboard, production contracts, Stylua, and whitespace checks
   remain passing; CI execution and Rojo installation are not available locally.
+
+## 2026-08-23 — Legacy profile migration
+
+- Completed: sanitizer migrates legacy checkpoint records and bounds run/chapter
+  timing fields before storing them.
+- Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
+- Unverified: live migration against Roblox DataStore records.

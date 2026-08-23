@@ -38,3 +38,7 @@ the current configuration), and the client requests initial HUD state through
 Accessibility settings use the validated `SetAccessibilitySettings` contract;
 only five boolean keys are accepted and writes are rate-limited before entering
 the profile.
+
+Profile sanitization migrates the original `checkpoint` field into
+`highestChapter` and rejects implausible timing values rather than silently
+wiping valid legacy progress.
