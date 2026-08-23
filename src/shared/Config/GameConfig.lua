@@ -15,12 +15,6 @@ local GameConfig = {
   UseDataStore = false, -- keep off in Studio to avoid errors
   AutosaveSeconds = 120,
   DataStoreName = "ToadsGreatEscape_Profile_v1",
-  -- Cycle through these until one preloads; swap in your own IDs if they error.
-  MusicIds = {
-    "rbxassetid://1843521234",
-    "rbxassetid://1837468655",
-    "rbxassetid://6065479763",
-  },
   MaxPlayersPerServer = 12,
   ProgressRemote = "ObbyProgress",
   KeyRemote = "KeyProgress",

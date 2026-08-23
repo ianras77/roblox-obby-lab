@@ -4,13 +4,17 @@ local SoundService = game:GetService("SoundService")
 local ContentProvider = game:GetService("ContentProvider")
 
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
+local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
 local ObbyService = require(ServerScriptService:WaitForChild("Services"):WaitForChild("ObbyService"))
 
-local function playFirstWorkingMusic(ids)
-  for _, id in ipairs(ids) do
+local function playFirstApprovedMusic(assets)
+  for _, asset in ipairs(assets) do
+    if not asset.verified or not asset.approvedForRelease then
+      continue
+    end
     local sound = Instance.new("Sound")
     sound.Name = "ObbyMusic"
-    sound.SoundId = id
+    sound.SoundId = asset.id
     sound.Looped = true
     sound.Volume = 0.45
     sound.Parent = SoundService
@@ -23,10 +27,10 @@ local function playFirstWorkingMusic(ids)
     end
     sound:Destroy()
   end
-  warn("[Music] All candidate MusicIds failed to preload; no music will play.")
+  warn("[Music] No approved registry asset is available; running without music.")
   return nil
 end
 
-playFirstWorkingMusic(GameConfig.MusicIds)
+playFirstApprovedMusic(AssetRegistry.music)
 
 ObbyService.new()
