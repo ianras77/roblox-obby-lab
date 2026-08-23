@@ -4,6 +4,9 @@ local Maid = require(game:GetService("ReplicatedStorage"):WaitForChild("Util"):W
 local DataStoreWrapper = require(script.Parent.DataStoreServiceWrapper)
 local ProfileSchema = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("ProfileSchema"))
 
+local activeService = nil
+local shutdownBound = false
+
 local CheckpointService = {}
 CheckpointService.__index = CheckpointService
 
@@ -16,6 +19,7 @@ function CheckpointService.new(stages, progressEvent, runState)
   self.store = DataStoreWrapper.new(GameConfig.DataStoreName)
   self.loaded = {}
   self.profiles = {}
+  activeService = self
   self:hookPlayers()
   local autosaveActive = true
   self.maid:Give(function()
@@ -34,11 +38,16 @@ function CheckpointService.new(stages, progressEvent, runState)
       end
     end
   end)
-  game:BindToClose(function()
-    for _, player in ipairs(Players:GetPlayers()) do
-      self:saveCheckpoint(player)
-    end
-  end)
+  if not shutdownBound then
+    shutdownBound = true
+    game:BindToClose(function()
+      if activeService then
+        for _, player in ipairs(Players:GetPlayers()) do
+          activeService:saveCheckpoint(player)
+        end
+      end
+    end)
+  end
   for _, player in ipairs(Players:GetPlayers()) do
     task.spawn(function()
       self:initializePlayer(player)
@@ -211,6 +220,9 @@ end
 
 function CheckpointService:destroy()
   self.maid:DoCleaning()
+  if activeService == self then
+    activeService = nil
+  end
 end
 
 return CheckpointService

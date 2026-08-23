@@ -38,3 +38,6 @@ server-owned progression events.
 Finale presentation is player-specific: the server sends only the completing
 player's finale event, while the client attaches local effects to that player's
 character. Shared checkpoint objects do not emit a finale burst for everyone.
+
+Shutdown persistence is registered once at module scope and follows the active
+checkpoint service across Studio rebuilds, preventing duplicate save callbacks.
