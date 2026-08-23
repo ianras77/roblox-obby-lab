@@ -41,6 +41,7 @@ function CheckpointService.new(stages, progressEvent, runState, analytics, total
   self.persistenceAllowed = {}
   self.profiles = {}
   self.deathConnections = {}
+  self.collisionConnections = {}
   activeService = self
   self:hookPlayers()
   local autosaveActive = true
@@ -92,7 +93,15 @@ function CheckpointService:initializePlayer(player)
   self.maid:Give(player.CharacterAdded:Connect(function()
     local character = player.Character
     if character then
+      if self.collisionConnections[player] then
+        self.collisionConnections[player]:Disconnect()
+      end
       configurePlayerCollision(character)
+      self.collisionConnections[player] = character.DescendantAdded:Connect(function(descendant)
+        if descendant:IsA("BasePart") then
+          descendant.CollisionGroup = PLAYER_COLLISION_GROUP
+        end
+      end)
     end
     self:teleportToSavedCheckpoint(player)
     local humanoid = character and character:FindFirstChildOfClass("Humanoid")
@@ -104,6 +113,12 @@ function CheckpointService:initializePlayer(player)
         local profile = self:getProfile(player)
         profile.totalDeaths += 1
       end)
+    end
+  end))
+  self.maid:Give(player.CharacterRemoving:Connect(function()
+    if self.collisionConnections[player] then
+      self.collisionConnections[player]:Disconnect()
+      self.collisionConnections[player] = nil
     end
   end))
   if player.Character then
@@ -133,6 +148,10 @@ function CheckpointService:hookPlayers()
     if self.deathConnections[player] then
       self.deathConnections[player]:Disconnect()
       self.deathConnections[player] = nil
+    end
+    if self.collisionConnections[player] then
+      self.collisionConnections[player]:Disconnect()
+      self.collisionConnections[player] = nil
     end
     self.loaded[player] = nil
     self.persistenceAllowed[player] = nil

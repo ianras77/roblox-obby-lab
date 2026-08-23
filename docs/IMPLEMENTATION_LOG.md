@@ -1351,3 +1351,11 @@
   out-of-route chapter indices before recording timing or completion.
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; live run timing remains Studio-unverified.
+
+## 2026-08-23 — Maintain collision isolation across character rebuilds
+
+- Completed: newly added character parts inherit the player collision group,
+  and per-player descendant connections are cleaned up on character removal.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; multi-client collision behavior remains
+  Studio-unverified.

@@ -224,6 +224,7 @@ grep -q 'function CheckpointService:isLoaded' "$ROOT_DIR/src/server/Services/Che
 grep -q 'ProfileLoadStatus' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile load status visibility missing"
 grep -q 'ToadsPlayers' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "multiplayer player collision group missing"
 grep -q 'CollisionGroupSetCollidable' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "player collision isolation missing"
+grep -q 'character.DescendantAdded' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "late character parts miss collision isolation"
 grep -q 'highestChapter = self:getProfile(player).highestChapter' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "initial highest chapter sync missing"
 grep -q 'highestChapter = self.checkpoints and self.checkpoints:getProfile(player).highestChapter' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "state highest chapter sync missing"
 grep -q 'ProfileSaveStatus' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile save status visibility missing"
