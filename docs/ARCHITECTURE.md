@@ -45,5 +45,10 @@ Finale presentation is player-specific: the server sends only the completing
 player's finale event, while the client attaches local effects to that player's
 character. Shared checkpoint objects do not emit a finale burst for everyone.
 
+Golden Keys use the same split: the server records a stable `KeyId` per player,
+while the client applies `LocalTransparencyModifier` to that player's collected
+keys. The physical instance is never destroyed, so other players can collect
+it independently.
+
 Shutdown persistence is registered once at module scope and follows the active
 checkpoint service across Studio rebuilds, preventing duplicate save callbacks.

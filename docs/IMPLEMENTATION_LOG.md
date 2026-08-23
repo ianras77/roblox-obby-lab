@@ -901,3 +901,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: production telemetry delivery remains disabled until analytics
   policy and destination approval.
+
+## 2026-08-23 — Hide collected keys per player
+
+- Completed: initial state synchronization and key pickup feedback now apply
+  local visibility for collected stable key IDs; the shared physical key is
+  never destroyed, preserving independent multiplayer collection.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: late streaming of key instances and two-client visual isolation
+  require Studio multiplayer testing.

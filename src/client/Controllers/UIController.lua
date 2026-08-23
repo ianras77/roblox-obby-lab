@@ -22,6 +22,7 @@ function UIController.new()
   }
   self.originalHazardColors = {}
   self.originalHazardMaterials = {}
+  self.collectedKeys = {}
   self.gui = self:createGui()
   self.progressEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.ProgressRemote)
   self.keyEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.KeyRemote)
@@ -45,6 +46,7 @@ function UIController:syncInitialState()
     self:updateTimerState(payload)
     self:updateProgress(payload.stage or 0, payload.total or 1)
     self:updateKeys(payload.keys or 0, payload.totalKeys or 0)
+    self:applyCollectedKeys(payload.collectedKeys)
     for key, enabled in pairs(payload.settings or {}) do
       if self.settings[key] ~= nil and type(enabled) == "boolean" then
         self.settings[key] = enabled
@@ -71,6 +73,30 @@ function UIController:applyAccessibility()
   for _, emitter in ipairs(workspace:GetDescendants()) do
     if emitter:IsA("ParticleEmitter") and emitter:GetAttribute("GameplayCritical") ~= true then
       emitter.Enabled = not self.settings.lowParticles
+    end
+  end
+end
+
+function UIController:hideCollectedKey(keyId)
+  if type(keyId) ~= "string" then
+    return
+  end
+  for _, key in ipairs(CollectionService:GetTagged("KeyCollectible")) do
+    if key:GetAttribute("KeyId") == keyId and key:IsA("BasePart") then
+      key.LocalTransparencyModifier = 1
+      key.CanQuery = false
+    end
+  end
+end
+
+function UIController:applyCollectedKeys(collectedKeys)
+  if type(collectedKeys) ~= "table" then
+    return
+  end
+  for keyId, collected in pairs(collectedKeys) do
+    if collected == true then
+      self.collectedKeys[keyId] = true
+      self:hideCollectedKey(keyId)
     end
   end
 end
@@ -370,6 +396,17 @@ function UIController:bind()
 
   self.keyEvent.OnClientEvent:Connect(function(payload)
     self:updateKeys(payload.found or 0, payload.total or 0)
+    if type(payload.keyId) == "string" then
+      self.collectedKeys[payload.keyId] = true
+      self:hideCollectedKey(payload.keyId)
+    end
+  end)
+
+  CollectionService:GetInstanceAddedSignal("KeyCollectible"):Connect(function(key)
+    local keyId = key:GetAttribute("KeyId")
+    if self.collectedKeys[keyId] then
+      self:hideCollectedKey(keyId)
+    end
   end)
 
   local finaleEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.FinaleRemote)
