@@ -28,3 +28,11 @@
 - Completed: initialization synchronization includes run mode and timing data.
 - Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
 - Unverified: time-trial UX, leaderboard policy, and Studio gameplay.
+
+## 2026-08-23 — Persisted accessibility settings
+
+- Completed: allowlisted, rate-limited settings remote and profile-backed
+  accessibility settings restoration through `GetObbyState`.
+- Tests: storyboard, production contracts, Stylua, and whitespace checks
+  remain the local validation baseline.
+- Unverified: settings behavior across real device respawn and Studio clients.

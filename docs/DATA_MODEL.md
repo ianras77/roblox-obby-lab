@@ -26,3 +26,7 @@ score. Timing and leaderboard submission still require Studio validation.
 Keys are authored deterministically at chapter locations (one per chapter in
 the current configuration), and the client requests initial HUD state through
 `GetObbyState` instead of depending solely on a startup event.
+
+Accessibility settings use the validated `SetAccessibilitySettings` contract;
+only five boolean keys are accepted and writes are rate-limited before entering
+the profile.

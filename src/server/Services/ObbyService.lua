@@ -9,6 +9,7 @@ local WorldBuilder = require(script.Parent.Parent.WorldGen.WorldBuilder)
 local CheckpointService = require(script.Parent.CheckpointService)
 local Maid = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Maid"))
 local RunStateService = require(script.Parent.RunStateService)
+local RemoteContracts = require(ReplicatedStorage:WaitForChild("Network"):WaitForChild("RemoteContracts"))
 
 local function resolveDirection(part)
   local axisAttr = part:GetAttribute("Axis") or part:GetAttribute("Direction")
@@ -43,6 +44,29 @@ local function countKeys(profile)
   return count
 end
 
+local function bindSettings(self)
+  local events = ReplicatedStorage:FindFirstChild("SharedEvents")
+  local event = events and events:FindFirstChild(RemoteContracts.SetSettings.name)
+  if not event then
+    return
+  end
+  local lastCall = {}
+  local allowed =
+    { reducedMotion = true, reduceFlashes = true, highContrast = true, largeText = true, lowParticles = true }
+  self.maid:Give(event.OnServerEvent:Connect(function(player, key, enabled)
+    if type(key) ~= "string" or not allowed[key] or type(enabled) ~= "boolean" then
+      return
+    end
+    local now = os.clock()
+    if now - (lastCall[player] or 0) < 0.2 then
+      return
+    end
+    lastCall[player] = now
+    local profile = self.checkpoints:getProfile(player)
+    profile.settings[key] = enabled
+  end))
+end
+
 function ObbyService.new()
   if ObbyService._instance then
     return ObbyService._instance
@@ -60,6 +84,7 @@ function ObbyService.new()
       keys = countKeys(self.checkpoints and self.checkpoints:getProfile(player) or { collectedKeys = {} }),
       totalKeys = self.totalKeys,
       collectedKeys = self.checkpoints and self.checkpoints:getProfile(player).collectedKeys or {},
+      settings = self.checkpoints and self.checkpoints:getProfile(player).settings or {},
     }
   end
   self.runState = RunStateService.new(self.world.totalStages)
@@ -68,6 +93,7 @@ function ObbyService.new()
   self.keyProgress = {}
   self.collectedKeys = {}
   self.totalKeys = 0
+  bindSettings(self)
   self:scanBehaviors()
   self:hookCommands()
   self:startHeartbeat()
@@ -501,6 +527,7 @@ function ObbyService:rebuild(seed)
       keys = countKeys(self.checkpoints and self.checkpoints:getProfile(player) or { collectedKeys = {} }),
       totalKeys = self.totalKeys,
       collectedKeys = self.checkpoints and self.checkpoints:getProfile(player).collectedKeys or {},
+      settings = self.checkpoints and self.checkpoints:getProfile(player).settings or {},
     }
   end
   self.checkpoints:destroy()
@@ -509,6 +536,7 @@ function ObbyService:rebuild(seed)
   self.checkpoints:bindCheckpoints()
   self.keyProgress = {}
   self.totalKeys = 0
+  bindSettings(self)
   self:scanBehaviors()
   self:hookCommands()
   self:startHeartbeat()

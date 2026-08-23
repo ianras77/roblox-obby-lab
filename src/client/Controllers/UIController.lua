@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
 local Theme = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("Theme"))
+local RemoteContracts = require(ReplicatedStorage:WaitForChild("Network"):WaitForChild("RemoteContracts"))
 
 local UIController = {}
 UIController.__index = UIController
@@ -20,6 +21,7 @@ function UIController.new()
   self.progressEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.ProgressRemote)
   self.keyEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.KeyRemote)
   self.stateFunction = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild("GetObbyState")
+  self.settingsEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(RemoteContracts.SetSettings.name)
   self:bind()
   self:syncInitialState()
   return self
@@ -32,6 +34,16 @@ function UIController:syncInitialState()
   if ok and payload then
     self:updateProgress(payload.stage or 0, payload.total or 1)
     self:updateKeys(payload.keys or 0, payload.totalKeys or 0)
+    for key, enabled in pairs(payload.settings or {}) do
+      if self.settings[key] ~= nil and type(enabled) == "boolean" then
+        self.settings[key] = enabled
+        self.player:SetAttribute("Accessibility_" .. key, enabled)
+      end
+    end
+    local scale = self.gui:FindFirstChild("AccessibilityScale")
+    if scale then
+      scale.Scale = self.settings.largeText and 1.15 or 1
+    end
   end
 end
 
@@ -202,6 +214,7 @@ function UIController:bind()
         local key = toggle:GetAttribute("SettingKey")
         self.settings[key] = not self.settings[key]
         self.player:SetAttribute("Accessibility_" .. key, self.settings[key])
+        self.settingsEvent:FireServer(key, self.settings[key])
         if key == "largeText" then
           local scale = self.gui:FindFirstChild("AccessibilityScale")
           if scale then

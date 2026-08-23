@@ -17,6 +17,12 @@ local RemoteContracts = {
     direction = "server_to_client",
     payload = "{ stage: number }",
   },
+  SetSettings = {
+    name = "SetAccessibilitySettings",
+    direction = "client_to_server",
+    payload = "{ key: string, enabled: boolean }",
+    rateLimitSeconds = 0.2,
+  },
 }
 
 return RemoteContracts
