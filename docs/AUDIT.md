@@ -18,14 +18,15 @@ manual Studio comparison before either is treated as authoritative.
 - Development chat commands for rebuild, reseed, and stage teleport.
 - CI installs pinned Stylua/Selene and runs the storyboard contract.
 
-## Verified weaknesses
+## Baseline findings and current status
 
 - `ZoneBuilder` and `WorldBuilder` both add spacing after stage/zone exits.
 - Template output is only an end CFrame; no explicit entrance, exit, bounds,
   safe spawn, mechanics, or validator contract exists.
-- Workspace cleanup uses broad names (`Obby`, `Weather`).
-- A checkpoint touch always overwrites the player's checkpoint, including with
-  an earlier stage; progress is broadcast only after a touch.
+- Workspace cleanup is now restricted to an owned `GeneratedObby` root; an
+  unknown root causes rebuild to fail closed.
+- Checkpoint progress is now monotonic and state synchronization has an
+  explicit initialization request; Studio respawn feel remains unverified.
 - Keys are now authored deterministically with stable IDs and per-player credit;
   duplicate-ID validation is active.
 - Persistence now has an explicit environment gate, versioned profile schema,
@@ -34,9 +35,10 @@ manual Studio comparison before either is treated as authoritative.
 - `ObbyService` uses a server Heartbeat for critical motion and bounded 10 Hz
   queries for wind and pressure pads; moving-platform rider correction remains
   a Studio physics validation item.
-- Lighting and ambience are applied globally during generation; decoration uses
-  a fixed world coordinate for every zone.
-- Music and effects cycle through unverified hard-coded asset IDs.
+- Lighting presentation now transitions locally by zone and decoration is
+  anchored from zone bounds; Studio visual verification remains pending.
+- Asset references are inventoried and unverified IDs are gated from release
+  music; asset permissions and playback remain pending Creator Hub/Studio.
 - UI now has an initial state handshake, settings, mode, and basic accessibility
   controls; responsive device and gamepad behavior remain unverified.
 - Server capacity configuration is now intentionally left to Creator Hub;

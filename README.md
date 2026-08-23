@@ -66,7 +66,8 @@ roblox-obby-lab/
 ## Scripts
 
 - `scripts/dev.sh` prints the local tool versions and confirms the project file.
-- `scripts/check.sh` runs the storyboard and production contracts, `stylua --check`, and `selene`.
+- `scripts/check.sh` runs the configuration, storyboard, and production
+  contracts, `stylua --check`, and `selene`.
 - `scripts/rojo_serve.sh` starts a Rojo server on the port declared in `default.project.json`.
 
 ## Notes
