@@ -36,8 +36,10 @@ manual Studio comparison before either is treated as authoritative.
 - Lighting and ambience are applied globally during generation; decoration uses
   a fixed world coordinate for every zone.
 - Music and effects cycle through unverified hard-coded asset IDs.
-- UI uses fixed offsets, has no initial state handshake, settings, mode, or
-  accessibility controls.
+- UI now has an initial state handshake, settings, mode, and basic accessibility
+  controls; responsive device and gamepad behavior remain unverified.
+- Server capacity configuration is now intentionally left to Creator Hub;
+  unused Lua capacity knobs are not treated as effective settings.
 - Automated tests are currently a placeholder plus shell storyboard checks.
 
 ## Not claimed as tested

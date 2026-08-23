@@ -8,6 +8,8 @@
 - [ ] Studio full run and multiplayer run have evidence.
 - [ ] Creator Hub max players, supported devices, icon, thumbnails, badges,
       private staging place, and approved audio are configured.
+- [ ] Creator Hub owns the actual maximum-player setting; no Lua config is
+      treated as a substitute for that dashboard value.
 - [ ] Production DataStore name and environment separation are verified.
 - [ ] `GameConfig.Environment` and `UseDataStore` match the intended place;
       Studio production writes are blocked.

@@ -27,6 +27,7 @@ grep -q 'merged.collectedKeys' "$ROOT_DIR/src/server/Services/DataStoreServiceWr
 grep -q 'showResults' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results presentation missing"
 grep -q 'MaxDevSeed' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "dev seed cap missing"
 grep -q 'SaveCheckpoints = true' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "production persistence default missing"
+if grep -q 'MaxPlayersPerServer' "$ROOT_DIR/src/shared/Config/GameConfig.lua"; then fail "fake server capacity knob remains"; fi
 grep -q 'player:" .. tostring(player.UserId)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "string datastore key missing"
 grep -q 'DevCommandCooldownSeconds' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "dev command rate limit missing"
 grep -q 'math.min(GameConfig.MaxDevStage, #self.world.stages)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "dynamic stage command cap missing"

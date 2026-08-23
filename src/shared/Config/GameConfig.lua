@@ -18,7 +18,6 @@ local GameConfig = {
   UseDataStore = true, -- StudioDevelopment is blocked by DataStoreServiceWrapper.
   AutosaveSeconds = 120,
   DataStoreName = "ToadsGreatEscape_Profile_v1",
-  MaxPlayersPerServer = 12,
   ProgressRemote = "ObbyProgress",
   KeyRemote = "KeyProgress",
   FinaleRemote = "FinaleSpotlight",
