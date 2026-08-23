@@ -7,5 +7,6 @@ cd "$ROOT_DIR"
 "$ROOT_DIR/scripts/storyboard_contract.sh"
 "$ROOT_DIR/scripts/production_contract.sh"
 "$ROOT_DIR/scripts/config_contract.sh"
+"$ROOT_DIR/scripts/profile_contract.sh"
 stylua --check src tests
 selene src tests

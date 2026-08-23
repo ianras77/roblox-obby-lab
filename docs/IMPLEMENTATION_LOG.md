@@ -439,3 +439,13 @@
 - Tests: configuration, storyboard, production, Stylua, and whitespace checks
   pass locally.
 - Unverified: long-lived server memory behavior requires live server soak tests.
+
+## 2026-08-23 — Profile contract gate
+
+- Completed: added an executable profile contract covering required defaults,
+  legacy checkpoint migration, timing bounds, boolean settings validation, and
+  the bounded collectible-key set; integrated it into `scripts/check.sh` and CI.
+- Tests: configuration, profile, storyboard, production, Stylua, and whitespace
+  checks pass locally.
+- Unverified: dynamic Luau execution and live DataStore migration still require
+  Studio/production-like testing.

@@ -9,9 +9,10 @@ from `scripts/` so `scripts/check.sh` works in the shared Roblox toolchain
 container without adding a Luau test framework.
 ## Test status
 
-The repository's executable confidence gates are the storyboard and production
-contract scripts plus Stylua/Selene and the CI Rojo build. Roblox-only behavior
-still requires Studio execution using `docs/PLAYTEST_MATRIX.md`.
+The repository's executable confidence gates are the configuration, profile,
+storyboard, and production contract scripts plus Stylua/Selene and the CI Rojo
+build. Roblox-only behavior still requires Studio execution using
+`docs/PLAYTEST_MATRIX.md`.
 
 The server-side validator runs during world generation and reports invalid stage
 manifests without deleting user-owned Workspace content.

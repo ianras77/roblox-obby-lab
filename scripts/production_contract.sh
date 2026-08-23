@@ -59,6 +59,7 @@ grep -q 'not self:isLoaded(player)' "$ROOT_DIR/src/server/Services/CheckpointSer
 grep -q 'checkpointProfile.highestChapter = math.max' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint profile state is stale"
 grep -q 'MaxCollectedKeys = 100' "$ROOT_DIR/src/shared/Config/ProfileSchema.lua" || fail "profile key bound missing"
 grep -q 'ProfileSchema.MaxCollectedKeys' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "runtime key bound missing"
+grep -q 'profile_contract.sh' "$ROOT_DIR/scripts/check.sh" || fail "profile contract is not in the CI gate"
 grep -q 'GetRequestBudgetForRequestType' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "datastore request budget is not checked"
 grep -q 'storeName .. "_StudioSandbox"' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "studio sandbox shares production datastore"
 grep -q 'DevCommandCooldownSeconds' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "dev command rate limit missing"
