@@ -6,7 +6,8 @@ single `Workspace.GeneratedObby` tree marked with `GeneratorOwner`, version,
 and seed attributes; rebuilds may remove only that owned tree.
 
 `StageBuilder` gives every stage a stable ID, entrance, exit, checkpoint, and
-metadata. `ZoneBuilder` connects exits and entrances, so templates do not also
+metadata including the chapter's primary mechanic, flavor, and difficulty tier.
+`ZoneBuilder` connects exits and entrances, so templates do not also
 hide travel spacing. `WorldValidator` checks the generated manifest before the
 world is considered valid.
 

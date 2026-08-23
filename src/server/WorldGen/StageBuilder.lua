@@ -4,6 +4,7 @@ local Build = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Build
 local WorldGenConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("WorldGenConfig"))
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
 local StageConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("StageConfig"))
+local ChapterConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("ChapterConfig"))
 
 local StageBuilder = {}
 
@@ -39,8 +40,13 @@ function StageBuilder.buildStage(args)
   endCFrame = endCFrame or (args.origin * CFrame.new(WorldGenConfig.StageLengthMax, 0, 0))
   local definition = StageConfig.getByIndex(args.stageIndex)
   local stageId = definition and definition.id or string.format("stage_%03d", args.stageIndex)
+  local presentation = ChapterConfig[stageType]
+    or { flavor = "Keep moving forward.", mechanic = "Obstacle course", tier = "Unknown" }
   model:SetAttribute("StageId", stageId)
   model:SetAttribute("StageIndex", args.stageIndex)
+  model:SetAttribute("ChapterFlavor", presentation.flavor)
+  model:SetAttribute("PrimaryMechanic", presentation.mechanic)
+  model:SetAttribute("DifficultyTier", presentation.tier)
 
   local checkpointCFrame = endCFrame * CFrame.new(0, WorldGenConfig.PlatformSize.Y + 2, 0)
   local cp =
