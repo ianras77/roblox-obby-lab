@@ -1443,3 +1443,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; live remote construction remains
   Studio-unverified.
+
+## 2026-08-23 — Fail closed on unknown persistence environments
+
+- Completed: DataStore access now has an explicit Staging/Production allowlist,
+  a separate StudioSandbox path with a suffixed store, and a fail-closed path
+  for unknown environment names.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Studio API access and live DataStore behavior
+  remain unverified.

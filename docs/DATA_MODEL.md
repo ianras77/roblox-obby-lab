@@ -25,7 +25,10 @@ configured interval and saves on shutdown/player removal.
 
 Persistence is enabled by default. `StudioDevelopment` remains fail-closed in
 the wrapper; use a distinct `StudioSandbox` store name and a deliberate place
-configuration when testing persistence in Studio.
+configuration when testing persistence in Studio. `StudioDevelopment` is
+ephemeral, `StudioSandbox` uses a suffixed store when Studio API access is
+enabled, and unknown environments fail closed. Live `Production` persistence
+is blocked when running inside Studio.
 
 Profile updates merge monotonic chapter/death/completion values, union collected
 keys, and retain the fastest valid run inside `UpdateAsync` so concurrent saves

@@ -15,9 +15,14 @@ end
 
 function Wrapper.new(name)
   local self = setmetatable({}, Wrapper)
-  self.enabled = GameConfig.UseDataStore
-    and GameConfig.SaveCheckpoints
-    and GameConfig.Environment ~= "StudioDevelopment"
+  local isStudioSandbox = RunService:IsStudio() and GameConfig.Environment == "StudioSandbox"
+  local environmentAllowsPersistence = GameConfig.Environment == "Staging"
+    or GameConfig.Environment == "Production"
+    or isStudioSandbox
+  self.enabled = GameConfig.UseDataStore and GameConfig.SaveCheckpoints and environmentAllowsPersistence
+  if not environmentAllowsPersistence then
+    warn(string.format("[DataStore] Persistence disabled for environment %s", tostring(GameConfig.Environment)))
+  end
   if RunService:IsStudio() and GameConfig.Environment == "Production" then
     warn("[DataStore] Production environment is blocked in Studio")
     self.enabled = false

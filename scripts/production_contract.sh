@@ -99,6 +99,8 @@ grep -q 'mergeKeys(value.collectedKeys)' "$ROOT_DIR/src/server/Services/DataStor
 grep -q 'mergeKeys(current.collectedKeys)' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "bounded current key merge missing"
 grep -q 'ProfileSchema.MaxCounter' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "stored counter merge is not bounded"
 grep -q 'ProfileSchema.MaxChapter' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "stored chapter merge is not bounded"
+grep -q 'environmentAllowsPersistence' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "datastore environment allowlist missing"
+grep -q 'isStudioSandbox' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "Studio sandbox persistence path missing"
 grep -q 'merged.bestChapterMs' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent chapter split merge missing"
 grep -q 'chapterNumber <= ProfileSchema.MaxChapter' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "chapter split merge is not bounded"
 grep -q 'merged.settings' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent settings merge missing"
