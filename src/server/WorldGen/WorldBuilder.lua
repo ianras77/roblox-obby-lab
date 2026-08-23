@@ -101,8 +101,6 @@ function WorldBuilder.buildWorld(seed)
   end
 
   print(string.format("[Obby] Built %d zones, %d stages, seed=%s", GameConfig.Zones, totalStages, tostring(seed)))
-  progressEvent:FireAllClients({ total = totalStages, stage = 0 })
-
   return {
     model = obbyModel,
     stages = allStages,

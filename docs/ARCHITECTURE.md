@@ -26,3 +26,7 @@ are server-to-client only; the client cannot award progression.
 `EnvironmentController` owns local zone presentation and smoothly transitions
 Lighting from chapter progress. The server still builds geometry and stores the
 zone palette, but does not repeatedly overwrite global Lighting while building.
+
+World construction does not broadcast a fake Stage 0 state. A client requests
+its authoritative restored state through `GetObbyState`, then receives later
+server-owned progression events.

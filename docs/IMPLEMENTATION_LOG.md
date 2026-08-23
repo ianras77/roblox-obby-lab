@@ -53,6 +53,12 @@
 - Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
 - Unverified: real Studio timing, reset semantics, and leaderboard publication.
 
+## 2026-08-23 — Removed startup state race
+
+- Completed: removed the synthetic global Stage 0 broadcast; restored client
+  state now comes only from `GetObbyState` and per-player events.
+- Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
+
 ## 2026-08-23 — CI build confidence
 
 - Completed: CI now installs pinned Rojo and builds a place artifact after
