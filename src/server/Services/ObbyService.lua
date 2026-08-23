@@ -145,19 +145,30 @@ function ObbyService:hookCommands()
   end
 
   self.maid:Give(Players.PlayerAdded:Connect(function(player)
+    local lastCommand = 0
     self.maid:Give(player.Chatted:Connect(function(msg)
       if not GameConfig.DevCommandsEnabled or not isAllowed(player) then
         return
       end
-      local command, arg = string.match(msg, "/(%w+)%s*(.*)")
+      local now = os.clock()
+      if now - lastCommand < GameConfig.DevCommandCooldownSeconds then
+        return
+      end
+      local command, arg = string.match(msg, "^/(%w+)%s*(.-)%s*$")
       if command == "rebuild" then
+        lastCommand = now
         self:rebuild(self.world.seed)
       elseif command == "reseed" then
-        local newSeed = tonumber(arg) or os.time()
+        local newSeed = math.floor(tonumber(arg) or os.time())
+        if newSeed < 0 or newSeed > GameConfig.MaxDevSeed then
+          return
+        end
+        lastCommand = now
         self:rebuild(newSeed)
       elseif command == "stage" then
         local target = tonumber(arg)
-        if target then
+        if target and target % 1 == 0 and target >= 1 and target <= GameConfig.MaxDevStage then
+          lastCommand = now
           self.checkpoints:teleportToStage(player, target)
         end
       end

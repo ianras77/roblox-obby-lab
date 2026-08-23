@@ -15,6 +15,10 @@ The current obstacle runtime remains centralized for compatibility, but the
 new contracts make a later component split safe. Studio playtesting is required
 before changing rider-carry physics or declaring cart reliability.
 
+Development chat commands are allowlisted outside Studio, parsed with anchored
+syntax, bounded by seed/stage limits, and rate-limited. They are not a player
+progression or reward API.
+
 Network names and payload direction are documented in
 `src/shared/Network/RemoteContracts.lua`. Progress, keys, and finale messages
 are server-to-client only; the client cannot award progression.
