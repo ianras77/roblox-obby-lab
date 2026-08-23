@@ -14,6 +14,10 @@ High contrast must visibly distinguish tagged hazards from the safe route, and
 Low particles must leave gameplay-critical readability intact while disabling
 ambient emitters.
 
+Reduced Motion must preserve the completion cue and results flow while omitting
+finale fireworks and spotlight animation; verify this in Studio alongside the
+normal celebration path.
+
 Replay controls now expose Adventure, Time Trial, and Practice from the HUD;
 verify mode reset timing, checkpoint semantics, completion results, and that no
 Practice run can qualify for a leaderboard.

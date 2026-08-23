@@ -83,6 +83,7 @@ grep -q 'applyAccessibility' "$ROOT_DIR/src/client/Controllers/UIController.lua"
 grep -q 'function EnvironmentController:syncInitialState' "$ROOT_DIR/src/client/Controllers/EnvironmentController.lua" || fail "environment initial state sync missing"
 grep -q 'tween:Cancel()' "$ROOT_DIR/src/client/Controllers/EnvironmentController.lua" || fail "environment tween lifecycle is unbounded"
 grep -q 'originalHazardMaterials' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "high contrast material restoration missing"
+grep -q 'if root and not reducedMotion then' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "reduced motion still emits finale particles"
 grep -q 'MaxDevSeed' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "dev seed cap missing"
 grep -q 'SaveCheckpoints = true' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "production persistence default missing"
 if grep -q 'MaxPlayersPerServer' "$ROOT_DIR/src/shared/Config/GameConfig.lua"; then fail "fake server capacity knob remains"; fi

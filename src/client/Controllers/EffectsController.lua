@@ -65,13 +65,15 @@ function EffectsController:finale()
   ):Play()
   game.Debris:AddItem(blur, 2.5)
 
-  local spot = Instance.new("SpotLight")
-  spot.Brightness = 4
-  spot.Angle = 90
-  spot.Range = 40
-  spot.Parent = root or workspace.Terrain
-  TweenService:Create(spot, TweenInfo.new(2, Enum.EasingStyle.Quad), { Brightness = 0 }):Play()
-  game.Debris:AddItem(spot, 3)
+  if not reducedMotion then
+    local spot = Instance.new("SpotLight")
+    spot.Brightness = 4
+    spot.Angle = 90
+    spot.Range = 40
+    spot.Parent = root or workspace.Terrain
+    TweenService:Create(spot, TweenInfo.new(2, Enum.EasingStyle.Quad), { Brightness = 0 }):Play()
+    game.Debris:AddItem(spot, 3)
+  end
 
   local shake = Instance.new("ColorCorrectionEffect")
   shake.TintColor = Color3.fromRGB(255, 240, 210)
@@ -84,7 +86,7 @@ function EffectsController:finale()
   game.Debris:AddItem(shake, 2)
 
   -- Fireworks at the player
-  if root then
+  if root and not reducedMotion then
     for _ = 1, 3 do
       local boom = Instance.new("ParticleEmitter")
       boom.Texture = AssetRegistry.getApprovedId("finale_firework")

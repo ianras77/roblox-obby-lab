@@ -911,3 +911,12 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: late streaming of key instances and two-client visual isolation
   require Studio multiplayer testing.
+
+## 2026-08-23 — Make finale reduced-motion safe
+
+- Completed: Reduced Motion now suppresses finale fireworks and spotlight
+  animation while retaining the completion transition and results presentation.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: nausea/accessibility review and device behavior require Studio
+  testing with the setting enabled.
