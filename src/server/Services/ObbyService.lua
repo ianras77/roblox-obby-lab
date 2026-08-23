@@ -151,6 +151,7 @@ function ObbyService.new()
   self.maid = Maid.new()
   self.behaviors = {}
   self.clock = 0
+  self.cosmeticClock = 0
   self.analytics = AnalyticsService.new(GameConfig.EnableAnalytics)
   self.queryClock = 0
   self.riderQueryClock = 0
@@ -524,6 +525,7 @@ end
 function ObbyService:startHeartbeat()
   self.maid:Give(RunService.Heartbeat:Connect(function(dt)
     self.clock = self.clock + dt
+    self.cosmeticClock = self.cosmeticClock + dt
     self.queryClock = self.queryClock + dt
     self.riderQueryClock = self.riderQueryClock + dt
     local tickNow = self.clock
@@ -551,26 +553,30 @@ function ObbyService:startHeartbeat()
       end
     end
 
-    for _, item in ipairs(self.behaviors.rotators) do
-      if item.part and item.part.Parent then
-        item.part.CFrame = item.part.CFrame * CFrame.Angles(0, item.speed * dt, 0)
+    if self.cosmeticClock >= 1 / 30 then
+      local cosmeticDt = self.cosmeticClock
+      self.cosmeticClock = 0
+      for _, item in ipairs(self.behaviors.rotators) do
+        if item.part and item.part.Parent then
+          item.part.CFrame = item.part.CFrame * CFrame.Angles(0, item.speed * cosmeticDt, 0)
+        end
       end
-    end
 
-    for _, item in ipairs(self.behaviors.bossGavels) do
-      if item.part and item.part.Parent then
-        local t = math.sin(tickNow * item.speed)
-        local pitch = t * item.angle
-        item.part.CFrame = item.origin * CFrame.Angles(pitch, 0, 0)
+      for _, item in ipairs(self.behaviors.bossGavels) do
+        if item.part and item.part.Parent then
+          local t = math.sin(tickNow * item.speed)
+          local pitch = t * item.angle
+          item.part.CFrame = item.origin * CFrame.Angles(pitch, 0, 0)
+        end
       end
-    end
 
-    for _, item in ipairs(self.behaviors.timedTiles) do
-      if item.part and item.part.Parent then
-        item.t = item.t + dt
-        local on = (item.t % item.cycle) > (item.cycle / 2)
-        item.part.Transparency = on and 0 or 0.8
-        item.part.CanCollide = on
+      for _, item in ipairs(self.behaviors.timedTiles) do
+        if item.part and item.part.Parent then
+          item.t = item.t + cosmeticDt
+          local on = (item.t % item.cycle) > (item.cycle / 2)
+          item.part.Transparency = on and 0 or 0.8
+          item.part.CanCollide = on
+        end
       end
     end
 

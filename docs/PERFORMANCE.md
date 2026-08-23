@@ -8,7 +8,9 @@ join, chapters 10/12/13/15/18, and a two-player session before release.
 
 Wind and pressure-pad contact queries are bounded to a 10 Hz server tick, and
 moving-platform rider sampling is bounded to a 20 Hz server tick. The obstacle
-transforms themselves still run from the centralized Heartbeat and need Studio
+transforms remain centralized, while rotators, gavel animation, and timed-tile
+state updates are bounded to a 30 Hz server tick. Moving-platform transforms
+and critical hazard authority remain on the Heartbeat path and need Studio
 profiling before proximity sleeping or a component split is declared safe.
 
 Planned work: proximity activation, bounded spatial checks, sleeping distant

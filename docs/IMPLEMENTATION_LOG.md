@@ -526,3 +526,13 @@
   whitespace checks pass locally.
 - Unverified: Roblox DataStore behavior and runtime performance still require
   staging/Studio measurement.
+
+## 2026-08-23 — Bound non-critical obstacle updates
+
+- Completed: rotators, gavel animation, and timed-tile state updates now run at
+  a bounded 30 Hz server tick, while moving-platform and critical hazard paths
+  retain their existing authority cadence.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: server cost and perceived motion quality require Studio
+  profiling and playtesting.

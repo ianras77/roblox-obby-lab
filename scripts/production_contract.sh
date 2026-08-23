@@ -104,6 +104,7 @@ grep -q 'shutdownBound' "$ROOT_DIR/src/server/Services/CheckpointService.lua" ||
 grep -q 'local direction = part.CFrame.LookVector' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "conveyor vertical velocity handling missing"
 grep -q 'if item.part and item.part.Parent then' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "obstacle lifecycle guards missing"
 grep -q 'part:SetNetworkOwner(nil)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "cart network ownership is not server-controlled"
+grep -q 'self.cosmeticClock >= 1 / 30' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "cosmetic obstacle updates are not bounded"
 grep -q 'movedCharacters' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "moving platform rider deduplication missing"
 grep -q 'riderQueryClock >= 0.05' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "moving platform queries are not bounded"
 grep -q 'self.riderQueryClock = 0' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "rider query clock is not reset on rebuild"
