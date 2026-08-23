@@ -17,6 +17,7 @@ Do not log chat, raw payloads, or high-cardinality personal data.
 Implementation status: the wrapper is disabled in Studio and by default. When
 explicitly enabled in a non-Studio environment, it submits the allowlisted
 events through Roblox `AnalyticsService:LogCustomEvent` inside `pcall`. Chapter
-events use the bounded numeric chapter index as the event value; joined,
+events use the bounded numeric chapter index from the configured canonical
+route as the event value; joined,
 completion, and other non-chapter events use `1`. Key IDs and personal data are
 never encoded.

@@ -1528,6 +1528,14 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; key reachability remains Studio-unverified.
 
+## 2026-08-23 — Bind analytics bounds to route configuration
+
+- Completed: analytics chapter-value validation now derives its upper bound
+  from the configured zone and chapter counts instead of duplicating `18`.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live analytics delivery remains
+  Studio-unverified.
+
 ## 2026-08-23 — Add original local vector art sources
 
 - Completed: added source-ready storybook railway-ticket branding and a Golden

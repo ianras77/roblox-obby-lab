@@ -2,6 +2,8 @@
 
 local RunService = game:GetService("RunService")
 local RobloxAnalytics = game:GetService("AnalyticsService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
 
 local AnalyticsService = {}
 AnalyticsService.__index = AnalyticsService
@@ -29,7 +31,8 @@ function AnalyticsService:track(player: Player?, eventName: string, fields: { [s
   -- user text, or arbitrary payload.
   local value = 1
   local chapter = fields and tonumber(fields.chapter or fields.stage)
-  if chapter and chapter % 1 == 0 and chapter >= 1 and chapter <= 18 then
+  local totalChapters = GameConfig.Zones * GameConfig.StagesPerZone
+  if chapter and chapter % 1 == 0 and chapter >= 1 and chapter <= totalChapters then
     value = chapter
   end
   local ok, err = pcall(function()

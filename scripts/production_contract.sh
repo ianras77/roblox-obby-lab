@@ -92,7 +92,7 @@ grep -q 'Practice requires a separately authorized chapter selection' "$ROOT_DIR
 grep -q 'lowParticles = false' "$ROOT_DIR/src/shared/Config/ProfileSchema.lua" || fail "complete accessibility profile defaults missing"
 grep -q 'AnalyticsService' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "analytics service wiring missing"
 grep -q 'LogCustomEvent' "$ROOT_DIR/src/server/Services/AnalyticsService.lua" || fail "analytics events are not submitted"
-grep -q 'chapter <= 18' "$ROOT_DIR/src/server/Services/AnalyticsService.lua" || fail "analytics chapter value is unbounded"
+grep -q 'chapter <= totalChapters' "$ROOT_DIR/src/server/Services/AnalyticsService.lua" || fail "analytics chapter value is unbounded"
 grep -q 'LogCustomEvent(player, eventName, value)' "$ROOT_DIR/src/server/Services/AnalyticsService.lua" || fail "analytics context is discarded"
 grep -q 'analytics:track(player, "chapter_started"' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "chapter start analytics event missing"
 grep -q 'bestChapterMs\[splitKey\]' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "chapter split persistence missing"
