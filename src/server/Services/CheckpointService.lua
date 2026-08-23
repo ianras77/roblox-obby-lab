@@ -224,6 +224,17 @@ function CheckpointService:bindCheckpoints()
 end
 
 function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
+  local stage = self.stages[stageIndex]
+  if
+    not stage
+    or stage.checkpoint ~= checkpoint
+    or not checkpoint:IsDescendantOf(stage.model)
+    or checkpoint:GetAttribute("StageIndex") ~= stageIndex
+    or checkpoint:GetAttribute("StageId") ~= stage.stageId
+  then
+    warn(string.format("[Checkpoint] rejected invalid runtime checkpoint for stage %s", tostring(stageIndex)))
+    return
+  end
   local player = Players:GetPlayerFromCharacter(hit.Parent)
   if not player then
     return
@@ -252,7 +263,7 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
       self.analytics:track(player, "chapter_started", { stage = stageIndex })
       self.analytics:track(player, "chapter_completed", { stage = stageIndex })
     end
-    local stageModel = checkpoint.Parent
+    local stageModel = stage.model
     local sound = checkpoint:FindFirstChildOfClass("Sound")
     if sound then
       sound:Play()

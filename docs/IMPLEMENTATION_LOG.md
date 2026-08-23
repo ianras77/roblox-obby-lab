@@ -1203,3 +1203,12 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: live DataStore outage and shutdown-save behavior still require
   Roblox Studio/private staging testing.
+
+## 2026-08-23 — Harden runtime checkpoint authority
+
+- Completed: checkpoint touches now verify the server-owned stage mapping,
+  model ownership, stable stage ID, and stage index before advancing progress.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live touch behavior and multiplayer timing still require Roblox
+  Studio/private staging testing.
