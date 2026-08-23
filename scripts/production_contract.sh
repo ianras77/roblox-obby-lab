@@ -29,6 +29,8 @@ grep -q 'AnalyticsService' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fa
 grep -q 'bestChapterMs\[splitKey\]' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "chapter split persistence missing"
 grep -q 'merged.collectedKeys' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent key merge missing"
 grep -q 'showResults' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results presentation missing"
+grep -q 'TimeTrialButton' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results replay actions missing"
+grep -q 'Golden Keys' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results key metric missing"
 grep -q 'applyAccessibility' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "accessibility application missing"
 grep -q 'MaxDevSeed' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "dev seed cap missing"
 grep -q 'SaveCheckpoints = true' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "production persistence default missing"

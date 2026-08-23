@@ -197,3 +197,14 @@
   pass locally.
 - Unverified: live request-budget behavior and recovery after transient Roblox
   DataStore outages require Studio/production-like testing.
+
+## 2026-08-23 — Structured completion results
+
+- Completed: completion now presents a structured player-local results card
+  with time, personal best, deaths, Golden Keys, completion percentage, and
+  Replay/Time Trial/Practice actions using the existing server-validated mode
+  contract.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: responsive layout and gamepad focus still require Studio device
+  testing.

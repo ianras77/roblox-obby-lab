@@ -290,14 +290,27 @@ function UIController:bind()
 end
 
 function UIController:showResults(payload)
+  local previous = self.gui:FindFirstChild("Results")
+  if previous then
+    previous:Destroy()
+  end
+  local card = Instance.new("Frame")
+  card.Name = "Results"
+  card.Size = UDim2.fromScale(0.72, 0.34)
+  card.Position = UDim2.fromScale(0.14, 0.33)
+  card.BackgroundColor3 = Color3.fromRGB(35, 45, 60)
+  card.BorderSizePixel = 0
+  card.Parent = self.gui
+
   local result = Instance.new("TextLabel")
-  result.Name = "Results"
-  result.Size = UDim2.fromScale(0.7, 0.18)
-  result.Position = UDim2.fromScale(0.15, 0.4)
-  result.BackgroundColor3 = Color3.fromRGB(35, 45, 60)
+  result.Name = "Summary"
+  result.Size = UDim2.fromScale(0.92, 0.62)
+  result.Position = UDim2.fromScale(0.04, 0.05)
+  result.BackgroundTransparency = 1
   result.TextColor3 = Color3.fromRGB(255, 236, 182)
   result.Font = Enum.Font.GothamBlack
   result.TextScaled = true
+  result.TextWrapped = true
   local mode = payload and payload.mode or self.player:GetAttribute("RunMode") or "Adventure"
   local elapsed = payload and payload.elapsedMs and string.format("\nTime: %.2fs", payload.elapsedMs / 1000) or ""
   local best = payload and payload.bestRunMs and string.format("\nPersonal best: %.2fs", payload.bestRunMs / 1000) or ""
@@ -307,16 +320,27 @@ function UIController:showResults(payload)
       and payload.totalKeys
       and string.format("\nGolden Keys: %d/%d", payload.keys, payload.totalKeys)
     or ""
-  result.Text = string.format(
-    "Toad Hall reached!\n%s run complete%s%s%s%s\nChoose a mode in Settings to replay.",
-    mode,
-    elapsed,
-    best,
-    deaths,
-    keys
-  )
-  result.Parent = self.gui
-  game:GetService("Debris"):AddItem(result, 8)
+  result.Text =
+    string.format("Toad Hall reached!\n%s run complete%s%s%s%s\nCompletion: 100%%", mode, elapsed, best, deaths, keys)
+  local function addAction(name, text, mode, position)
+    local button = Instance.new("TextButton")
+    button.Name = name
+    button.Size = UDim2.fromScale(0.29, 0.18)
+    button.Position = position
+    button.BackgroundColor3 = Color3.fromRGB(218, 166, 72)
+    button.TextColor3 = Color3.fromRGB(35, 25, 20)
+    button.Font = Enum.Font.GothamBold
+    button.TextScaled = true
+    button.Text = text
+    button.Parent = card
+    button.Activated:Connect(function()
+      self.modeEvent:FireServer(mode)
+      card:Destroy()
+    end)
+  end
+  addAction("AdventureButton", "Replay", "Adventure", UDim2.fromScale(0.04, 0.77))
+  addAction("TimeTrialButton", "Time Trial", "TimeTrial", UDim2.fromScale(0.355, 0.77))
+  addAction("PracticeButton", "Practice", "Practice", UDim2.fromScale(0.67, 0.77))
 end
 
 function UIController:updateProgress(stage, total)
