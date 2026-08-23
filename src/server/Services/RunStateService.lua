@@ -81,8 +81,9 @@ function RunStateService:startAtGate(player: Player, gate: BasePart): boolean
     return false
   end
   local character = player.Character
+  local humanoid = character and character:FindFirstChildOfClass("Humanoid")
   local root = character and character:FindFirstChild("HumanoidRootPart")
-  if not root or (root.Position - gate.Position).Magnitude > 12 then
+  if not humanoid or humanoid.Health <= 0 or not root or (root.Position - gate.Position).Magnitude > 12 then
     return false
   end
   state.startedAt = os.clock()

@@ -1,5 +1,14 @@
 # Implementation log
 
+## 2026-08-23 — Require a live character at the Time Trial gate
+
+- Completed: Time Trial gate admission now requires a live Humanoid in addition
+  to a valid root and distance check, preventing dead characters from arming
+  the server clock.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live gate touch timing requires Studio playtesting.
+
 ## 2026-08-23 — Baseline and correctness foundation
 
 - Completed: repository audit and development branch creation.
