@@ -50,6 +50,8 @@ grep -q 'bestChapterMs\[splitKey\]' "$ROOT_DIR/src/server/Services/CheckpointSer
 grep -q 'merged.collectedKeys' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent key merge missing"
 grep -q 'mergeKeys(value.collectedKeys)' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "bounded value key merge missing"
 grep -q 'mergeKeys(current.collectedKeys)' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "bounded current key merge missing"
+grep -q 'ProfileSchema.MaxCounter' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "stored counter merge is not bounded"
+grep -q 'ProfileSchema.MaxChapter' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "stored chapter merge is not bounded"
 grep -q 'merged.bestChapterMs' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent chapter split merge missing"
 grep -q 'chapterNumber <= 18' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "chapter split merge is not bounded"
 grep -q 'merged.settings' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent settings merge missing"

@@ -1,6 +1,7 @@
 local DataStoreService = game:GetService("DataStoreService")
 local RunService = game:GetService("RunService")
 local GameConfig = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("GameConfig"))
+local ProfileSchema = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("ProfileSchema"))
 
 local Wrapper = {}
 Wrapper.__index = Wrapper
@@ -66,9 +67,18 @@ function Wrapper:SetAsync(key, value)
           return value
         end
         local merged = table.clone(value)
-        merged.highestChapter = math.max(tonumber(current.highestChapter) or 0, value.highestChapter or 0)
-        merged.totalDeaths = math.max(tonumber(current.totalDeaths) or 0, value.totalDeaths or 0)
-        merged.completionCount = math.max(tonumber(current.completionCount) or 0, value.completionCount or 0)
+        merged.highestChapter = math.clamp(
+          math.max(tonumber(current.highestChapter) or 0, value.highestChapter or 0),
+          0,
+          ProfileSchema.MaxChapter
+        )
+        merged.totalDeaths =
+          math.clamp(math.max(tonumber(current.totalDeaths) or 0, value.totalDeaths or 0), 0, ProfileSchema.MaxCounter)
+        merged.completionCount = math.clamp(
+          math.max(tonumber(current.completionCount) or 0, value.completionCount or 0),
+          0,
+          ProfileSchema.MaxCounter
+        )
         local mergedKeys = {}
         local keyCount = 0
         local function mergeKeys(source)

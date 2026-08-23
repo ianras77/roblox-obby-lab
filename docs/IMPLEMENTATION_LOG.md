@@ -585,6 +585,14 @@
 - Unverified: dynamic Luau execution and live DataStore migration still require
   Studio/production-like testing.
 
+## 2026-08-23 — Bound stored values during concurrent saves
+
+- Completed: `UpdateAsync` now applies the profile chapter and counter ceilings
+  to existing stored records as well as the current session value.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live malformed-record migration requires staging DataStore tests.
+
 ## 2026-08-23 — Submit allowlisted analytics events
 
 - Completed: the server analytics wrapper now submits allowlisted events to
