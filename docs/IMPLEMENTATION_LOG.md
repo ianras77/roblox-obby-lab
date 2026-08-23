@@ -1417,3 +1417,11 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; live state-function observation remains
   Studio-unverified.
+
+## 2026-08-23 — Centralize state-function contract ownership
+
+- Completed: world remote creation now uses the shared `GetObbyState` contract
+  instead of duplicating its name in the builder.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live remote construction remains
+  Studio-unverified.

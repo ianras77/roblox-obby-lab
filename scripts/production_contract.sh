@@ -55,7 +55,7 @@ if grep -q 'part:Destroy()' "$ROOT_DIR/src/server/Services/ObbyService.lua"; the
 fi
 grep -q 'GeneratorVersion' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "generator version missing"
 grep -q 'AuthoredKeysPerChapter = 1' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "authored key contract missing"
-grep -q 'GetObbyState' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "initial state request missing"
+grep -q 'RemoteContracts.State.name' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "initial state request missing"
 if grep -q 'progressEvent:FireAllClients' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua"; then fail "startup state must not broadcast globally"; fi
 if grep -q 'celebrator.Parent = checkpoint' "$ROOT_DIR/src/server/Services/CheckpointService.lua"; then fail "finale burst must not be shared"; fi
 grep -q 'SetAccessibilitySettings' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "settings contract missing"
@@ -236,6 +236,7 @@ grep -q 'highestChapter = self:getProfile(player).highestChapter' "$ROOT_DIR/src
 grep -q 'highestChapter = self.checkpoints and self.checkpoints:getProfile(player).highestChapter' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "state highest chapter sync missing"
 grep -q 'chapterId = stage.stageId' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "stable chapter ID is not synchronized"
 grep -q 'chapter = getChapterPresentation(self.world.stages, stage)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "initial chapter presentation is not synchronized"
+grep -q 'RemoteContracts.State.name' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "state function name is not contract-owned"
 grep -q 'ProfileSaveStatus' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile save status visibility missing"
 grep -q 'ephemeral profile' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "datastore failure playability path missing"
 grep -q 'persistenceAllowed' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "failed reads are not write-gated"

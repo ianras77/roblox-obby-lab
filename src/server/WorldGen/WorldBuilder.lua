@@ -43,16 +43,16 @@ local function ensureFolders()
       evt.Parent = folder
     end
   end
-  local stateFunction = folder:FindFirstChild("GetObbyState")
+  local stateFunction = folder:FindFirstChild(RemoteContracts.State.name)
   if not stateFunction then
     stateFunction = Instance.new("RemoteFunction")
-    stateFunction.Name = "GetObbyState"
+    stateFunction.Name = RemoteContracts.State.name
     stateFunction.Parent = folder
   end
   return folder:FindFirstChild(GameConfig.ProgressRemote),
     folder:FindFirstChild(GameConfig.KeyRemote),
     folder:FindFirstChild(GameConfig.FinaleRemote),
-    folder:FindFirstChild("GetObbyState")
+    folder:FindFirstChild(RemoteContracts.State.name)
 end
 
 function WorldBuilder.buildWorld(seed)
