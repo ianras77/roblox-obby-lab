@@ -44,6 +44,7 @@ function StageBuilder.buildStage(args)
     or { flavor = "Keep moving forward.", mechanic = "Obstacle course", tier = "Unknown" }
   model:SetAttribute("StageId", stageId)
   model:SetAttribute("StageIndex", args.stageIndex)
+  model:SetAttribute("ChapterName", displayName)
   model:SetAttribute("ChapterFlavor", presentation.flavor)
   model:SetAttribute("PrimaryMechanic", presentation.mechanic)
   model:SetAttribute("DifficultyTier", presentation.tier)

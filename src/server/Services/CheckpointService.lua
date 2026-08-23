@@ -140,6 +140,7 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
     end
     player:SetAttribute("Checkpoint", stageIndex)
     player:SetAttribute("CheckpointId", checkpoint:GetAttribute("StageId"))
+    local stageModel = checkpoint.Parent
     local sound = checkpoint:FindFirstChildOfClass("Sound")
     if sound then
       sound:Play()
@@ -165,6 +166,9 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
         timeTrialEligible = eligible,
         bestRunMs = self:getProfile(player).bestRunMs,
         deaths = self:getProfile(player).totalDeaths,
+        chapterName = stageModel:GetAttribute("ChapterName") or checkpoint:GetAttribute("StageId"),
+        mechanic = stageModel:GetAttribute("PrimaryMechanic"),
+        flavor = stageModel:GetAttribute("ChapterFlavor"),
       })
     end
     if stageIndex == #self.stages then

@@ -248,6 +248,11 @@ function UIController:bind()
   self.progressEvent.OnClientEvent:Connect(function(payload)
     local stage = payload.stage or 0
     local total = payload.total or 1
+    self.currentChapter = {
+      name = payload.chapterName,
+      mechanic = payload.mechanic,
+      flavor = payload.flavor,
+    }
     self:updateProgress(stage, total)
     self:guideToStage(stage + 1)
     self:flashMilestone(stage, total)
@@ -344,7 +349,14 @@ function UIController:flashMilestone(stage, total)
   gui.TextColor3 = Color3.fromRGB(255, 230, 180)
   gui.Font = Enum.Font.GothamBlack
   gui.TextScaled = true
-  gui.Text = string.format("Chapter %d / %d unlocked - keep chasing Toad's plan!", stage, total)
+  local current = self.currentChapter or {}
+  gui.Text = string.format(
+    "Chapter %d / %d: %s\n%s",
+    stage,
+    total,
+    current.name or "New chapter",
+    current.mechanic or "Keep moving forward!"
+  )
   gui.Parent = self.gui
   game:GetService("Debris"):AddItem(gui, 1.2)
 end
