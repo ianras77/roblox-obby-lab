@@ -32,6 +32,7 @@ function ProfileSchema.default(): PlayerProfile
       highContrast = false,
       largeText = false,
       lowParticles = false,
+      showTimer = true,
       uiScale = 1,
     },
   }

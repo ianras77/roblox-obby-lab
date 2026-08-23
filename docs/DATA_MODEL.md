@@ -42,6 +42,8 @@ the current configuration), and the client requests initial HUD state through
 `GetObbyState` instead of depending solely on a startup event.
 
 Accessibility settings use the validated `SetAccessibilitySettings` contract;
+this includes `showTimer`, which only changes local timer presentation and
+never changes server-owned timing.
 only five boolean keys are accepted and writes are rate-limited before entering
 the profile.
 

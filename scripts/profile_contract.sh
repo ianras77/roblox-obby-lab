@@ -19,6 +19,7 @@ for marker in (
     "highContrast = false",
     "largeText = false",
     "lowParticles = false",
+    "showTimer = true",
     "raw.highestChapter or legacyChapter",
     "validTime < 86400000",
     'type(raw.settings[key]) == "boolean"',

@@ -66,8 +66,14 @@ local function bindSettings(self)
   self.maid:Give(Players.PlayerRemoving:Connect(function(player)
     lastCall[player] = nil
   end))
-  local allowed =
-    { reducedMotion = true, reduceFlashes = true, highContrast = true, largeText = true, lowParticles = true }
+  local allowed = {
+    reducedMotion = true,
+    reduceFlashes = true,
+    highContrast = true,
+    largeText = true,
+    lowParticles = true,
+    showTimer = true,
+  }
   self.maid:Give(event.OnServerEvent:Connect(function(player, key, enabled)
     if type(key) ~= "string" or not allowed[key] or type(enabled) ~= "boolean" then
       return

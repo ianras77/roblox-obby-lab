@@ -831,3 +831,13 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: multi-client Practice/reset behavior requires Studio testing.
+
+## 2026-08-23 — Persist Time Trial timer visibility
+
+- Completed: `showTimer` is now part of the validated profile defaults and
+  settings UI; hiding it affects presentation only, while server timing and
+  eligibility remain unchanged.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: settings persistence and device-specific HUD placement require
+  Studio testing.

@@ -18,6 +18,7 @@ function UIController.new()
     highContrast = false,
     largeText = false,
     lowParticles = false,
+    showTimer = true,
   }
   self.originalHazardColors = {}
   self.originalHazardMaterials = {}
@@ -224,6 +225,7 @@ function UIController:createGui()
     highContrast = "High contrast hazards",
     largeText = "Larger text",
     lowParticles = "Lower particles",
+    showTimer = "Show Time Trial timer",
   }) do
     local toggle = Instance.new("TextButton")
     toggle.Name = key
@@ -312,6 +314,12 @@ function UIController:bind()
         if key == "highContrast" or key == "lowParticles" then
           self:applyAccessibility()
         end
+        if key == "showTimer" then
+          local timer = self.gui:FindFirstChild("Timer")
+          if timer and self.timerStartedAt then
+            timer.Visible = self.settings.showTimer
+          end
+        end
         toggle.Text = string.gsub(toggle.Text, ": %u+", ": " .. (self.settings[key] and "ON" or "OFF"))
       end)
     end
@@ -345,6 +353,7 @@ function UIController:bind()
   end
 
   self.progressEvent.OnClientEvent:Connect(function(payload)
+    self.lastProgressPayload = payload
     local stage = payload.stage or 0
     local total = payload.total or 1
     self:updateTimerState(payload)
@@ -377,7 +386,7 @@ function UIController:updateTimerState(payload)
   if payload.mode == "TimeTrial" and payload.runStarted then
     local elapsed = (payload.elapsedMs or 0) / 1000
     self.timerStartedAt = os.clock() - elapsed
-    timer.Visible = true
+    timer.Visible = self.settings.showTimer ~= false
   elseif payload.mode then
     self.timerStartedAt = nil
     timer.Visible = false
