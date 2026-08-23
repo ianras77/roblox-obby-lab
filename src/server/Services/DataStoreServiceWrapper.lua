@@ -9,6 +9,7 @@ function Wrapper.new(name)
   local self = setmetatable({}, Wrapper)
   self.enabled = GameConfig.UseDataStore and not RunService:IsStudio()
   self.store = self.enabled and DataStoreService:GetDataStore(name or GameConfig.DataStoreName) or nil
+  self.maxAttempts = 3
   return self
 end
 
@@ -16,13 +17,15 @@ function Wrapper:GetAsync(key)
   if not self.enabled then
     return nil
   end
-  local ok, result = pcall(function()
-    return self.store:GetAsync(key)
-  end)
-  if ok then
-    return result
-  else
-    warn("DataStore get failed", result)
+  for attempt = 1, self.maxAttempts do
+    local ok, result = pcall(function()
+      return self.store:GetAsync(key)
+    end)
+    if ok then
+      return result
+    end
+    warn(string.format("DataStore get failed (attempt %d): %s", attempt, tostring(result)))
+    task.wait(2 ^ (attempt - 1))
   end
   return nil
 end
@@ -31,12 +34,19 @@ function Wrapper:SetAsync(key, value)
   if not self.enabled then
     return
   end
-  local ok, err = pcall(function()
-    self.store:SetAsync(key, value)
-  end)
-  if not ok then
-    warn("DataStore set failed", err)
+  for attempt = 1, self.maxAttempts do
+    local ok, err = pcall(function()
+      self.store:UpdateAsync(key, function()
+        return value
+      end)
+    end)
+    if ok then
+      return true
+    end
+    warn(string.format("DataStore set failed (attempt %d): %s", attempt, tostring(err)))
+    task.wait(2 ^ (attempt - 1))
   end
+  return false
 end
 
 return Wrapper
