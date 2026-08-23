@@ -1174,3 +1174,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: live checkpoint touch behavior still requires Roblox Studio.
+
+## 2026-08-23 — Validate checkpoint ownership
+
+- Completed: world validation now rejects checkpoints that are not descendants
+  of their recorded stage model, preventing a manifest from pointing at an
+  unrelated live part.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live checkpoint touch behavior still requires Roblox Studio.

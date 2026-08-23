@@ -125,6 +125,9 @@ function WorldValidator.validate(
       table.insert(errors, string.format("stage %s missing checkpoint", stageLabel(stage)))
     else
       checkpoints[stage.stageIndex] = true
+      if not modelIsModel or not stage.checkpoint:IsDescendantOf(stageModel) then
+        table.insert(errors, string.format("stage %s checkpoint is outside its model", stageLabel(stage)))
+      end
       if stage.checkpoint:GetAttribute("StageIndex") ~= stage.stageIndex then
         table.insert(errors, string.format("checkpoint %d has wrong stage index", stage.stageIndex))
       end
