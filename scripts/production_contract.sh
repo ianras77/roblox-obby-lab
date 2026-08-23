@@ -53,6 +53,7 @@ grep -q 'profile.highestChapter < stage' "$ROOT_DIR/src/server/Services/ObbyServ
 grep -q 'lowParticles = false' "$ROOT_DIR/src/shared/Config/ProfileSchema.lua" || fail "complete accessibility profile defaults missing"
 grep -q 'AnalyticsService' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "analytics service wiring missing"
 grep -q 'LogCustomEvent' "$ROOT_DIR/src/server/Services/AnalyticsService.lua" || fail "analytics events are not submitted"
+grep -q 'analytics:track(player, "chapter_started"' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "chapter start analytics event missing"
 grep -q 'bestChapterMs\[splitKey\]' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "chapter split persistence missing"
 grep -q 'merged.collectedKeys' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent key merge missing"
 grep -q 'mergeKeys(value.collectedKeys)' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "bounded value key merge missing"

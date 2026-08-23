@@ -224,6 +224,7 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
     checkpointProfile.highestChapter = math.max(checkpointProfile.highestChapter, stageIndex)
     self.profiles[player] = checkpointProfile
     if self.analytics then
+      self.analytics:track(player, "chapter_started", { stage = stageIndex })
       self.analytics:track(player, "chapter_completed", { stage = stageIndex })
     end
     local stageModel = checkpoint.Parent

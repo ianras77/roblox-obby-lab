@@ -891,3 +891,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: actual server frame-time savings and wake-up presentation require
   Roblox MicroProfiler and multi-player Studio testing.
+
+## 2026-08-23 — Emit the documented chapter-start event
+
+- Completed: the server now emits the allowlisted `chapter_started` event at
+  the first monotonic checkpoint transition for a chapter, alongside the
+  existing completion event; client payloads cannot create analytics events.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: production telemetry delivery remains disabled until analytics
+  policy and destination approval.
