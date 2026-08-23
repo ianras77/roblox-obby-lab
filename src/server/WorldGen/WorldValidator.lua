@@ -206,7 +206,7 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     end
     if owned then
       local keyId = key:GetAttribute("KeyId")
-      if not keyId then
+      if type(keyId) ~= "string" or #keyId == 0 or #keyId > 80 then
         table.insert(errors, "collectible missing KeyId: " .. key:GetFullName())
       elseif ids[keyId] then
         table.insert(errors, "duplicate collectible id: " .. keyId)

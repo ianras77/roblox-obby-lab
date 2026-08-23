@@ -1075,6 +1075,15 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: live attribute mutation remains a Studio-only test.
 
+## 2026-08-23 — Fail closed on collectible identity types
+
+- Completed: world validation now requires non-empty bounded string `KeyId`
+  values, preventing malformed numeric or oversized collectible IDs from
+  reaching duplicate checks or string diagnostics.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: malformed live collectible attributes remain a Studio-only test.
+
 ## 2026-08-23 — Harden malformed stage diagnostics
 
 - Completed: `WorldValidator` now requires bounded string stage IDs and finite
