@@ -328,7 +328,9 @@ function ObbyService:scanBehaviors()
 
   local function add(tag, handler)
     for _, inst in ipairs(CollectionService:GetTagged(tag)) do
-      handler(inst)
+      if self.world and self.world.model and inst:IsDescendantOf(self.world.model) then
+        handler(inst)
+      end
     end
   end
 

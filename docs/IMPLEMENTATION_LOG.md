@@ -1,5 +1,14 @@
 # Implementation log
 
+## 2026-08-23 — Scope obstacle discovery to owned world
+
+- Completed: CollectionService-tagged obstacle, cart, and collectible scans
+  now register only instances beneath the current generated world, preventing
+  unrelated Workspace content from entering runtime behavior or key totals.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live tagged user-content coexistence requires Studio testing.
+
 ## 2026-08-23 — Add original art source briefs
 
 - Completed: added organized source-art prompt briefs for the logo, icon, and

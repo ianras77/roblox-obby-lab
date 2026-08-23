@@ -39,6 +39,7 @@ grep -q 'elapsed < self.minimumTimeTrialSeconds' "$ROOT_DIR/src/server/Services/
 grep -q 'player:SetAttribute("RunCompleted", false)' "$ROOT_DIR/src/server/Services/RunStateService.lua" || fail "run completion state is not reset"
 grep -q 'humanoid.Health <= 0' "$ROOT_DIR/src/server/Services/RunStateService.lua" || fail "time trial gate accepts dead characters"
 grep -q 'local function getLivePlayerRoot' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "physics touch authority helper missing"
+grep -q 'inst:IsDescendantOf(self.world.model)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "behavior scan is not ownership-scoped"
 grep -q 'RunStartGate' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "time trial start gate missing"
 grep -q 'startAtGate' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "server time trial gate handling missing"
 grep -q 'resetForTimeTrial' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "time trial checkpoint reset missing"
