@@ -14,4 +14,6 @@ fi
 grep -q 'GeneratorVersion' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "generator version missing"
 grep -q 'AuthoredKeysPerChapter = 1' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "authored key contract missing"
 grep -q 'GetObbyState' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "initial state request missing"
+grep -q 'SetAccessibilitySettings' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "settings contract missing"
+grep -q 'reducedMotion = true' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "settings allowlist missing"
 echo "production contracts ok"
