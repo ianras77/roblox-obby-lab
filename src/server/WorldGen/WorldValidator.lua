@@ -3,6 +3,8 @@
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
+local StageConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("StageConfig"))
+local WorldGenConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("WorldGenConfig"))
 
 local WorldValidator = {}
 
@@ -34,15 +36,14 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
     local stageModel = stage.model
     local modelIsModel = typeof(stageModel) == "Instance" and stageModel:IsA("Model")
     local checkpointIsPart = typeof(stage.checkpoint) == "Instance" and stage.checkpoint:IsA("BasePart")
+    local validStageIndex = type(stage.stageIndex) == "number"
+      and finite(stage.stageIndex)
+      and stage.stageIndex % 1 == 0
+    local definition = validStageIndex and StageConfig.getByIndex(stage.stageIndex) or nil
     if stage.stageIndex ~= expectedIndex then
       table.insert(errors, string.format("stage order gap or duplicate near %s", stageLabel(stage)))
     end
-    if
-      type(stage.stageIndex) ~= "number"
-      or not finite(stage.stageIndex)
-      or stage.stageIndex % 1 ~= 0
-      or indexes[stage.stageIndex]
-    then
+    if not validStageIndex or indexes[stage.stageIndex] then
       table.insert(errors, string.format("duplicate or invalid stage index near %s", tostring(stage.stageIndex)))
     else
       indexes[stage.stageIndex] = true
@@ -53,6 +54,15 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
       table.insert(errors, "duplicate stage id: " .. stage.stageId)
     else
       ids[stage.stageId] = true
+    end
+    if not definition or stage.stageId ~= definition.id then
+      table.insert(
+        errors,
+        string.format("stage %s stable ID does not match canonical configuration", stageLabel(stage))
+      )
+    end
+    if not definition or stage.stageType ~= WorldGenConfig.StageTypes[definition.index] then
+      table.insert(errors, string.format("stage %s type does not match canonical configuration", stageLabel(stage)))
     end
     if not checkpointIsPart then
       table.insert(errors, string.format("stage %s missing checkpoint", stageLabel(stage)))

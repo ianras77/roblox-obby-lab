@@ -1055,6 +1055,16 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: malformed live metadata injection remains a Studio-only test.
 
+## 2026-08-23 — Cross-check canonical stage identity
+
+- Completed: `WorldValidator` now compares each manifest stage ID and type with
+  the canonical `StageConfig`/`WorldGenConfig` entry for its index, rejecting
+  identity drift before persistence or presentation can consume it.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live malformed stage identity injection remains a Studio-only
+  test.
+
 ## 2026-08-23 — Harden malformed stage diagnostics
 
 - Completed: `WorldValidator` now requires bounded string stage IDs and finite

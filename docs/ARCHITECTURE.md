@@ -16,6 +16,8 @@ it connects exits and entrances, so templates do not hide travel spacing.
 intentional elevation transition.
 Its returned world manifest also exposes each zone's model, entrance, exit,
 bounds, center, and index for presentation and inspection systems.
+Stable IDs and stage types are compared against the canonical configuration
+before persistence-facing systems consume them.
 `WorldValidator` checks those measurements and ownership before the world is
 considered valid; each generated stage model also carries a matching
 `ZoneIndex` marker so the manifest cannot claim ownership the instance does
