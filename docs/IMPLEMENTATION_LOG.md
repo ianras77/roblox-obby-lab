@@ -269,6 +269,15 @@
 - Unverified: Studio rebuild behavior with extreme but valid seeds remains
   pending.
 
+## 2026-08-23 — Immediate checkpoint profile consistency
+
+- Completed: checkpoint advancement now updates the loaded in-memory profile as
+  well as player attributes, keeping server Practice authorization consistent
+  with the chapter just reached before autosave runs.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: Studio persistence timing and reconnect behavior remain pending.
+
 ## 2026-08-23 — Canonical Time Trial start
 
 - Completed: crossing the validated Time Trial gate now clears the player's

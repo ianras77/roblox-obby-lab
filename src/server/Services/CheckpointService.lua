@@ -176,6 +176,9 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
     end
     player:SetAttribute("Checkpoint", stageIndex)
     player:SetAttribute("CheckpointId", checkpoint:GetAttribute("StageId"))
+    local profile = self:getProfile(player)
+    profile.highestChapter = math.max(profile.highestChapter, stageIndex)
+    self.profiles[player] = profile
     if self.analytics then
       self.analytics:track(player, "chapter_completed", { stage = stageIndex })
     end
