@@ -8,7 +8,8 @@ and seed attributes; rebuilds may remove only that owned tree.
 `StageBuilder` gives every stage a stable ID, entrance, exit, checkpoint, and
 metadata including the chapter's primary mechanic, flavor, and difficulty tier.
 It also returns an explicit gameplay path corridor with a center CFrame and
-configured width.
+configured width, plus a bounded non-empty mechanics list used by presentation
+and runtime diagnostics.
 `ZoneBuilder` records each stage's measured connector length and owning zone as
 it connects exits and entrances, so templates do not hide travel spacing.
 `WorldBuilder` carries the previous zone exit into the next zone, including the

@@ -73,10 +73,19 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
       and type(corridor.width) == "number"
       and finite(corridor.width)
       and corridor.width > 0
+    local validMechanics = type(stage.mechanics) == "table" and #stage.mechanics > 0
+    if validMechanics then
+      for _, mechanic in ipairs(stage.mechanics) do
+        if type(mechanic) ~= "string" or #mechanic == 0 or #mechanic > 80 then
+          validMechanics = false
+          break
+        end
+      end
+    end
     if not validEntrance or not validExit then
       table.insert(errors, string.format("stage %s missing entrance or exit", stageLabel(stage)))
     end
-    if not validSafeSpawn or typeof(stage.bounds) ~= "Vector3" or type(stage.mechanics) ~= "table" then
+    if not validSafeSpawn or typeof(stage.bounds) ~= "Vector3" or not validMechanics then
       table.insert(errors, string.format("stage %s missing build result fields", stageLabel(stage)))
     end
     if not validConnectorLength or stage.connectorLength < 0 then

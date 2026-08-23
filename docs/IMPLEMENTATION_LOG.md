@@ -1046,6 +1046,15 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: malformed live instances still require Studio mutation tests.
 
+## 2026-08-23 — Validate stage mechanic metadata
+
+- Completed: generated stage manifests now require a non-empty list of bounded
+  string mechanic names; malformed or empty mechanic metadata fails world
+  validation before runtime systems consume it.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: malformed live metadata injection remains a Studio-only test.
+
 ## 2026-08-23 — Harden malformed stage diagnostics
 
 - Completed: `WorldValidator` now requires bounded string stage IDs and finite
