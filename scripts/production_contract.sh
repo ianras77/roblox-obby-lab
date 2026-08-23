@@ -119,6 +119,7 @@ grep -q 'if player.Character then' "$ROOT_DIR/src/server/Services/CheckpointServ
 grep -q 'if not player.Parent then' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile load lacks leave guard"
 grep -q 'not self:isLoaded(player)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "failed profile loads can still be saved"
 grep -q 'checkpointProfile.highestChapter = math.max' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint profile state is stale"
+grep -Fq 'self.deathConnections[player]:Disconnect()' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "respawn death connections are not cleaned"
 grep -q 'profile.highestChapter = math.max(profile.highestChapter' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "save path can regress profile progress"
 grep -q 'local snapshot = ProfileSchema.sanitize(profile)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "save path passes mutable profile"
 grep -q 'if not self:isLoaded(player) then' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint progression is not load-gated"

@@ -26,6 +26,10 @@ The world validator also reports unanchored generated environment parts, while
 allowing intentional cart ride assemblies. Static scenery should remain
 anchored to avoid accidental server physics and replication cost.
 
+Humanoid death connections are tracked per player and replaced on each new
+character, preventing respawn cycles from accumulating listeners in the service
+Maid.
+
 Cart behavior now has a 45-second timeout and below-course recovery reset;
 boarding, dismounting, multiplayer interaction, and high-latency behavior still
 require Studio playtesting before the cart is called production-ready.

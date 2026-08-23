@@ -21,6 +21,7 @@ function CheckpointService.new(stages, progressEvent, runState, analytics, total
   self.store = DataStoreWrapper.new(GameConfig.DataStoreName)
   self.loaded = {}
   self.profiles = {}
+  self.deathConnections = {}
   activeService = self
   self:hookPlayers()
   local autosaveActive = true
@@ -72,10 +73,13 @@ function CheckpointService:initializePlayer(player)
     self:teleportToSavedCheckpoint(player)
     local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
     if humanoid then
-      self.maid:Give(humanoid.Died:Connect(function()
+      if self.deathConnections[player] then
+        self.deathConnections[player]:Disconnect()
+      end
+      self.deathConnections[player] = humanoid.Died:Connect(function()
         local profile = self:getProfile(player)
         profile.totalDeaths += 1
-      end))
+      end)
     end
   end))
   if self.progressEvent then
@@ -98,6 +102,10 @@ function CheckpointService:hookPlayers()
 
   self.maid:Give(Players.PlayerRemoving:Connect(function(player)
     self:saveCheckpoint(player)
+    if self.deathConnections[player] then
+      self.deathConnections[player]:Disconnect()
+      self.deathConnections[player] = nil
+    end
     self.loaded[player] = nil
     self.profiles[player] = nil
   end))
@@ -359,6 +367,10 @@ end
 
 function CheckpointService:destroy()
   self.maid:DoCleaning()
+  for player, connection in pairs(self.deathConnections) do
+    connection:Disconnect()
+    self.deathConnections[player] = nil
+  end
   if activeService == self then
     activeService = nil
   end

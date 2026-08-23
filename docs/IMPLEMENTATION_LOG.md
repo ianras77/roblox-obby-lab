@@ -1084,3 +1084,11 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: final-results readability on mobile and large-text settings
   requires Studio device testing.
+
+## 2026-08-23 — Bound respawn death connections
+
+- Completed: checkpoint lifecycle now tracks one Humanoid death connection per
+  player, replaces it on respawn, and disconnects it on departure or rebuild.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: long-lived server soak behavior requires Roblox Studio testing.
