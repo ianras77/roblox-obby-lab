@@ -14,6 +14,7 @@ telemetry destination and policy are approved:
 
 Do not log chat, raw payloads, or high-cardinality personal data.
 
-Implementation status: the event catalog is documented, but the runtime
-analytics sink is intentionally still a no-op until a Roblox-approved
-telemetry policy and destination are selected.
+Implementation status: the wrapper is disabled in Studio and by default. When
+explicitly enabled in a non-Studio environment, it submits the allowlisted
+events through Roblox `AnalyticsService:LogCustomEvent` inside `pcall`, using a
+fixed low-cardinality value of `1`.

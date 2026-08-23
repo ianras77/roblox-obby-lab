@@ -1,6 +1,7 @@
 --!strict
 
 local RunService = game:GetService("RunService")
+local RobloxAnalytics = game:GetService("AnalyticsService")
 
 local AnalyticsService = {}
 AnalyticsService.__index = AnalyticsService
@@ -20,13 +21,18 @@ function AnalyticsService.new(enabled: boolean?)
 end
 
 function AnalyticsService:track(player: Player?, eventName: string, fields: { [string]: any }?)
-  if not self.enabled or not allowedEvents[eventName] then
+  if not self.enabled or not allowedEvents[eventName] or not player then
     return
   end
   -- Keep the integration boundary deliberately small. A production sink can
-  -- be added later without allowing clients to submit arbitrary events.
-  local _ = player and player.UserId
+  -- receive only allowlisted events and a fixed low-cardinality value.
   local _ = fields
+  local ok, err = pcall(function()
+    RobloxAnalytics:LogCustomEvent(player, eventName, 1)
+  end)
+  if not ok then
+    warn(string.format("[Analytics] event failed (%s): %s", eventName, tostring(err)))
+  end
 end
 
 return AnalyticsService

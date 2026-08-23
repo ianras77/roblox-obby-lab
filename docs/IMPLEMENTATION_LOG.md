@@ -585,6 +585,15 @@
 - Unverified: dynamic Luau execution and live DataStore migration still require
   Studio/production-like testing.
 
+## 2026-08-23 — Submit allowlisted analytics events
+
+- Completed: the server analytics wrapper now submits allowlisted events to
+  Roblox AnalyticsService when explicitly enabled outside Studio, using a
+  protected call and fixed low-cardinality value.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: Creator Hub analytics availability and delivery require staging.
+
 ## 2026-08-23 — Reconcile persistence and performance documentation
 
 - Completed: corrected release documentation to describe the implemented
