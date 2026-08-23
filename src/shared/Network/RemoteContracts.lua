@@ -23,6 +23,12 @@ local RemoteContracts = {
     payload = "{ key: string, enabled: boolean }",
     rateLimitSeconds = 0.2,
   },
+  SetMode = {
+    name = "SetRunMode",
+    direction = "client_to_server",
+    payload = "{ mode: Adventure | TimeTrial | Practice }",
+    rateLimitSeconds = 1,
+  },
 }
 
 return RemoteContracts

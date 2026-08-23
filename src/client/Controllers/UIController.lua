@@ -22,6 +22,7 @@ function UIController.new()
   self.keyEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.KeyRemote)
   self.stateFunction = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild("GetObbyState")
   self.settingsEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(RemoteContracts.SetSettings.name)
+  self.modeEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(RemoteContracts.SetMode.name)
   self:bind()
   self:syncInitialState()
   return self
@@ -146,6 +147,18 @@ function UIController:createGui()
   heading.Font = Enum.Font.GothamBold
   heading.TextScaled = true
   heading.Parent = panel
+  for _, mode in ipairs({ "Adventure", "TimeTrial", "Practice" }) do
+    local button = Instance.new("TextButton")
+    button.Name = "Mode_" .. mode
+    button.Size = UDim2.new(1, 0, 0, 28)
+    button.BackgroundColor3 = Theme.Brass
+    button.TextColor3 = Theme.Ink
+    button.Font = Enum.Font.GothamBold
+    button.TextScaled = true
+    button.Text = "Play " .. mode
+    button:SetAttribute("RunMode", mode)
+    button.Parent = panel
+  end
   for key, labelText in pairs({
     reducedMotion = "Reduced motion",
     reduceFlashes = "Reduce flashes",
@@ -224,6 +237,12 @@ function UIController:bind()
         toggle.Text = string.gsub(toggle.Text, ": %u+", ": " .. (self.settings[key] and "ON" or "OFF"))
       end)
     end
+    if toggle:IsA("TextButton") and toggle:GetAttribute("RunMode") then
+      toggle.MouseButton1Click:Connect(function()
+        self.modeEvent:FireServer(toggle:GetAttribute("RunMode"))
+        panel.Visible = false
+      end)
+    end
   end
 
   self.progressEvent.OnClientEvent:Connect(function(payload)
@@ -237,6 +256,28 @@ function UIController:bind()
   self.keyEvent.OnClientEvent:Connect(function(payload)
     self:updateKeys(payload.found or 0, payload.total or 0)
   end)
+
+  local finaleEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.FinaleRemote)
+  finaleEvent.OnClientEvent:Connect(function(payload)
+    self:showResults(payload)
+  end)
+end
+
+function UIController:showResults(payload)
+  local result = Instance.new("TextLabel")
+  result.Name = "Results"
+  result.Size = UDim2.fromScale(0.7, 0.18)
+  result.Position = UDim2.fromScale(0.15, 0.4)
+  result.BackgroundColor3 = Color3.fromRGB(35, 45, 60)
+  result.TextColor3 = Color3.fromRGB(255, 236, 182)
+  result.Font = Enum.Font.GothamBlack
+  result.TextScaled = true
+  result.Text = string.format(
+    "Toad Hall reached!\n%s run complete — choose a mode in Settings to replay.",
+    self.player:GetAttribute("RunMode") or "Adventure"
+  )
+  result.Parent = self.gui
+  game:GetService("Debris"):AddItem(result, 8)
 end
 
 function UIController:updateProgress(stage, total)

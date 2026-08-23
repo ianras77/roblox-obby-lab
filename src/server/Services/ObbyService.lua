@@ -67,6 +67,33 @@ local function bindSettings(self)
   end))
 end
 
+local function bindRunModes(self)
+  local events = ReplicatedStorage:FindFirstChild("SharedEvents")
+  local event = events and events:FindFirstChild(RemoteContracts.SetMode.name)
+  if not event then
+    return
+  end
+  local lastCall = {}
+  self.maid:Give(event.OnServerEvent:Connect(function(player, mode)
+    if type(mode) ~= "string" then
+      return
+    end
+    local now = os.clock()
+    if now - (lastCall[player] or 0) < 1 then
+      return
+    end
+    lastCall[player] = now
+    if not self.runState:setMode(player, mode) then
+      return
+    end
+    self.world.progressEvent:FireClient(player, {
+      stage = player:GetAttribute("Checkpoint") or 0,
+      total = self.world.totalStages,
+      mode = mode,
+    })
+  end))
+end
+
 function ObbyService.new()
   if ObbyService._instance then
     return ObbyService._instance
@@ -94,6 +121,7 @@ function ObbyService.new()
   self.collectedKeys = {}
   self.totalKeys = 0
   bindSettings(self)
+  bindRunModes(self)
   self:scanBehaviors()
   self:hookCommands()
   self:startHeartbeat()
@@ -537,6 +565,7 @@ function ObbyService:rebuild(seed)
   self.keyProgress = {}
   self.totalKeys = 0
   bindSettings(self)
+  bindRunModes(self)
   self:scanBehaviors()
   self:hookCommands()
   self:startHeartbeat()
