@@ -1322,6 +1322,13 @@
   whitespace checks pass locally; cart boarding and multiplayer physics remain
   unverified without Roblox Studio.
 
+## 2026-08-23 — Validate generated root placement
+
+- Completed: world validation now rejects a correctly named/owned generated
+  model that is not actually parented directly beneath `Workspace`.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live DataModel validation remains pending.
+
 ## 2026-08-23 — Bound mode teleport startup timing
 
 - Completed: mode resets now wait briefly for a character root before applying

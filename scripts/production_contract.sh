@@ -9,6 +9,7 @@ grep -q 'GeneratorOwner' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fai
 grep -q 'GeneratorVersion = "2"' "$ROOT_DIR/src/shared/Config/WorldGenConfig.lua" || fail "canonical generator version missing"
 grep -q 'unsupported generator version' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "generator version validation missing"
 grep -q 'generated root has an invalid seed' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "generated root seed validation missing"
+grep -q 'not parented to Workspace' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "generated root parent validation missing"
 grep -q 'Refusing to delete Workspace.GeneratedObby' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "rebuild ownership guard missing"
 grep -q 'Invalid world seed' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "world seed boundary validation missing"
 grep -q 'seed ~= seed' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "NaN seed rejection missing"

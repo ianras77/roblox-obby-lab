@@ -79,6 +79,9 @@ local function validateRoot(root)
     table.insert(errors, "generated root is missing or invalid")
     return errors
   end
+  if root.Parent ~= workspace then
+    table.insert(errors, "generated root is not parented to Workspace")
+  end
   if root:GetAttribute("GeneratorOwner") ~= "ToadsGreatEscape" then
     table.insert(errors, "generated root has invalid owner")
   end
