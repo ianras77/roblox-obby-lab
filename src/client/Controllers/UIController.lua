@@ -298,11 +298,22 @@ function UIController:showResults(payload)
   result.TextColor3 = Color3.fromRGB(255, 236, 182)
   result.Font = Enum.Font.GothamBlack
   result.TextScaled = true
+  local mode = payload and payload.mode or self.player:GetAttribute("RunMode") or "Adventure"
+  local elapsed = payload and payload.elapsedMs and string.format("\nTime: %.2fs", payload.elapsedMs / 1000) or ""
   local best = payload and payload.bestRunMs and string.format("\nPersonal best: %.2fs", payload.bestRunMs / 1000) or ""
+  local deaths = payload and payload.deaths and string.format("\nDeaths: %d", payload.deaths) or ""
+  local keys = payload
+      and payload.keys
+      and payload.totalKeys
+      and string.format("\nGolden Keys: %d/%d", payload.keys, payload.totalKeys)
+    or ""
   result.Text = string.format(
-    "Toad Hall reached!\n%s run complete%s\nChoose a mode in Settings to replay.",
-    self.player:GetAttribute("RunMode") or "Adventure",
-    best
+    "Toad Hall reached!\n%s run complete%s%s%s%s\nChoose a mode in Settings to replay.",
+    mode,
+    elapsed,
+    best,
+    deaths,
+    keys
   )
   result.Parent = self.gui
   game:GetService("Debris"):AddItem(result, 8)

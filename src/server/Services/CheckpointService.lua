@@ -10,13 +10,14 @@ local shutdownBound = false
 local CheckpointService = {}
 CheckpointService.__index = CheckpointService
 
-function CheckpointService.new(stages, progressEvent, runState, analytics)
+function CheckpointService.new(stages, progressEvent, runState, analytics, totalKeysProvider)
   local self = setmetatable({}, CheckpointService)
   self.stages = stages
   self.maid = Maid.new()
   self.progressEvent = progressEvent
   self.runState = runState
   self.analytics = analytics
+  self.totalKeysProvider = totalKeysProvider
   self.store = DataStoreWrapper.new(GameConfig.DataStoreName)
   self.loaded = {}
   self.profiles = {}
@@ -215,7 +216,21 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
       local finale = game:GetService("ReplicatedStorage"):FindFirstChild("SharedEvents")
       local evt = finale and finale:FindFirstChild(GameConfig.FinaleRemote)
       if evt then
-        evt:FireClient(player, { stage = stageIndex })
+        local profile = self:getProfile(player)
+        local foundKeys = 0
+        for _ in pairs(profile.collectedKeys) do
+          foundKeys += 1
+        end
+        evt:FireClient(player, {
+          stage = stageIndex,
+          mode = player:GetAttribute("RunMode") or "Adventure",
+          elapsedMs = elapsed and math.floor(elapsed * 1000) or nil,
+          bestRunMs = profile.bestRunMs,
+          deaths = profile.totalDeaths,
+          keys = foundKeys,
+          totalKeys = self.totalKeysProvider and self.totalKeysProvider() or nil,
+          bestChapterMs = profile.bestChapterMs,
+        })
       end
     end
   end

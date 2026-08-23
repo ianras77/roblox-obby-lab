@@ -121,7 +121,15 @@ function ObbyService.new()
     }
   end
   self.runState = RunStateService.new(self.world.totalStages)
-  self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent, self.runState, self.analytics)
+  self.checkpoints = CheckpointService.new(
+    self.world.stages,
+    self.world.progressEvent,
+    self.runState,
+    self.analytics,
+    function()
+      return self.totalKeys
+    end
+  )
   self.checkpoints:bindCheckpoints()
   self.keyProgress = {}
   self.collectedKeys = {}
@@ -599,7 +607,15 @@ function ObbyService:rebuild(seed)
   end
   self.checkpoints:destroy()
   self.runState = RunStateService.new(self.world.totalStages)
-  self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent, self.runState, self.analytics)
+  self.checkpoints = CheckpointService.new(
+    self.world.stages,
+    self.world.progressEvent,
+    self.runState,
+    self.analytics,
+    function()
+      return self.totalKeys
+    end
+  )
   self.checkpoints:bindCheckpoints()
   self.keyProgress = {}
   self.totalKeys = 0
