@@ -90,19 +90,16 @@ function CheckpointService:initializePlayer(player)
   if self.analytics then
     self.analytics:track(player, "joined")
   end
-  self.maid:Give(player.CharacterAdded:Connect(function()
-    local character = player.Character
-    if character then
-      if self.collisionConnections[player] then
-        self.collisionConnections[player]:Disconnect()
-      end
-      configurePlayerCollision(character)
-      self.collisionConnections[player] = character.DescendantAdded:Connect(function(descendant)
-        if descendant:IsA("BasePart") then
-          descendant.CollisionGroup = PLAYER_COLLISION_GROUP
-        end
-      end)
+  self.maid:Give(player.CharacterAdded:Connect(function(character)
+    if self.collisionConnections[player] then
+      self.collisionConnections[player]:Disconnect()
     end
+    configurePlayerCollision(character)
+    self.collisionConnections[player] = character.DescendantAdded:Connect(function(descendant)
+      if descendant:IsA("BasePart") then
+        descendant.CollisionGroup = PLAYER_COLLISION_GROUP
+      end
+    end)
     self:teleportToSavedCheckpoint(player)
     local humanoid = character and character:FindFirstChildOfClass("Humanoid")
     if humanoid then
