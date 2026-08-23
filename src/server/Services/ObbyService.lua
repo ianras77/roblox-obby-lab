@@ -196,14 +196,14 @@ end
 
 function ObbyService:registerKey(part)
   local keyId = part:GetAttribute("KeyId")
-  if not keyId then
+  if type(keyId) ~= "string" or #keyId == 0 or #keyId > 80 then
     warn("[Keys] collectible missing stable KeyId", part:GetFullName())
     return
   end
   self.totalKeys = self.totalKeys + 1
   self.maid:Give(part.Touched:Connect(function(hit)
     local player = Players:GetPlayerFromCharacter(hit.Parent)
-    if not player then
+    if not player or not part.Parent or not self.checkpoints:isLoaded(player) then
       return
     end
     local root = hit.Parent:FindFirstChild("HumanoidRootPart")

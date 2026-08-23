@@ -53,4 +53,7 @@ grep -q 'if item.part and item.part.Parent then' "$ROOT_DIR/src/server/Services/
 grep -q 'part:SetNetworkOwner(nil)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "cart network ownership is not server-controlled"
 grep -q 'Players:GetPlayerFromCharacter(character)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "hazard interaction is not player-context validated"
 grep -q 'lastHit\[humanoid\]' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "hazard touch debounce missing"
+grep -q 'function CheckpointService:isLoaded' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile readiness check missing"
+grep -q 'self.checkpoints:isLoaded(player)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "key collection can race profile load"
+grep -q '#keyId > 80' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "key identity bounds missing"
 echo "production contracts ok"

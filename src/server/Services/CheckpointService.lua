@@ -119,6 +119,10 @@ function CheckpointService:getProfile(player)
   return self.profiles[player] or ProfileSchema.default()
 end
 
+function CheckpointService:isLoaded(player): boolean
+  return self.loaded[player] == true and self.profiles[player] ~= nil
+end
+
 function CheckpointService:markKey(player, keyId: string): boolean
   local profile = self:getProfile(player)
   if profile.collectedKeys[keyId] then

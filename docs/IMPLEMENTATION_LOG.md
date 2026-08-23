@@ -156,3 +156,14 @@
   pass locally.
 - Unverified: latency behavior and full failure/respawn feel still require
   Studio playtesting.
+
+## 2026-08-23 — Profile-safe collectible handoff
+
+- Completed: key touches now wait for the player's profile load, validate the
+  stable key identity type and length, and ignore detached collectible parts.
+  This prevents an early touch from being overwritten by asynchronous profile
+  loading.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: live DataStore latency and Studio multi-client collection remain
+  pending.
