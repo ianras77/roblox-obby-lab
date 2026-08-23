@@ -114,6 +114,9 @@ function CheckpointService:loadCheckpoint(player)
     player:SetAttribute("Checkpoint", profile.highestChapter)
     player:SetAttribute("CheckpointId", self.stages[profile.highestChapter].stageId)
   end
+  if player.Character then
+    self:teleportToSavedCheckpoint(player)
+  end
 end
 
 function CheckpointService:saveCheckpoint(player)

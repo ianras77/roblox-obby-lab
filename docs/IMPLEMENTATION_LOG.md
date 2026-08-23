@@ -433,6 +433,15 @@
   whitespace checks pass locally.
 - Unverified: live reconnect and rebuild timing require Studio/staging tests.
 
+## 2026-08-23 — Repair character position after profile load
+
+- Completed: when a profile load finishes after character spawn, the service
+  now teleports the existing character to the sanitized saved checkpoint;
+  future `CharacterAdded` events retain the same safe-spawn path.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live join latency and spawn ordering require Studio/staging.
+
 ## 2026-08-23 — Reset run completion state
 
 - Completed: server run initialization and mode changes now clear the previous
