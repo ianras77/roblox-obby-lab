@@ -155,6 +155,19 @@ function CheckpointService:resetForTimeTrial(player)
   return true
 end
 
+function CheckpointService:setPracticeCheckpoint(player, targetStage): boolean
+  if not self:isLoaded(player) or type(targetStage) ~= "number" or targetStage % 1 ~= 0 then
+    return false
+  end
+  local stage = self.stages[targetStage]
+  if not stage or not stage.checkpoint then
+    return false
+  end
+  player:SetAttribute("Checkpoint", targetStage)
+  player:SetAttribute("CheckpointId", stage.checkpoint:GetAttribute("StageId"))
+  return true
+end
+
 function CheckpointService:markKey(player, keyId: string): boolean
   local profile = self:getProfile(player)
   if profile.collectedKeys[keyId] then

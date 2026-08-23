@@ -147,12 +147,18 @@ local function bindPracticeStage(self)
     if os.clock() - (lastCall[player] or 0) < 1 then
       return
     end
+    if not self.checkpoints:isLoaded(player) then
+      return
+    end
     local profile = self.checkpoints:getProfile(player)
-    if not self.checkpoints:isLoaded(player) or profile.highestChapter < stage then
+    if profile.highestChapter < stage then
       return
     end
     lastCall[player] = os.clock()
     self.runState:setMode(player, "Practice")
+    if not self.checkpoints:setPracticeCheckpoint(player, stage) then
+      return
+    end
     self.checkpoints:teleportToStage(player, stage)
     self.world.progressEvent:FireClient(player, {
       stage = stage,

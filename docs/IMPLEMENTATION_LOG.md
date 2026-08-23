@@ -822,3 +822,12 @@
   installed.
 - Unverified: the respawn/teleport presentation and gate crossing still
   require Roblox Studio playtesting.
+
+## 2026-08-23 — Make Practice chapter respawns coherent
+
+- Completed: selecting an unlocked Practice chapter now assigns a temporary
+  server-owned checkpoint before teleporting, so death respawns within the
+  selected chapter without changing persisted highest progress.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: multi-client Practice/reset behavior requires Studio testing.
