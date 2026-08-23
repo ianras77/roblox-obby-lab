@@ -489,6 +489,12 @@ function UIController:bind()
     self:applyAccessibilityToHazard(part)
   end)
 
+  workspace.DescendantAdded:Connect(function(instance)
+    if instance:IsA("ParticleEmitter") and instance:GetAttribute("GameplayCritical") ~= true then
+      instance.Enabled = not self.settings.lowParticles
+    end
+  end)
+
   local finaleEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.FinaleRemote)
   finaleEvent.OnClientEvent:Connect(function(payload)
     self:showResults(payload)

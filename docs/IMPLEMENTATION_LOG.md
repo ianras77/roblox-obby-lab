@@ -1494,3 +1494,11 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; device-level accessibility behavior remains
   Studio-unverified.
+
+## 2026-08-23 — Reconcile streamed particle accessibility
+
+- Completed: non-critical particle emitters added after HUD initialization now
+  inherit the current low-particles setting, including rebuilt world content.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; streamed-device behavior remains
+  Studio-unverified.

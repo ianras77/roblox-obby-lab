@@ -132,6 +132,7 @@ grep -q 'function EnvironmentController:syncInitialState' "$ROOT_DIR/src/client/
 grep -q 'tween:Cancel()' "$ROOT_DIR/src/client/Controllers/EnvironmentController.lua" || fail "environment tween lifecycle is unbounded"
 grep -q 'originalHazardMaterials' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "high contrast material restoration missing"
 grep -q 'GetInstanceAddedSignal("KillBrick")' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "streamed hazards miss high contrast mode"
+grep -q 'workspace.DescendantAdded' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "streamed particle accessibility is not reconciled"
 grep -q 'if root and not reducedMotion and not reduceFlashes then' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "reduced motion still emits finale particles"
 grep -q 'MaxDevSeed' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "dev seed cap missing"
 grep -q 'SaveCheckpoints = true' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "production persistence default missing"

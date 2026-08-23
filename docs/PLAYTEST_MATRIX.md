@@ -14,6 +14,9 @@ High contrast must visibly distinguish tagged hazards from the safe route, and
 Low particles must leave gameplay-critical readability intact while disabling
 ambient emitters.
 
+Also verify that emitters created by a development rebuild or streamed-in
+content inherit the current low-particles setting.
+
 Reduced Motion must preserve the completion cue and results flow while omitting
 finale fireworks and spotlight animation; verify this in Studio alongside the
 normal celebration path.
