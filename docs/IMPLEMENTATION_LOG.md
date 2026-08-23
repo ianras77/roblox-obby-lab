@@ -1512,6 +1512,14 @@
   whitespace checks pass locally; live client bootstrap remains
   Studio-unverified.
 
+## 2026-08-23 — Reconcile performance documentation
+
+- Completed: performance notes now distinguish proximity-slept moving
+  platforms from always-authoritative critical hazards and no longer describe
+  platform sleeping as future work.
+- Tests: documentation consistency reviewed against current runtime code;
+  MicroProfiler and device measurements remain Studio-unverified.
+
 ## 2026-08-23 — Add original local vector art sources
 
 - Completed: added source-ready storybook railway-ticket branding and a Golden
