@@ -28,6 +28,10 @@ No external art was uploaded by this work. Replace the current trial-and-error
 music fallback with approved assets before publication; keep empty fallbacks so
 missing audio cannot break gameplay.
 
+Source-art briefs are stored in `art/prompts/`. No raster output is claimed
+until the image-generation workflow is available and each final file is
+reviewed for originality, dimensions, and intended Roblox use.
+
 `src/shared/Config/AssetRegistry.lua` is now the release gate for music. Every
 entry must be marked both `verified` and `approvedForRelease` after ownership,
 permission, moderation, and device playback checks. Unverified candidates are

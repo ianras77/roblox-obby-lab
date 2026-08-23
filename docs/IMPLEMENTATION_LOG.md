@@ -1,5 +1,15 @@
 # Implementation log
 
+## 2026-08-23 — Add original art source briefs
+
+- Completed: added organized source-art prompt briefs for the logo, icon, and
+  eighteen-card chapter package without claiming generated files or uploaded
+  Roblox assets.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: raster generation, originality review, and Creator Hub uploads
+  require the unavailable art workflow and manual review.
+
 ## 2026-08-23 — Make validator instance guards type-safe
 
 - Completed: model and checkpoint validation now checks Luau instance type
