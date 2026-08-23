@@ -14,6 +14,7 @@ export type PlayerProfile = {
 local ProfileSchema = {}
 ProfileSchema.CurrentVersion = 1
 ProfileSchema.MaxCollectedKeys = 100
+ProfileSchema.MaxChapter = 18
 
 function ProfileSchema.default(): PlayerProfile
   return {
@@ -43,7 +44,8 @@ function ProfileSchema.sanitize(raw: any): PlayerProfile
   profile.schemaVersion = ProfileSchema.CurrentVersion
   -- Migrate the original checkpoint-only record without trusting its shape.
   local legacyChapter = raw.checkpoint
-  profile.highestChapter = math.max(0, math.floor(tonumber(raw.highestChapter or legacyChapter) or 0))
+  profile.highestChapter =
+    math.clamp(math.max(0, math.floor(tonumber(raw.highestChapter or legacyChapter) or 0)), 0, ProfileSchema.MaxChapter)
   profile.totalDeaths = math.max(0, math.floor(tonumber(raw.totalDeaths) or 0))
   profile.completionCount = math.max(0, math.floor(tonumber(raw.completionCount) or 0))
   local bestRunMs = tonumber(raw.bestRunMs)

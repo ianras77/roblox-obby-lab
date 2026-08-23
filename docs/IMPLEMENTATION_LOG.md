@@ -394,6 +394,16 @@
 - Unverified: validator execution against live generated instances remains a
   Studio-only check.
 
+## 2026-08-23 — Bound persisted chapter progress
+
+- Completed: profile sanitization now clamps legacy and current
+  `highestChapter` values to the canonical 18-chapter route, preventing
+  malformed records from advertising impossible progression.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live migration of malicious or corrupt records requires staging
+  DataStore validation.
+
 ## 2026-08-23 — Bounded rider contact queries
 
 - Completed: moving-platform contact detection now samples `GetTouchingParts()`

@@ -23,6 +23,8 @@ for marker in (
     "validTime < 86400000",
     'type(raw.settings[key]) == "boolean"',
     "ProfileSchema.MaxCollectedKeys = 100",
+    "ProfileSchema.MaxChapter = 18",
+    "ProfileSchema.MaxChapter",
     "keyCount >= ProfileSchema.MaxCollectedKeys",
 ):
     if marker not in source:
