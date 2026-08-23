@@ -214,6 +214,8 @@ grep -q 'Players:GetPlayerFromCharacter(character)' "$ROOT_DIR/src/server/Servic
 grep -q 'lastHit\[humanoid\]' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "hazard touch debounce missing"
 grep -q 'function CheckpointService:isLoaded' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile readiness check missing"
 grep -q 'ProfileLoadStatus' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile load status visibility missing"
+grep -q 'highestChapter = self:getProfile(player).highestChapter' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "initial highest chapter sync missing"
+grep -q 'highestChapter = self.checkpoints and self.checkpoints:getProfile(player).highestChapter' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "state highest chapter sync missing"
 grep -q 'ProfileSaveStatus' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile save status visibility missing"
 grep -q 'function Wrapper:isEnabled' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "datastore environment visibility missing"
 grep -q 'self.checkpoints:isLoaded(player)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "key collection can race profile load"

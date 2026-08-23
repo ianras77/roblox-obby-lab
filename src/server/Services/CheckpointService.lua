@@ -91,6 +91,7 @@ function CheckpointService:initializePlayer(player)
       total = #self.stages,
       initialized = true,
       mode = player:GetAttribute("RunMode") or "Adventure",
+      highestChapter = self:getProfile(player).highestChapter,
       runStarted = run and run.running or false,
       elapsedMs = self.runState and math.floor(self.runState:getElapsed(player) * 1000) or 0,
     })

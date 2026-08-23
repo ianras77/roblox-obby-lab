@@ -1238,3 +1238,12 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: standalone Luau execution and live multiplayer checkpoint timing
   require the project toolchain and Roblox Studio respectively.
+
+## 2026-08-23 — Restore replay state on initialization
+
+- Completed: initial state responses now include the saved highest chapter, so
+  returning players retain access to unlocked Practice chapters immediately.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: reconnect behavior with live DataStore profiles still requires
+  Roblox Studio/private staging testing.
