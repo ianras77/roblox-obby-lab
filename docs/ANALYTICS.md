@@ -1,6 +1,8 @@
 # Analytics
 
-Analytics is not enabled yet. The planned server-only, no-op-safe event set is:
+The server-only, no-op-safe event set is implemented through
+`Services/AnalyticsService.lua`; it remains disabled by default until a
+telemetry destination and policy are approved:
 
 | Event | Trigger | Decision it informs |
 | --- | --- | --- |

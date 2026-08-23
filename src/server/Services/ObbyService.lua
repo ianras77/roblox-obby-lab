@@ -10,6 +10,7 @@ local CheckpointService = require(script.Parent.CheckpointService)
 local Maid = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Maid"))
 local RunStateService = require(script.Parent.RunStateService)
 local RemoteContracts = require(ReplicatedStorage:WaitForChild("Network"):WaitForChild("RemoteContracts"))
+local AnalyticsService = require(script.Parent.AnalyticsService)
 
 local function resolveDirection(part)
   local axisAttr = part:GetAttribute("Axis") or part:GetAttribute("Direction")
@@ -105,6 +106,7 @@ function ObbyService.new()
   self.maid = Maid.new()
   self.behaviors = {}
   self.clock = 0
+  self.analytics = AnalyticsService.new(GameConfig.EnableAnalytics)
   self.queryClock = 0
   self.world = WorldBuilder.buildWorld(GameConfig.Seed)
   self.world.stateFunction.OnServerInvoke = function(player)
@@ -119,7 +121,7 @@ function ObbyService.new()
     }
   end
   self.runState = RunStateService.new(self.world.totalStages)
-  self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent, self.runState)
+  self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent, self.runState, self.analytics)
   self.checkpoints:bindCheckpoints()
   self.keyProgress = {}
   self.collectedKeys = {}
@@ -206,6 +208,7 @@ function ObbyService:registerKey(part)
       return
     end
     self.collectedKeys[player][keyId] = true
+    self.analytics:track(player, "golden_key_discovered", { chapter = part:GetAttribute("StageIndex") })
     self.keyProgress[player] = 0
     for _ in pairs(self.checkpoints:getProfile(player).collectedKeys) do
       self.keyProgress[player] += 1
@@ -583,7 +586,7 @@ function ObbyService:rebuild(seed)
   end
   self.checkpoints:destroy()
   self.runState = RunStateService.new(self.world.totalStages)
-  self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent, self.runState)
+  self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent, self.runState, self.analytics)
   self.checkpoints:bindCheckpoints()
   self.keyProgress = {}
   self.totalKeys = 0

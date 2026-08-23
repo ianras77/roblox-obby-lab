@@ -17,6 +17,7 @@ local GameConfig = {
   SaveCheckpoints = true, -- Environment controls whether the store can write.
   UseDataStore = true, -- StudioDevelopment is blocked by DataStoreServiceWrapper.
   AutosaveSeconds = 120,
+  EnableAnalytics = false,
   DataStoreName = "ToadsGreatEscape_Profile_v1",
   ProgressRemote = "ObbyProgress",
   KeyRemote = "KeyProgress",

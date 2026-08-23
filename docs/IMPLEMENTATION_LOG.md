@@ -80,6 +80,15 @@
 - Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
 - Unverified: live migration against Roblox DataStore records.
 
+## 2026-08-23 — No-op-safe analytics boundary
+
+- Completed: allowlisted server analytics wrapper wired to joins, chapter
+  checkpoints, key discovery, and qualifying run completion.
+- Completed: analytics is disabled in Studio and by default; no raw chat or
+  arbitrary client event payloads are accepted.
+- Tests: storyboard, production contracts, Stylua, Selene, and Rojo CI passed
+  on the prior validated branch state; this update needs a fresh CI run.
+
 ## 2026-08-23 — GitHub CI green
 
 - Completed: draft PR CI run `32657495468` passed Stylua, Selene, contract

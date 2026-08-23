@@ -10,12 +10,13 @@ local shutdownBound = false
 local CheckpointService = {}
 CheckpointService.__index = CheckpointService
 
-function CheckpointService.new(stages, progressEvent, runState)
+function CheckpointService.new(stages, progressEvent, runState, analytics)
   local self = setmetatable({}, CheckpointService)
   self.stages = stages
   self.maid = Maid.new()
   self.progressEvent = progressEvent
   self.runState = runState
+  self.analytics = analytics
   self.store = DataStoreWrapper.new(GameConfig.DataStoreName)
   self.loaded = {}
   self.profiles = {}
@@ -58,6 +59,9 @@ end
 
 function CheckpointService:initializePlayer(player)
   self:loadCheckpoint(player)
+  if self.analytics then
+    self.analytics:track(player, "joined")
+  end
   self.maid:Give(player.CharacterAdded:Connect(function()
     self:teleportToSavedCheckpoint(player)
     local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
@@ -154,6 +158,9 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
     end
     player:SetAttribute("Checkpoint", stageIndex)
     player:SetAttribute("CheckpointId", checkpoint:GetAttribute("StageId"))
+    if self.analytics then
+      self.analytics:track(player, "chapter_completed", { stage = stageIndex })
+    end
     local stageModel = checkpoint.Parent
     local sound = checkpoint:FindFirstChildOfClass("Sound")
     if sound then
@@ -168,6 +175,9 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
       elapsed, eligible = self.runState:onChapterReached(player, stageIndex)
     end
     if elapsed and eligible then
+      if self.analytics then
+        self.analytics:track(player, "run_completed", { mode = player:GetAttribute("RunMode") })
+      end
       local profile = self:getProfile(player)
       profile.completionCount += 1
       if not profile.bestRunMs or elapsed * 1000 < profile.bestRunMs then
