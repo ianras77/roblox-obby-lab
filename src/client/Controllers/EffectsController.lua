@@ -19,15 +19,17 @@ function EffectsController.new()
 end
 
 function EffectsController:bind()
-  self.progressEvent.OnClientEvent:Connect(function()
-    self:flash()
+  self.progressEvent.OnClientEvent:Connect(function(payload)
+    if not payload.initialized then
+      self:checkpointPulse()
+    end
   end)
   self.finaleEvent.OnClientEvent:Connect(function()
     self:finale()
   end)
 end
 
-function EffectsController:flash()
+function EffectsController:checkpointPulse()
   if
     self.player:GetAttribute("Accessibility_reduceFlashes")
     or self.player:GetAttribute("Accessibility_reducedMotion")
@@ -35,14 +37,17 @@ function EffectsController:flash()
     return
   end
   local gui = Instance.new("Frame")
-  gui.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-  gui.Size = UDim2.fromScale(1, 1)
-  gui.BackgroundTransparency = 0.4
+  gui.Name = "CheckpointPulse"
+  gui.BackgroundColor3 = Color3.fromRGB(218, 166, 72)
+  gui.Size = UDim2.fromScale(0.18, 0.012)
+  gui.Position = UDim2.fromScale(0.41, 0.07)
+  gui.BackgroundTransparency = 0.15
   gui.BorderSizePixel = 0
   gui.Parent = self.player:WaitForChild("PlayerGui")
-  TweenService
-    :Create(gui, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { BackgroundTransparency = 1 })
-    :Play()
+  TweenService:Create(gui, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    BackgroundTransparency = 1,
+    Size = UDim2.fromScale(0.3, 0.012),
+  }):Play()
   game.Debris:AddItem(gui, 0.5)
 end
 

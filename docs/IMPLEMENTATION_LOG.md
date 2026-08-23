@@ -316,6 +316,16 @@
   pass locally.
 - Unverified: visual readability on real devices remains pending Studio.
 
+## 2026-08-23 — Subtle checkpoint feedback
+
+- Completed: ordinary checkpoint progress now uses a small HUD pulse rather
+  than a full-screen white flash; the pulse respects reduced-motion and
+  reduced-flash settings while finale presentation remains separate.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: visual timing and accessibility perception require Studio device
+  testing.
+
 ## 2026-08-23 — Canonical Time Trial start
 
 - Completed: crossing the validated Time Trial gate now clears the player's
