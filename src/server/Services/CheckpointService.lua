@@ -256,7 +256,10 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
       end
       local completionProfile = self:getProfile(player)
       completionProfile.completionCount += 1
-      if not completionProfile.bestRunMs or elapsed * 1000 < completionProfile.bestRunMs then
+      if
+        player:GetAttribute("RunMode") == "TimeTrial"
+        and (not completionProfile.bestRunMs or elapsed * 1000 < completionProfile.bestRunMs)
+      then
         completionProfile.bestRunMs = math.floor(elapsed * 1000)
       end
     end

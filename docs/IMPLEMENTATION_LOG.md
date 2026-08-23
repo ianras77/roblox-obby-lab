@@ -920,3 +920,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: nausea/accessibility review and device behavior require Studio
   testing with the setting enabled.
+
+## 2026-08-23 — Keep Adventure runs out of Time Trial bests
+
+- Completed: final completion still increments the unlock counter in Adventure,
+  but `bestRunMs` is now updated only for eligible Time Trial runs; Practice
+  remains ineligible.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: end-to-end PB preservation across real profile saves requires
+  Studio sandbox DataStore testing.

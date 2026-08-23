@@ -30,9 +30,10 @@ Run state is server-owned and distinguishes `Adventure`, `TimeTrial`, and
 `Practice`. Practice completion is deliberately ineligible for a time-trial
 score. Timing and leaderboard submission still require Studio validation.
 
-Qualifying final-chapter completion updates `completionCount` and the smallest
-`bestRunMs` on the server. Character deaths increment `totalDeaths`; Practice
-completion never updates the personal best.
+Qualifying final-chapter completion updates `completionCount` on the server;
+only an eligible Time Trial completion updates the smallest `bestRunMs`.
+Character deaths increment `totalDeaths`; Adventure and Practice completion do
+not overwrite the Time Trial personal best.
 
 Time Trial chapter splits update `bestChapterMs` only when they improve the
 stored split; Adventure and Practice do not submit leaderboard-style splits.

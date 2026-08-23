@@ -58,6 +58,7 @@ grep -q 'AnalyticsService' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fa
 grep -q 'LogCustomEvent' "$ROOT_DIR/src/server/Services/AnalyticsService.lua" || fail "analytics events are not submitted"
 grep -q 'analytics:track(player, "chapter_started"' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "chapter start analytics event missing"
 grep -q 'bestChapterMs\[splitKey\]' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "chapter split persistence missing"
+grep -q 'player:GetAttribute("RunMode") == "TimeTrial"' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "adventure completion can overwrite time trial best"
 grep -q 'merged.collectedKeys' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent key merge missing"
 grep -q 'mergeKeys(value.collectedKeys)' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "bounded value key merge missing"
 grep -q 'mergeKeys(current.collectedKeys)' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "bounded current key merge missing"
