@@ -861,3 +861,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: actual audio playback, permissions, and device mixing require
   Creator Hub and Studio verification.
+
+## 2026-08-23 — Move developer commands to TextChatService
+
+- Completed: `/rebuild`, `/reseed`, and `/stage` now use explicit server-side
+  `TextChatCommand` aliases with the existing allowlist, bounds, and cooldown;
+  legacy `Player.Chatted` is retained only as a compatibility fallback.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: command behavior in current Roblox Studio chat channels requires
+  Studio testing.

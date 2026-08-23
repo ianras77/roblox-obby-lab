@@ -1,5 +1,6 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local TextChatService = game:GetService("TextChatService")
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -240,41 +241,72 @@ function ObbyService:hookCommands()
     return false
   end
 
-  local function bindPlayerCommands(player)
-    local lastCommand = 0
-    self.maid:Give(player.Chatted:Connect(function(msg)
-      if not GameConfig.DevCommandsEnabled or not isAllowed(player) then
+  local lastCommand = {}
+  local function dispatch(player, msg)
+    if not GameConfig.DevCommandsEnabled or not isAllowed(player) then
+      return
+    end
+    local now = os.clock()
+    if now - (lastCommand[player] or 0) < GameConfig.DevCommandCooldownSeconds then
+      return
+    end
+    local command, arg = string.match(msg, "^/(%w+)%s*(.-)%s*$")
+    if command == "rebuild" then
+      lastCommand[player] = now
+      self:rebuild(self.world.seed)
+    elseif command == "reseed" then
+      local newSeed = math.floor(tonumber(arg) or os.time())
+      if newSeed < 0 or newSeed > GameConfig.MaxDevSeed then
         return
       end
-      local now = os.clock()
-      if now - lastCommand < GameConfig.DevCommandCooldownSeconds then
-        return
+      lastCommand[player] = now
+      self:rebuild(newSeed)
+    elseif command == "stage" then
+      local target = tonumber(arg)
+      local maxStage = math.min(GameConfig.MaxDevStage, #self.world.stages)
+      if target and target % 1 == 0 and target >= 1 and target <= maxStage then
+        lastCommand[player] = now
+        self.checkpoints:teleportToStage(player, target)
       end
-      local command, arg = string.match(msg, "^/(%w+)%s*(.-)%s*$")
-      if command == "rebuild" then
-        lastCommand = now
-        self:rebuild(self.world.seed)
-      elseif command == "reseed" then
-        local newSeed = math.floor(tonumber(arg) or os.time())
-        if newSeed < 0 or newSeed > GameConfig.MaxDevSeed then
-          return
-        end
-        lastCommand = now
-        self:rebuild(newSeed)
-      elseif command == "stage" then
-        local target = tonumber(arg)
-        local maxStage = math.min(GameConfig.MaxDevStage, #self.world.stages)
-        if target and target % 1 == 0 and target >= 1 and target <= maxStage then
-          lastCommand = now
-          self.checkpoints:teleportToStage(player, target)
-        end
+    end
+  end
+
+  local modernCommands = typeof(TextChatService) == "Instance"
+  if modernCommands then
+    for _, definition in ipairs({
+      { name = "ToadsRebuildCommand", alias = "/rebuild" },
+      { name = "ToadsReseedCommand", alias = "/reseed" },
+      { name = "ToadsStageCommand", alias = "/stage" },
+    }) do
+      local command = TextChatService:FindFirstChild(definition.name)
+      if not command then
+        command = Instance.new("TextChatCommand")
+        command.Name = definition.name
+        command.PrimaryAlias = definition.alias
+        command.Parent = TextChatService
       end
+      self.maid:Give(command.Triggered:Connect(function(textSource, unfilteredText)
+        local player = Players:GetPlayerByUserId(textSource.UserId)
+        if player then
+          dispatch(player, unfilteredText)
+        end
+      end))
+    end
+  else
+    for _, player in ipairs(Players:GetPlayers()) do
+      self.maid:Give(player.Chatted:Connect(function(msg)
+        dispatch(player, msg)
+      end))
+    end
+    self.maid:Give(Players.PlayerAdded:Connect(function(player)
+      self.maid:Give(player.Chatted:Connect(function(msg)
+        dispatch(player, msg)
+      end))
     end))
   end
-  self.maid:Give(Players.PlayerAdded:Connect(bindPlayerCommands))
-  for _, player in ipairs(Players:GetPlayers()) do
-    bindPlayerCommands(player)
-  end
+  self.maid:Give(Players.PlayerRemoving:Connect(function(player)
+    lastCommand[player] = nil
+  end))
   self.maid:Give(Players.PlayerRemoving:Connect(function(player)
     self.keyProgress[player] = nil
     self.collectedKeys[player] = nil
