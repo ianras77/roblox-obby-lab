@@ -20,3 +20,11 @@
   Selene is unavailable in this environment.
 - Next executable step: replace the checkpoint-only wrapper with a versioned
   profile service and explicit client state synchronization.
+
+## 2026-08-23 — Replay-safe run state
+
+- Completed: server-owned Adventure, TimeTrial, and Practice run state, chapter
+  timing, and split storage; Practice completion cannot qualify.
+- Completed: initialization synchronization includes run mode and timing data.
+- Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
+- Unverified: time-trial UX, leaderboard policy, and Studio gameplay.

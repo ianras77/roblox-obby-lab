@@ -8,11 +8,12 @@ local ProfileSchema = require(game:GetService("ReplicatedStorage"):WaitForChild(
 local CheckpointService = {}
 CheckpointService.__index = CheckpointService
 
-function CheckpointService.new(stages, progressEvent)
+function CheckpointService.new(stages, progressEvent, runState)
   local self = setmetatable({}, CheckpointService)
   self.stages = stages
   self.maid = Maid.new()
   self.progressEvent = progressEvent
+  self.runState = runState
   self.store = DataStoreWrapper.new(GameConfig.DataStoreName)
   self:hookPlayers()
   for _, player in ipairs(Players:GetPlayers()) do
@@ -99,7 +100,14 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
       burst:Emit(24)
     end
     if self.progressEvent then
-      self.progressEvent:FireClient(player, { stage = stageIndex, total = #self.stages })
+      local elapsed, eligible = self.runState and self.runState:onChapterReached(player, stageIndex)
+      self.progressEvent:FireClient(player, {
+        stage = stageIndex,
+        total = #self.stages,
+        mode = player:GetAttribute("RunMode") or "Adventure",
+        elapsedMs = elapsed and math.floor(elapsed * 1000) or nil,
+        timeTrialEligible = eligible,
+      })
     end
     if stageIndex == #self.stages then
       local celebrator = Instance.new("ParticleEmitter")

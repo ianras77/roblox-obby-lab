@@ -13,3 +13,7 @@ owned:
 Before release, implement validated migrations, `UpdateAsync`, bounded retry
 backoff, autosave, `PlayerRemoving`, `BindToClose`, and separate Studio
 sandbox/private staging/production stores.
+
+Run state is server-owned and distinguishes `Adventure`, `TimeTrial`, and
+`Practice`. Practice completion is deliberately ineligible for a time-trial
+score. Timing and leaderboard submission still require Studio validation.

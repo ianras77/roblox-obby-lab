@@ -8,6 +8,7 @@ local ObstacleConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForC
 local WorldBuilder = require(script.Parent.Parent.WorldGen.WorldBuilder)
 local CheckpointService = require(script.Parent.CheckpointService)
 local Maid = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Maid"))
+local RunStateService = require(script.Parent.RunStateService)
 
 local function resolveDirection(part)
   local axisAttr = part:GetAttribute("Axis") or part:GetAttribute("Direction")
@@ -43,7 +44,8 @@ function ObbyService.new()
   self.behaviors = {}
   self.clock = 0
   self.world = WorldBuilder.buildWorld(GameConfig.Seed)
-  self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent)
+  self.runState = RunStateService.new(self.world.totalStages)
+  self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent, self.runState)
   self.checkpoints:bindCheckpoints()
   self.keyProgress = {}
   self.collectedKeys = {}
@@ -466,9 +468,13 @@ function ObbyService:rebuild(seed)
   if self.world and self.world.model then
     self.world.model:Destroy()
   end
+  if self.runState then
+    self.runState:destroy()
+  end
   self.world = WorldBuilder.buildWorld(seed)
   self.checkpoints:destroy()
-  self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent)
+  self.runState = RunStateService.new(self.world.totalStages)
+  self.checkpoints = CheckpointService.new(self.world.stages, self.world.progressEvent, self.runState)
   self.checkpoints:bindCheckpoints()
   self.keyProgress = {}
   self.totalKeys = 0
