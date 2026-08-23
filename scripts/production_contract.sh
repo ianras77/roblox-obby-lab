@@ -13,6 +13,7 @@ grep -q 'stageId = result.model:GetAttribute("StageId")' "$ROOT_DIR/src/server/W
 grep -q 'if not stageModel or not stageModel:IsA("Model")' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator model guard missing"
 grep -q 'if stage.model and stage.model:IsA("Model")' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator descendant guard missing"
 grep -q 'if stage.checkpoint and stage.checkpoint:IsA("BasePart")' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator checkpoint guard missing"
+grep -q 'typeof(stage.entrance) == "CFrame"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator CFrame type guards missing"
 grep -q 'stageIndex <= previous' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint regression guard missing"
 if grep -q 'part:Destroy()' "$ROOT_DIR/src/server/Services/ObbyService.lua"; then
   fail "collectible runtime must not globally destroy keys"

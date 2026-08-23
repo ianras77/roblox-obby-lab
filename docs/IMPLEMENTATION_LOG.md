@@ -1,5 +1,14 @@
 # Implementation log
 
+## 2026-08-23 — Validate structured stage result types
+
+- Completed: world validation now checks CFrame, Vector3, and mechanics-table
+  types before using stage result fields in geometry checks, making malformed
+  template returns fail with diagnostics instead of runtime errors.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: malformed-template behavior in live Studio remains unverified.
+
 ## 2026-08-23 — Bound checkpoint root readiness
 
 - Completed: safe checkpoint teleports now wait up to five seconds for a

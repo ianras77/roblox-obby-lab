@@ -43,10 +43,13 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
         table.insert(errors, string.format("checkpoint %d has wrong stage index", stage.stageIndex))
       end
     end
-    if not stage.entrance or not stage.exit then
+    local validEntrance = typeof(stage.entrance) == "CFrame"
+    local validExit = typeof(stage.exit) == "CFrame"
+    local validSafeSpawn = typeof(stage.safeSpawn) == "CFrame"
+    if not validEntrance or not validExit then
       table.insert(errors, string.format("stage %d missing entrance or exit", stage.stageIndex or -1))
     end
-    if not stage.safeSpawn or not stage.bounds or not stage.mechanics then
+    if not validSafeSpawn or typeof(stage.bounds) ~= "Vector3" or type(stage.mechanics) ~= "table" then
       table.insert(errors, string.format("stage %d missing build result fields", stage.stageIndex or -1))
     end
     if stage.bounds and (stage.bounds.X <= 0 or stage.bounds.Y <= 0 or stage.bounds.Z <= 0) then
@@ -76,7 +79,7 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
         end
       end
     end
-    if stage.entrance and stage.exit then
+    if validEntrance and validExit then
       local forwardDistance = stage.exit.Position.X - stage.entrance.Position.X
       if forwardDistance <= 0 then
         table.insert(errors, string.format("stage %d does not progress forward", stage.stageIndex or -1))
