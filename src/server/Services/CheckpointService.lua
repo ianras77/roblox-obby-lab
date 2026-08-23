@@ -3,6 +3,7 @@ local Debris = game:GetService("Debris")
 local GameConfig = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("GameConfig"))
 local Maid = require(game:GetService("ReplicatedStorage"):WaitForChild("Util"):WaitForChild("Maid"))
 local DataStoreWrapper = require(script.Parent.DataStoreServiceWrapper)
+local ProfileSchema = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("ProfileSchema"))
 
 local CheckpointService = {}
 CheckpointService.__index = CheckpointService
@@ -14,15 +15,31 @@ function CheckpointService.new(stages, progressEvent)
   self.progressEvent = progressEvent
   self.store = DataStoreWrapper.new(GameConfig.DataStoreName)
   self:hookPlayers()
+  for _, player in ipairs(Players:GetPlayers()) do
+    task.spawn(function()
+      self:initializePlayer(player)
+    end)
+  end
   return self
+end
+
+function CheckpointService:initializePlayer(player)
+  self:loadCheckpoint(player)
+  self.maid:Give(player.CharacterAdded:Connect(function()
+    self:teleportToSavedCheckpoint(player)
+  end))
+  if self.progressEvent then
+    self.progressEvent:FireClient(player, {
+      stage = player:GetAttribute("Checkpoint") or 0,
+      total = #self.stages,
+      initialized = true,
+    })
+  end
 end
 
 function CheckpointService:hookPlayers()
   self.maid:Give(Players.PlayerAdded:Connect(function(player)
-    self:loadCheckpoint(player)
-    self.maid:Give(player.CharacterAdded:Connect(function()
-      self:teleportToSavedCheckpoint(player)
-    end))
+    self:initializePlayer(player)
   end))
 
   self.maid:Give(Players.PlayerRemoving:Connect(function(player)
@@ -32,8 +49,11 @@ end
 
 function CheckpointService:loadCheckpoint(player)
   local saved = self.store:GetAsync(player.UserId)
-  if saved and saved.checkpoint then
-    player:SetAttribute("Checkpoint", saved.checkpoint)
+  local profile = ProfileSchema.sanitize(saved)
+  profile.highestChapter = math.clamp(profile.highestChapter, 0, #self.stages)
+  if profile.highestChapter > 0 then
+    player:SetAttribute("Checkpoint", profile.highestChapter)
+    player:SetAttribute("CheckpointId", self.stages[profile.highestChapter].stageId)
   end
 end
 
@@ -41,12 +61,9 @@ function CheckpointService:saveCheckpoint(player)
   if not GameConfig.SaveCheckpoints then
     return
   end
-  local checkpointIndex = player:GetAttribute("Checkpoint")
-  if checkpointIndex then
-    self.store:SetAsync(player.UserId, {
-      checkpoint = checkpointIndex,
-    })
-  end
+  local profile = ProfileSchema.sanitize(nil)
+  profile.highestChapter = player:GetAttribute("Checkpoint") or 0
+  self.store:SetAsync(player.UserId, profile)
 end
 
 function CheckpointService:bindCheckpoints()
