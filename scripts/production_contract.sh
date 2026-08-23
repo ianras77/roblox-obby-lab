@@ -76,6 +76,7 @@ grep -q 'SaveCheckpoints = true' "$ROOT_DIR/src/shared/Config/GameConfig.lua" ||
 if grep -q 'MaxPlayersPerServer' "$ROOT_DIR/src/shared/Config/GameConfig.lua"; then fail "fake server capacity knob remains"; fi
 grep -q 'player:" .. tostring(player.UserId)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "string datastore key missing"
 grep -q 'local saved, loadSucceeded' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "datastore load outcome is not distinguished"
+grep -q 'player:SetAttribute("Checkpoint", 0)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile load does not establish zero checkpoint state"
 grep -q 'not self:isLoaded(player)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "failed profile loads can still be saved"
 grep -q 'checkpointProfile.highestChapter = math.max' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint profile state is stale"
 grep -q 'profile.highestChapter = math.max(profile.highestChapter' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "save path can regress profile progress"

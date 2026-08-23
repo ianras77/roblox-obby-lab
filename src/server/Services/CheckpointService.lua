@@ -99,6 +99,8 @@ function CheckpointService:hookPlayers()
 end
 
 function CheckpointService:loadCheckpoint(player)
+  player:SetAttribute("Checkpoint", 0)
+  player:SetAttribute("CheckpointId", nil)
   local saved, loadSucceeded = self.store:GetAsync("player:" .. tostring(player.UserId))
   self.loaded[player] = loadSucceeded == true
   local profile = ProfileSchema.sanitize(saved)

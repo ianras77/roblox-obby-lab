@@ -424,6 +424,15 @@
 - Unverified: join/load timing under live DataStore latency requires Studio or
   staging validation.
 
+## 2026-08-23 — Establish checkpoint state on profile load
+
+- Completed: profile loading now clears stale checkpoint attributes before
+  applying sanitized saved progress, including explicit zero-progress state;
+  this prevents old-world state from surviving a rebuild or new load.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live reconnect and rebuild timing require Studio/staging tests.
+
 ## 2026-08-23 — Reset run completion state
 
 - Completed: server run initialization and mode changes now clear the previous
