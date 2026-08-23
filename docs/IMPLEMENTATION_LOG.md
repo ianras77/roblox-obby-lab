@@ -413,6 +413,15 @@
   pass locally.
 - Unverified: actual gamepad focus order and device ergonomics require Studio.
 
+## 2026-08-23 — Explicit selectable HUD controls
+
+- Completed: reset, settings, mode, Practice chapter, accessibility, and
+  results actions are explicitly marked selectable for gamepad navigation.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: actual selection order and console safe-area behavior require
+  Studio testing.
+
 ## 2026-08-23 — Canonical Time Trial start
 
 - Completed: crossing the validated Time Trial gate now clears the player's

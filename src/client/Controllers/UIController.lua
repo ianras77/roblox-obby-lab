@@ -121,6 +121,7 @@ function UIController:createGui()
 
   local reset = Instance.new("TextButton")
   reset.Name = "ResetButton"
+  reset.Selectable = true
   reset.Size = UDim2.fromOffset(Theme.MinimumTouchSize + 76, Theme.MinimumTouchSize)
   reset.Position = UDim2.fromScale(0.02, 0.12)
   reset.BackgroundColor3 = Color3.fromRGB(240, 150, 110)
@@ -132,6 +133,7 @@ function UIController:createGui()
 
   local settings = Instance.new("TextButton")
   settings.Name = "SettingsButton"
+  settings.Selectable = true
   settings.Size = UDim2.fromOffset(Theme.MinimumTouchSize, Theme.MinimumTouchSize)
   settings.Position = UDim2.fromScale(0.02, 0.18)
   settings.BackgroundColor3 = Theme.Ink
@@ -177,6 +179,7 @@ function UIController:createGui()
   for _, mode in ipairs({ "Adventure", "TimeTrial", "Practice" }) do
     local button = Instance.new("TextButton")
     button.Name = "Mode_" .. mode
+    button.Selectable = true
     button.Size = UDim2.new(1, 0, 0, 28)
     button.BackgroundColor3 = Theme.Brass
     button.TextColor3 = Theme.Ink
@@ -203,6 +206,7 @@ function UIController:createGui()
   for stage = 1, GameConfig.Zones * GameConfig.StagesPerZone do
     local button = Instance.new("TextButton")
     button.Name = "Stage_" .. stage
+    button.Selectable = true
     button.Text = "Chapter " .. stage
     button.TextScaled = true
     button.Font = Enum.Font.GothamBold
@@ -220,6 +224,7 @@ function UIController:createGui()
   }) do
     local toggle = Instance.new("TextButton")
     toggle.Name = key
+    toggle.Selectable = true
     toggle:SetAttribute("SettingKey", key)
     toggle.Size = UDim2.new(1, 0, 0, 28)
     toggle.BackgroundColor3 = Color3.fromRGB(62, 75, 95)
@@ -396,6 +401,7 @@ function UIController:showResults(payload)
   local function addAction(name, text, actionMode, position)
     local button = Instance.new("TextButton")
     button.Name = name
+    button.Selectable = true
     button.Size = UDim2.fromScale(0.29, 0.18)
     button.Position = position
     button.BackgroundColor3 = Color3.fromRGB(218, 166, 72)
