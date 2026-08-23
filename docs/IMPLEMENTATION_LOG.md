@@ -1054,3 +1054,13 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: malformed live instance injection remains a Studio-only test.
+
+## 2026-08-23 — Separate route and exploration completion
+
+- Completed: the results screen now reports route completion separately from
+  Golden Key exploration percentage, preventing a finished run with missing
+  optional keys from appearing fully explored.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: final-results readability on mobile and large-text settings
+  requires Studio device testing.

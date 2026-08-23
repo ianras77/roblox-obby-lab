@@ -87,6 +87,8 @@ grep -q 'masterVolume", "musicVolume", "sfxVolume", "uiScale' "$ROOT_DIR/src/ser
 grep -q 'showResults' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results presentation missing"
 grep -q 'TimeTrialButton' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results replay actions missing"
 grep -q 'Golden Keys' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results key metric missing"
+grep -q 'Route completion: 100%%' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results route completion metric missing"
+grep -q 'Exploration:' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results exploration metric missing"
 grep -q 'showPracticeSelector' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "practice selector missing"
 grep -q 'if actionMode == "Practice" then' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results practice action bypasses selector"
 grep -q 'function UIController:updateTimerState' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "time trial HUD timer missing"

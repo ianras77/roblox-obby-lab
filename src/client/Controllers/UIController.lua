@@ -536,8 +536,19 @@ function UIController:showResults(payload)
       and payload.totalKeys
       and string.format("\nGolden Keys: %d/%d", payload.keys, payload.totalKeys)
     or ""
-  result.Text =
-    string.format("Toad Hall reached!\n%s run complete%s%s%s%s\nCompletion: 100%%", mode, elapsed, best, deaths, keys)
+  local exploration = ""
+  if payload and payload.keys and payload.totalKeys and payload.totalKeys > 0 then
+    exploration = string.format("\nExploration: %d%%", math.floor(payload.keys / payload.totalKeys * 100))
+  end
+  result.Text = string.format(
+    "Toad Hall reached!\n%s run complete%s%s%s%s%s\nRoute completion: 100%%",
+    mode,
+    elapsed,
+    best,
+    deaths,
+    keys,
+    exploration
+  )
   local function addAction(name, text, actionMode, position)
     local button = Instance.new("TextButton")
     button.Name = name

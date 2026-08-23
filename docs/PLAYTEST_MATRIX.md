@@ -25,6 +25,9 @@ Practice run can qualify for a leaderboard.
 Also verify that Adventure replay completion unlocks Time Trial but does not
 replace the stored Time Trial personal best.
 
+Completion results must distinguish route completion from Golden Key exploration
+percentage, including the zero-key case.
+
 Also verify a new player cannot activate Time Trial, and that it becomes
 available only after an Adventure completion.
 
