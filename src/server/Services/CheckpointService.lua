@@ -377,6 +377,9 @@ end
 function CheckpointService:teleportToCFrame(player, destination: CFrame)
   local character = player.Character
   local root = character and character:FindFirstChild("HumanoidRootPart")
+  if character and not root then
+    root = character:WaitForChild("HumanoidRootPart", 5)
+  end
   if not root or not root:IsA("BasePart") then
     return false
   end

@@ -137,6 +137,7 @@ grep -q 'local snapshot = ProfileSchema.sanitize(profile)' "$ROOT_DIR/src/server
 grep -q 'if not self:isLoaded(player) then' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint progression is not load-gated"
 grep -q 'if cp and cp:IsA("BasePart") then' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint binding lacks runtime type guard"
 grep -q 'WaitForChild("HumanoidRootPart", 5)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint teleport has no bounded root wait"
+grep -q 'function CheckpointService:teleportToCFrame' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "mode teleport helper missing"
 grep -q 'MaxCollectedKeys = 100' "$ROOT_DIR/src/shared/Config/ProfileSchema.lua" || fail "profile key bound missing"
 grep -q 'type(keyId) ~= "string"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator collectible ID type guard missing"
 grep -q 'ProfileSchema.MaxCollectedKeys' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "runtime key bound missing"

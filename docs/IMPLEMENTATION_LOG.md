@@ -1322,6 +1322,14 @@
   whitespace checks pass locally; cart boarding and multiplayer physics remain
   unverified without Roblox Studio.
 
+## 2026-08-23 — Bound mode teleport startup timing
+
+- Completed: mode resets now wait briefly for a character root before applying
+  the authoritative start-gate teleport, reducing missed replay resets during
+  character startup.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; reset timing remains Studio-unverified.
+
 ## 2026-08-23 — Bound run-state chapter input
 
 - Completed: server run-state completion logic now rejects non-integer or
