@@ -990,6 +990,15 @@
 - Unverified: real concurrent-session conflict behavior requires a staging
   DataStore test.
 
+## 2026-08-23 — Apply persisted UI scale
+
+- Completed: the persisted `uiScale` setting now has a bounded server contract,
+  a settings-panel control, and a client HUD scale application that composes
+  with the larger-text accessibility multiplier.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: device ergonomics and large-text clipping require Studio testing.
+
 ## 2026-08-23 — Apply settings before initial HUD presentation
 
 - Completed: the client now applies persisted accessibility and audio settings

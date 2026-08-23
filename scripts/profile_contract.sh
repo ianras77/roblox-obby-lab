@@ -23,6 +23,7 @@ for marker in (
     "masterVolume = 1",
     "musicVolume = 1",
     "sfxVolume = 1",
+    "uiScale = 1",
     "raw.highestChapter or legacyChapter",
     "validTime < 86400000",
     'type(raw.settings[key]) == "boolean"',

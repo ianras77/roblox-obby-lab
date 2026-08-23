@@ -23,6 +23,7 @@ function UIController.new()
     masterVolume = 1,
     musicVolume = 1,
     sfxVolume = 1,
+    uiScale = 1,
   }
   self.originalHazardColors = {}
   self.originalHazardMaterials = {}
@@ -57,10 +58,7 @@ function UIController:syncInitialState()
     self:updateProgress(payload.stage or 0, payload.total or 1)
     self:updateKeys(payload.keys or 0, payload.totalKeys or 0)
     self:applyCollectedKeys(payload.collectedKeys)
-    local scale = self.gui:FindFirstChild("AccessibilityScale")
-    if scale then
-      scale.Scale = self.settings.largeText and 1.15 or 1
-    end
+    self:applyUIScale()
     self:applyAccessibility()
     self:applyAudioVolumes()
     self:refreshVolumeLabels()
@@ -73,6 +71,13 @@ function UIController:applyAudioVolumes()
   SoundGroups.ensure("Ambience", 0.35 * master)
   SoundGroups.ensure("SFX", 0.8 * master * (self.settings.sfxVolume or 1))
   SoundGroups.ensure("UI", 0.8 * master * (self.settings.sfxVolume or 1))
+end
+
+function UIController:applyUIScale()
+  local scale = self.gui:FindFirstChild("AccessibilityScale")
+  if scale then
+    scale.Scale = (self.settings.uiScale or 1) * (self.settings.largeText and 1.15 or 1)
+  end
 end
 
 function UIController:refreshVolumeLabels()
@@ -292,6 +297,7 @@ function UIController:createGui()
     { key = "masterVolume", label = "Master volume" },
     { key = "musicVolume", label = "Music volume" },
     { key = "sfxVolume", label = "Effects volume" },
+    { key = "uiScale", label = "UI scale" },
   }) do
     local volume = Instance.new("TextButton")
     volume.Name = definition.key
@@ -373,10 +379,7 @@ function UIController:bind()
         self.player:SetAttribute("Accessibility_" .. key, self.settings[key])
         self.settingsEvent:FireServer(key, self.settings[key])
         if key == "largeText" then
-          local scale = self.gui:FindFirstChild("AccessibilityScale")
-          if scale then
-            scale.Scale = self.settings[key] and 1.15 or 1
-          end
+          self:applyUIScale()
         end
         if key == "highContrast" or key == "lowParticles" then
           self:applyAccessibility()
@@ -404,10 +407,23 @@ function UIController:bind()
     if toggle:IsA("TextButton") and toggle:GetAttribute("VolumeKey") then
       toggle.Activated:Connect(function()
         local key = toggle:GetAttribute("VolumeKey")
-        local nextValue = ((self.settings[key] or 1) - 0.25) % 1.25
+        local currentValue = self.settings[key] or 1
+        local nextValue
+        if key == "uiScale" then
+          nextValue = currentValue + 0.1
+          if nextValue > 1.5 then
+            nextValue = 0.8
+          end
+        else
+          nextValue = (currentValue - 0.25) % 1.25
+        end
         self.settings[key] = nextValue
         self.settingsEvent:FireServer(key, nextValue)
-        self:applyAudioVolumes()
+        if key == "uiScale" then
+          self:applyUIScale()
+        else
+          self:applyAudioVolumes()
+        end
         self:refreshVolumeLabels()
       end)
     end

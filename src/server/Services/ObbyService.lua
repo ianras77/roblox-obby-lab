@@ -86,9 +86,10 @@ local function bindSettings(self)
     largeText = true,
     lowParticles = true,
     showTimer = true,
-    masterVolume = "number",
-    musicVolume = "number",
-    sfxVolume = "number",
+    masterVolume = "volume",
+    musicVolume = "volume",
+    sfxVolume = "volume",
+    uiScale = "scale",
   }
   self.maid:Give(event.OnServerEvent:Connect(function(player, key, enabled)
     if type(key) ~= "string" or not allowed[key] then
@@ -97,7 +98,12 @@ local function bindSettings(self)
     if allowed[key] == true and type(enabled) ~= "boolean" then
       return
     end
-    if allowed[key] == "number" and (type(enabled) ~= "number" or enabled ~= enabled or enabled < 0 or enabled > 1) then
+    local minimum = allowed[key] == "scale" and 0.8 or 0
+    local maximum = allowed[key] == "scale" and 1.5 or 1
+    if
+      (allowed[key] == "volume" or allowed[key] == "scale")
+      and (type(enabled) ~= "number" or enabled ~= enabled or enabled < minimum or enabled > maximum)
+    then
       return
     end
     if not self.checkpoints:isLoaded(player) then
