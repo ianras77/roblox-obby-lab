@@ -1502,3 +1502,11 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; streamed-device behavior remains
   Studio-unverified.
+
+## 2026-08-23 — Add original local vector art sources
+
+- Completed: added source-ready storybook railway-ticket branding and a Golden
+  Key icon under `art/`, with upload status recorded in the asset manifest.
+- Tests: SVG files recognized as valid SVG images; configuration, profile,
+  storyboard, production, Stylua, and whitespace checks pass locally. Roblox
+  upload and in-game rendering remain unverified.

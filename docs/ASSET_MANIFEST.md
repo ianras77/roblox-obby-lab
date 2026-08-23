@@ -16,6 +16,17 @@ Current referenced IDs (all unverified):
 | `1837468655` | Sound | Legacy trouble music candidate |
 | `12222152` | Sound | Checkpoint feedback |
 | `12222058` | Sound | Key pickup |
+
+## Local source art
+
+| Path | Purpose | Dimensions/viewBox | Status | Roblox upload action |
+| --- | --- | --- | --- | --- |
+| `art/branding/toads-great-escape-logo.svg` | Experience branding and title card | 1200 x 420 | Source-ready, not uploaded | Export/upload approved PNG variants for icon, thumbnail, and UI use |
+| `art/ui/golden-key.svg` | Golden Key HUD and collectible reference | 256 x 256 | Source-ready, not uploaded | Export/upload transparent PNG if a Roblox image ID is required |
+
+These files are original local vector sources. No Roblox asset IDs are claimed
+for them until an owner uploads and verifies the resulting assets in Creator
+Hub/Studio.
 | `241594419` | Particle texture | Spark/burst effects |
 | `260430117` | Particle texture | Sparkle/firefly effects |
 | `258128463` | Particle texture | Impact/firework effects |
