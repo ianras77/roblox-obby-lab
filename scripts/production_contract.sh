@@ -55,6 +55,8 @@ grep -q 'math.min(GameConfig.MaxDevStage, #self.world.stages)' "$ROOT_DIR/src/se
 grep -q 'approvedForRelease' "$ROOT_DIR/src/shared/Config/AssetRegistry.lua" || fail "asset approval registry missing"
 grep -q 'getApprovedId("checkpoint_feedback")' "$ROOT_DIR/src/shared/Util/Build.lua" || fail "checkpoint sound bypasses asset registry"
 grep -q 'getApprovedId("key_pickup")' "$ROOT_DIR/src/shared/Util/Build.lua" || fail "key sound bypasses asset registry"
+grep -q 'getApprovedId("finale_firework")' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale particle bypasses asset registry"
+grep -q 'getApprovedId("finale_chime")' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale sound bypasses asset registry"
 grep -q 'playFirstApprovedMusic' "$ROOT_DIR/src/server/ServerMain.server.lua" || fail "asset approval gate missing"
 grep -q 'ChapterFlavor' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "chapter presentation metadata missing"
 grep -q 'StageBuildResult' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "explicit stage build result missing"

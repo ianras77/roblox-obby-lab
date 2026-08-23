@@ -32,6 +32,24 @@ local registry = {
       source = "legacy collectible builder",
       note = "Verify ownership and moderation before release.",
     },
+    {
+      key = "finale_firework",
+      type = "ParticleTexture",
+      id = "rbxassetid://258128463",
+      verified = false,
+      approvedForRelease = false,
+      source = "legacy finale effect",
+      note = "Verify ownership and moderation before release.",
+    },
+    {
+      key = "finale_chime",
+      type = "Sound",
+      id = "rbxassetid://138186576",
+      verified = false,
+      approvedForRelease = false,
+      source = "legacy finale effect",
+      note = "Verify ownership and moderation before release.",
+    },
   },
   music = {
     {

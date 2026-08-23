@@ -298,6 +298,15 @@
 - Unverified: Roblox asset ownership, moderation, and playback require Creator
   Hub/Studio verification.
 
+## 2026-08-23 — Client finale asset gate
+
+- Completed: client fireworks texture and finale chime now use AssetRegistry;
+  unapproved assets produce safe empty fallbacks, and reduced-particle mode
+  also lowers the emitted burst count.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: asset playback and finale presentation remain Studio-dependent.
+
 ## 2026-08-23 — Canonical Time Trial start
 
 - Completed: crossing the validated Time Trial gate now clears the player's

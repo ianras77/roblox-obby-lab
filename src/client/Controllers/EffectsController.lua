@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
+local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
 
 local EffectsController = {}
 EffectsController.__index = EffectsController
@@ -81,17 +82,17 @@ function EffectsController:finale()
   if root then
     for _ = 1, 3 do
       local boom = Instance.new("ParticleEmitter")
-      boom.Texture = "rbxassetid://258128463"
+      boom.Texture = AssetRegistry.getApprovedId("finale_firework")
       boom.Lifetime = NumberRange.new(1, 1.6)
       boom.Speed = NumberRange.new(32, 38)
       boom.Rate = self.player:GetAttribute("Accessibility_lowParticles") and 40 or 200
       boom.SpreadAngle = Vector2.new(360, 360)
       boom.Parent = root
-      boom:Emit(200)
+      boom:Emit(self.player:GetAttribute("Accessibility_lowParticles") and 40 or 200)
       game.Debris:AddItem(boom, 2)
     end
     local s = Instance.new("Sound")
-    s.SoundId = "rbxassetid://138186576"
+    s.SoundId = AssetRegistry.getApprovedId("finale_chime")
     s.Volume = 1
     s.Parent = root
     s:Play()
