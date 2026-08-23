@@ -19,6 +19,7 @@ function UIController.new()
     lowParticles = false,
   }
   self.originalHazardColors = {}
+  self.originalHazardMaterials = {}
   self.gui = self:createGui()
   self.progressEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.ProgressRemote)
   self.keyEvent = ReplicatedStorage:WaitForChild("SharedEvents"):WaitForChild(GameConfig.KeyRemote)
@@ -58,8 +59,9 @@ function UIController:applyAccessibility()
   for _, part in ipairs(CollectionService:GetTagged("KillBrick")) do
     if part:IsA("BasePart") then
       self.originalHazardColors[part] = self.originalHazardColors[part] or part.Color
+      self.originalHazardMaterials[part] = self.originalHazardMaterials[part] or part.Material
       part.Color = self.settings.highContrast and Color3.fromRGB(255, 255, 255) or self.originalHazardColors[part]
-      part.Material = self.settings.highContrast and Enum.Material.Neon or part.Material
+      part.Material = self.settings.highContrast and Enum.Material.Neon or self.originalHazardMaterials[part]
     end
   end
   for _, emitter in ipairs(workspace:GetDescendants()) do

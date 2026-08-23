@@ -307,6 +307,15 @@
   pass locally.
 - Unverified: asset playback and finale presentation remain Studio-dependent.
 
+## 2026-08-23 — Reversible high-contrast hazards
+
+- Completed: high-contrast mode now snapshots and restores hazard materials as
+  well as colors, so toggling the accessibility setting does not leave a
+  permanent client-side visual mutation.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: visual readability on real devices remains pending Studio.
+
 ## 2026-08-23 — Canonical Time Trial start
 
 - Completed: crossing the validated Time Trial gate now clears the player's
