@@ -141,6 +141,13 @@ function CheckpointService:markKey(player, keyId: string): boolean
   if profile.collectedKeys[keyId] then
     return false
   end
+  local keyCount = 0
+  for _ in pairs(profile.collectedKeys) do
+    keyCount += 1
+  end
+  if keyCount >= ProfileSchema.MaxCollectedKeys then
+    return false
+  end
   profile.collectedKeys[keyId] = true
   self.profiles[player] = profile
   return true

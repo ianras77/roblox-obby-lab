@@ -346,6 +346,15 @@
 - Unverified: ambience ownership, moderation, and playback remain Creator
   Hub/Studio checks.
 
+## 2026-08-23 — Bounded collectible profile input
+
+- Completed: profile sanitization and runtime key credit now cap stored
+  collectible identities at 100, bounding malformed persistence payloads while
+  leaving the authored 18-key route unaffected.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: live migration of oversized legacy records remains pending.
+
 ## 2026-08-23 — Scrollable settings panel
 
 - Completed: the settings/mode panel now uses automatic vertical canvas sizing

@@ -13,6 +13,7 @@ export type PlayerProfile = {
 
 local ProfileSchema = {}
 ProfileSchema.CurrentVersion = 1
+ProfileSchema.MaxCollectedKeys = 100
 
 function ProfileSchema.default(): PlayerProfile
   return {
@@ -67,9 +68,14 @@ function ProfileSchema.sanitize(raw: any): PlayerProfile
     end
   end
   if type(raw.collectedKeys) == "table" then
+    local keyCount = 0
     for key, value in pairs(raw.collectedKeys) do
       if type(key) == "string" and value == true and #key <= 80 then
         profile.collectedKeys[key] = true
+        keyCount += 1
+        if keyCount >= ProfileSchema.MaxCollectedKeys then
+          break
+        end
       end
     end
   end
