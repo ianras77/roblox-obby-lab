@@ -17,3 +17,7 @@ before changing rider-carry physics or declaring cart reliability.
 Network names and payload direction are documented in
 `src/shared/Network/RemoteContracts.lua`. Progress, keys, and finale messages
 are server-to-client only; the client cannot award progression.
+
+`EnvironmentController` owns local zone presentation and smoothly transitions
+Lighting from chapter progress. The server still builds geometry and stores the
+zone palette, but does not repeatedly overwrite global Lighting while building.

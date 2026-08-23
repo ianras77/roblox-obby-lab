@@ -88,7 +88,7 @@ function WorldBuilder.buildWorld(seed)
       elevationStep = GameConfig.ElevationPerZone / GameConfig.StagesPerZone,
     })
     DecorBuilder.decorateZone(zoneModel, zoneCfg)
-    DecorBuilder.applyLighting(zoneCfg)
+    -- Lighting presentation is transitioned locally by EnvironmentController.
     for _, s in ipairs(stages) do
       table.insert(allStages, s)
     end
