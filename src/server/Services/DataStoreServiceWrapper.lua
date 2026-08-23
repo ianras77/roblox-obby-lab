@@ -42,8 +42,27 @@ function Wrapper:SetAsync(key, value)
   end
   for attempt = 1, self.maxAttempts do
     local ok, err = pcall(function()
-      self.store:UpdateAsync(key, function()
-        return value
+      self.store:UpdateAsync(key, function(current)
+        if type(current) ~= "table" then
+          return value
+        end
+        local merged = table.clone(value)
+        merged.highestChapter = math.max(tonumber(current.highestChapter) or 0, value.highestChapter or 0)
+        merged.totalDeaths = math.max(tonumber(current.totalDeaths) or 0, value.totalDeaths or 0)
+        merged.completionCount = math.max(tonumber(current.completionCount) or 0, value.completionCount or 0)
+        if type(current.collectedKeys) == "table" then
+          merged.collectedKeys = table.clone(value.collectedKeys or {})
+          for keyId, collected in pairs(current.collectedKeys) do
+            if collected == true then
+              merged.collectedKeys[keyId] = true
+            end
+          end
+        end
+        local currentBest = tonumber(current.bestRunMs)
+        if currentBest and currentBest > 0 and (not merged.bestRunMs or currentBest < merged.bestRunMs) then
+          merged.bestRunMs = currentBest
+        end
+        return merged
       end)
     end)
     if ok then
