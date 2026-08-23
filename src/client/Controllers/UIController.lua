@@ -141,12 +141,16 @@ function UIController:createGui()
   settings.Text = "⚙"
   settings.Parent = gui
 
-  local panel = Instance.new("Frame")
+  local panel = Instance.new("ScrollingFrame")
   panel.Name = "SettingsPanel"
   panel.Visible = false
   panel.Size = UDim2.fromScale(0.34, 0.34)
   panel.Position = UDim2.fromScale(0.02, 0.25)
   panel.BackgroundColor3 = Theme.Ink
+  panel.BorderSizePixel = 0
+  panel.CanvasSize = UDim2.fromScale(0, 0)
+  panel.AutomaticCanvasSize = Enum.AutomaticSize.Y
+  panel.ScrollBarThickness = 8
   panel.Parent = gui
   local panelConstraint = Instance.new("UISizeConstraint")
   panelConstraint.MinSize = Vector2.new(220, 190)

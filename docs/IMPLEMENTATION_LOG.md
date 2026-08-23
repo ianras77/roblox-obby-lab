@@ -326,6 +326,16 @@
 - Unverified: visual timing and accessibility perception require Studio device
   testing.
 
+## 2026-08-23 — Scrollable settings panel
+
+- Completed: the settings/mode panel now uses automatic vertical canvas sizing
+  and scrolling so all accessibility, replay, and mode controls remain
+  reachable when the panel exceeds the viewport height.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: touch scrolling and gamepad focus order require Studio device
+  testing.
+
 ## 2026-08-23 — Canonical Time Trial start
 
 - Completed: crossing the validated Time Trial gate now clears the player's
