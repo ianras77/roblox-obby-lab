@@ -192,6 +192,11 @@ function ObbyService:registerKey(part)
     if not player then
       return
     end
+    local root = hit.Parent:FindFirstChild("HumanoidRootPart")
+    local humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+    if not root or not humanoid or humanoid.Health <= 0 or (root.Position - part.Position).Magnitude > 18 then
+      return
+    end
     self.collectedKeys[player] = self.collectedKeys[player] or {}
     if self.collectedKeys[player][keyId] or not self.checkpoints:markKey(player, keyId) then
       return

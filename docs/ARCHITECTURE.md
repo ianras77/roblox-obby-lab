@@ -19,6 +19,10 @@ Development chat commands are allowlisted outside Studio, parsed with anchored
 syntax, bounded by seed/stage limits, and rate-limited. They are not a player
 progression or reward API.
 
+Checkpoint and key touches additionally require a live HumanoidRootPart,
+positive Humanoid health, and a short server-side distance bound. These are
+sanity checks for authority, not a latency-punishing anti-cheat system.
+
 Network names and payload direction are documented in
 `src/shared/Network/RemoteContracts.lua`. Progress, keys, and finale messages
 are server-to-client only; the client cannot award progression.

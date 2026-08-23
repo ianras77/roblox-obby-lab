@@ -17,6 +17,8 @@ grep -q 'GetObbyState' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail 
 if grep -q 'progressEvent:FireAllClients' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua"; then fail "startup state must not broadcast globally"; fi
 grep -q 'SetAccessibilitySettings' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "settings contract missing"
 grep -q 'reducedMotion = true' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "settings allowlist missing"
+grep -q 'Magnitude <= 18' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "checkpoint distance validation missing"
+grep -q 'Magnitude > 18' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "key distance validation missing"
 grep -q 'SetRunMode' "$ROOT_DIR/src/shared/Network/RemoteContracts.lua" || fail "run mode contract missing"
 grep -q 'showResults' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results presentation missing"
 grep -q 'MaxDevSeed' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "dev seed cap missing"

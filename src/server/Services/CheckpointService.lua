@@ -133,7 +133,13 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
     return
   end
   local humanoidRoot = hit.Parent:FindFirstChild("HumanoidRootPart")
-  if humanoidRoot then
+  local humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+  if
+    humanoidRoot
+    and humanoid
+    and humanoid.Health > 0
+    and (humanoidRoot.Position - checkpoint.Position).Magnitude <= 18
+  then
     local previous = player:GetAttribute("Checkpoint") or 0
     if stageIndex <= previous then
       return
