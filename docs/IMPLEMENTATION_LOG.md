@@ -36,3 +36,11 @@
 - Tests: storyboard, production contracts, Stylua, and whitespace checks
   remain the local validation baseline.
 - Unverified: settings behavior across real device respawn and Studio clients.
+
+## 2026-08-23 — Replay controls and results presentation
+
+- Completed: server-validated mode selection and a completion results panel for
+  Adventure, Time Trial, and Practice.
+- Completed: Practice remains explicitly ineligible in server run state.
+- Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
+- Unverified: device layout, actual timing flow, and Studio multiplayer behavior.
