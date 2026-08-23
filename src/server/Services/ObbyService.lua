@@ -45,6 +45,17 @@ local function countKeys(profile)
   return count
 end
 
+local function getLivePlayerRoot(hit)
+  local character = hit.Parent
+  local player = character and Players:GetPlayerFromCharacter(character)
+  local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+  local root = character and character:FindFirstChild("HumanoidRootPart")
+  if player and humanoid and humanoid.Health > 0 and root then
+    return root
+  end
+  return nil
+end
+
 local function bindSettings(self)
   local events = ReplicatedStorage:FindFirstChild("SharedEvents")
   local event = events and events:FindFirstChild(RemoteContracts.SetSettings.name)
@@ -370,7 +381,7 @@ function ObbyService:scanBehaviors()
       speed = part:GetAttribute("Speed") or ObstacleConfig.ConveyorSpeed,
     })
     self.maid:Give(part.Touched:Connect(function(hit)
-      local humanoidRoot = hit.Parent and hit.Parent:FindFirstChild("HumanoidRootPart")
+      local humanoidRoot = getLivePlayerRoot(hit)
       if humanoidRoot then
         local vel = humanoidRoot.AssemblyLinearVelocity
         local direction = part.CFrame.LookVector * (part:GetAttribute("Speed") or ObstacleConfig.ConveyorSpeed)
@@ -382,7 +393,7 @@ function ObbyService:scanBehaviors()
   add("BouncePad", function(part)
     local power = part:GetAttribute("Power") or ObstacleConfig.BouncePower
     self.maid:Give(part.Touched:Connect(function(hit)
-      local humanoidRoot = hit.Parent and hit.Parent:FindFirstChild("HumanoidRootPart")
+      local humanoidRoot = getLivePlayerRoot(hit)
       if humanoidRoot then
         humanoidRoot.AssemblyLinearVelocity =
           Vector3.new(humanoidRoot.AssemblyLinearVelocity.X, power, humanoidRoot.AssemblyLinearVelocity.Z)

@@ -1,5 +1,14 @@
 # Implementation log
 
+## 2026-08-23 — Restrict physics touches to live players
+
+- Completed: conveyor and bounce-pad forces now require a live player
+  character, preventing arbitrary HumanoidRootPart-bearing objects from
+  activating gameplay physics.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live NPC/multiplayer physics behavior requires Studio testing.
+
 ## 2026-08-23 — Guard profile loads after player departure
 
 - Completed: profile-load coroutines now stop and clear session tables when a
