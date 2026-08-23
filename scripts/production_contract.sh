@@ -34,6 +34,8 @@ grep -q 'MaxDevSeed' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "dev s
 grep -q 'SaveCheckpoints = true' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "production persistence default missing"
 if grep -q 'MaxPlayersPerServer' "$ROOT_DIR/src/shared/Config/GameConfig.lua"; then fail "fake server capacity knob remains"; fi
 grep -q 'player:" .. tostring(player.UserId)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "string datastore key missing"
+grep -q 'local saved, loadSucceeded' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "datastore load outcome is not distinguished"
+grep -q 'not self:isLoaded(player)' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "failed profile loads can still be saved"
 grep -q 'DevCommandCooldownSeconds' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "dev command rate limit missing"
 grep -q 'math.min(GameConfig.MaxDevStage, #self.world.stages)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "dynamic stage command cap missing"
 grep -q 'approvedForRelease' "$ROOT_DIR/src/shared/Config/AssetRegistry.lua" || fail "asset approval registry missing"

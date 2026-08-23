@@ -21,19 +21,19 @@ end
 
 function Wrapper:GetAsync(key)
   if not self.enabled then
-    return nil
+    return nil, true
   end
   for attempt = 1, self.maxAttempts do
     local ok, result = pcall(function()
       return self.store:GetAsync(key)
     end)
     if ok then
-      return result
+      return result, true
     end
     warn(string.format("DataStore get failed (attempt %d): %s", attempt, tostring(result)))
     task.wait(2 ^ (attempt - 1))
   end
-  return nil
+  return nil, false
 end
 
 function Wrapper:SetAsync(key, value)

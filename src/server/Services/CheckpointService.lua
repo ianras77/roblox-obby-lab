@@ -95,10 +95,14 @@ function CheckpointService:hookPlayers()
 end
 
 function CheckpointService:loadCheckpoint(player)
-  local saved = self.store:GetAsync("player:" .. tostring(player.UserId))
-  self.loaded[player] = true
+  local saved, loadSucceeded = self.store:GetAsync("player:" .. tostring(player.UserId))
+  self.loaded[player] = loadSucceeded == true
   local profile = ProfileSchema.sanitize(saved)
   self.profiles[player] = profile
+  if not self.loaded[player] then
+    warn(string.format("[DataStore] Profile load failed for %s; writes are disabled", player.Name))
+    return
+  end
   profile.highestChapter = math.clamp(profile.highestChapter, 0, #self.stages)
   if profile.highestChapter > 0 then
     player:SetAttribute("Checkpoint", profile.highestChapter)
@@ -107,7 +111,7 @@ function CheckpointService:loadCheckpoint(player)
 end
 
 function CheckpointService:saveCheckpoint(player)
-  if not GameConfig.SaveCheckpoints then
+  if not GameConfig.SaveCheckpoints or not self:isLoaded(player) then
     return
   end
   local profile = self.profiles[player] or ProfileSchema.default()

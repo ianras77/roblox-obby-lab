@@ -186,3 +186,14 @@
 - Tests: configuration, storyboard, production, Stylua, and whitespace checks
   pass locally.
 - Unverified: validator behavior against live Studio physics remains pending.
+
+## 2026-08-23 — Safe DataStore read failure
+
+- Completed: DataStore reads now return an explicit success flag. A failed
+  profile load supplies temporary defaults for gameplay but marks the player
+  unavailable for persistence, preventing shutdown/autosave from overwriting
+  existing data with defaults.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: live request-budget behavior and recovery after transient Roblox
+  DataStore outages require Studio/production-like testing.
