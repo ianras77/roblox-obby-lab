@@ -115,6 +115,8 @@ grep -q 'AutomaticCanvasSize = Enum.AutomaticSize.Y' "$ROOT_DIR/src/client/Contr
 if grep -q 'MouseButton1Click' "$ROOT_DIR/src/client/Controllers/UIController.lua"; then fail "HUD controls use mouse-only activation"; fi
 grep -q 'reset.Selectable = true' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "reset button gamepad selection missing"
 grep -q 'button.Selectable = true' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "replay button gamepad selection missing"
+grep -q 'cardConstraint.MinSize = Vector2.new(280, 220)' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results card has no responsive minimum"
+grep -q 'buttonConstraint.MinSize = Vector2.new(84, 44)' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results actions miss touch target minimum"
 grep -q 'math.max(self.highestChapter, stage)' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "practice unlock state is not live-synchronized"
 grep -q 'highestChapter = self.checkpoints' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "completed chapter state missing"
 grep -q 'applyAccessibility' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "accessibility application missing"

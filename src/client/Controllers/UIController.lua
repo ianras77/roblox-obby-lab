@@ -542,6 +542,10 @@ function UIController:showResults(payload)
   card.BackgroundColor3 = Color3.fromRGB(35, 45, 60)
   card.BorderSizePixel = 0
   card.Parent = self.gui
+  local cardConstraint = Instance.new("UISizeConstraint")
+  cardConstraint.MinSize = Vector2.new(280, 220)
+  cardConstraint.MaxSize = Vector2.new(720, 360)
+  cardConstraint.Parent = card
 
   local result = Instance.new("TextLabel")
   result.Name = "Summary"
@@ -586,6 +590,9 @@ function UIController:showResults(payload)
     button.TextScaled = true
     button.Text = text
     button.Parent = card
+    local buttonConstraint = Instance.new("UISizeConstraint")
+    buttonConstraint.MinSize = Vector2.new(84, 44)
+    buttonConstraint.Parent = button
     button.Activated:Connect(function()
       card:Destroy()
       if actionMode == "Practice" then

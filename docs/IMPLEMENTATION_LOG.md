@@ -1344,6 +1344,14 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; device presentation remains Studio-unverified.
 
+## 2026-08-23 — Harden results layout constraints
+
+- Completed: the completion card now has bounded responsive sizing and replay
+  actions retain a minimum 44-pixel touch target for small screens.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; device and gamepad ergonomics remain
+  Studio-unverified.
+
 ## 2026-08-23 — Bound mode teleport startup timing
 
 - Completed: mode resets now wait briefly for a character root before applying
