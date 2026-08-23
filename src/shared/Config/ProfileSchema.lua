@@ -64,7 +64,7 @@ function ProfileSchema.sanitize(raw: any): PlayerProfile
         and validTime
         and chapterNumber % 1 == 0
         and chapterNumber >= 1
-        and chapterNumber <= 100
+        and chapterNumber <= ProfileSchema.MaxChapter
         and validTime > 0
         and validTime < 86400000
       then

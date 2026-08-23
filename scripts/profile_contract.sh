@@ -25,6 +25,7 @@ for marker in (
     'type(raw.settings[key]) == "boolean"',
     "ProfileSchema.MaxCollectedKeys = 100",
     "ProfileSchema.MaxChapter = 18",
+    "chapterNumber <= ProfileSchema.MaxChapter",
     "ProfileSchema.MaxChapter",
     "ProfileSchema.MaxCounter = 1000000000",
     "keyCount >= ProfileSchema.MaxCollectedKeys",

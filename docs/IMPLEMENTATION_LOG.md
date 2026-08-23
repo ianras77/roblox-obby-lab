@@ -841,3 +841,13 @@
   whitespace checks pass locally; Selene remains CI-only in this environment.
 - Unverified: settings persistence and device-specific HUD placement require
   Studio testing.
+
+## 2026-08-23 — Align chapter split bounds with the canonical route
+
+- Completed: profile sanitization now rejects chapter split records beyond
+  `ProfileSchema.MaxChapter`, preventing stale or malformed records from
+  creating split entries outside the 18-chapter route.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: migration behavior against live legacy records requires a
+  Studio sandbox DataStore run.

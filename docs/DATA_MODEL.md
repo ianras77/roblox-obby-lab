@@ -36,6 +36,8 @@ completion never updates the personal best.
 
 Time Trial chapter splits update `bestChapterMs` only when they improve the
 stored split; Adventure and Practice do not submit leaderboard-style splits.
+Split keys are bounded to the canonical 18-chapter route during profile
+sanitization and concurrent datastore merging.
 
 Keys are authored deterministically at chapter locations (one per chapter in
 the current configuration), and the client requests initial HUD state through
