@@ -68,6 +68,17 @@ function WorldValidator.validate(stages: { any }, totalStages: number): ({ strin
       ids[keyId] = true
     end
   end
+  for _, stage in ipairs(stages) do
+    for _, descendant in ipairs(stage.model:GetDescendants()) do
+      if descendant:IsA("BasePart") and not descendant.Anchored then
+        local intentionalRide = descendant:FindFirstAncestorWhichIsA("Model")
+        local isCartPart = intentionalRide and intentionalRide:FindFirstChild("Seat") ~= nil
+        if not isCartPart then
+          table.insert(errors, "unanchored environment part: " .. descendant:GetFullName())
+        end
+      end
+    end
+  end
   return errors, #stages
 end
 

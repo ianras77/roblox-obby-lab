@@ -13,3 +13,7 @@ profiling before replacement.
 Planned work: proximity activation, bounded spatial checks, sleeping distant
 mechanics, pooled effects, anchored scenery, and explicit collision/query
 flags. No frame-rate claim is made here.
+
+The world validator also reports unanchored generated environment parts, while
+allowing intentional cart ride assemblies. Static scenery should remain
+anchored to avoid accidental server physics and replication cost.

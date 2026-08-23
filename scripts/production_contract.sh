@@ -38,5 +38,6 @@ grep -q 'ChapterFlavor' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail
 grep -q 'StageBuildResult' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "explicit stage build result missing"
 grep -q 'duplicate collectible id' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "duplicate collectible validation missing"
 grep -q 'does not progress forward' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "forward geometry validation missing"
+grep -q 'unanchored environment part' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "anchored environment validation missing"
 grep -q 'shutdownBound' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "shutdown callback lifecycle guard missing"
 echo "production contracts ok"
