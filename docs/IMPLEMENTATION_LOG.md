@@ -1795,3 +1795,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: live multi-player collectible behavior remains pending Studio validation.
 - Next executable step: test tagged keys both inside and outside the generated root in a two-client Studio session.
+### 2026-08-24 - Bound streamed hazard accessibility caches
+
+- Completed: original hazard colors/materials are stored in weak-key tables, allowing streamed-out parts and their local accessibility metadata to be collected.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: long-session streaming memory behavior remains pending Studio profiling.
+- Next executable step: stream generated zones in and out repeatedly while watching client memory.

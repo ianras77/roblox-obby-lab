@@ -25,8 +25,8 @@ function UIController.new()
     sfxVolume = 1,
     uiScale = 1,
   }
-  self.originalHazardColors = {}
-  self.originalHazardMaterials = {}
+  self.originalHazardColors = setmetatable({}, { __mode = "k" })
+  self.originalHazardMaterials = setmetatable({}, { __mode = "k" })
   self.hazardHighlights = setmetatable({}, { __mode = "k" })
   self.collectedKeys = {}
   self.gui = self:createGui()

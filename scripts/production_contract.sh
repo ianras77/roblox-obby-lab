@@ -144,6 +144,7 @@ grep -q 'function EnvironmentController:syncInitialState' "$ROOT_DIR/src/client/
 grep -q 'tween:Cancel()' "$ROOT_DIR/src/client/Controllers/EnvironmentController.lua" || fail "environment tween lifecycle is unbounded"
 grep -q 'originalHazardMaterials' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "high contrast material restoration missing"
 grep -q 'HazardContrastOutline' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "high contrast hazard shape cue missing"
+grep -q 'originalHazardColors = setmetatable' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "hazard accessibility cache retains streamed parts"
 grep -q 'GetInstanceAddedSignal("KillBrick")' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "streamed hazards miss high contrast mode"
 grep -q 'workspace.DescendantAdded' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "streamed particle accessibility is not reconciled"
 grep -q 'RemoteContracts.State.name' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "HUD state lookup is not contract-owned"
