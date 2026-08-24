@@ -6,7 +6,8 @@ current environment. The known high-cost paths are the global Heartbeat, rider
 and permanent particle emitters. Studio profiling must measure generation,
 join, chapters 10/12/13/15/18, and a two-player session before release.
 
-Wind and pressure-pad overlap queries are bounded to a 10 Hz server tick, and
+Wind and pressure-pad overlap queries are bounded to a 10 Hz server tick and a
+64-part result cap, and
 moving-platform rider sampling is bounded to a 20 Hz server tick. The obstacle
 transforms remain centralized, while rotators, gavel animation, and timed-tile
 state updates are bounded to a 30 Hz server tick. Moving-platform transforms

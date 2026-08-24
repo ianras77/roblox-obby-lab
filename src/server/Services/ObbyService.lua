@@ -13,6 +13,10 @@ local RunStateService = require(script.Parent.RunStateService)
 local RemoteContracts = require(ReplicatedStorage:WaitForChild("Network"):WaitForChild("RemoteContracts"))
 local AnalyticsService = require(script.Parent.AnalyticsService)
 
+local mechanicOverlapParams = OverlapParams.new()
+mechanicOverlapParams.MaxParts = 64
+mechanicOverlapParams.RespectCanCollide = false
+
 local function resolveDirection(part)
   local axisAttr = part:GetAttribute("Axis") or part:GetAttribute("Direction")
   if typeof(axisAttr) == "Vector3" and axisAttr.Magnitude > 0 then
@@ -103,7 +107,7 @@ local function hasNearbyPlayer(position, radius)
 end
 
 local function getOverlappingParts(part)
-  return workspace:GetPartsInPart(part)
+  return workspace:GetPartsInPart(part, mechanicOverlapParams)
 end
 
 local function bindSettings(self)
