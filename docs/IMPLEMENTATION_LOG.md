@@ -1603,3 +1603,11 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; live shutdown timing remains
   Studio-unverified.
+
+## 2026-08-24 — Add executable pure-Luau progression tests
+
+- Completed: core checkpoint normalization and contiguous progression rules now
+  have executable assertions under tests/, run by CI with pinned Luau 0.734.
+- Tests: local contract and Stylua checks pass; Luau execution is CI-verified
+  after the new runner installation, while Roblox runtime behavior remains
+  Studio-unverified.

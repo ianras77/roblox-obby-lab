@@ -1,8 +1,9 @@
 # Tests
 
-This folder contains test notes. A Roblox or Luau test runner is not installed
-in this environment, so runtime tests are explicitly tracked as pending rather
-than reported as green.
+This folder contains pure-Luau tests that do not require Roblox services. CI
+installs the pinned Luau 0.734 runner and executes them through scripts/check.sh.
+Roblox-only behavior is still explicitly tracked as pending rather than
+reported as green.
 
 The current storyboard, production, and canonical configuration contracts run
 from `scripts/` so `scripts/check.sh` works in the shared Roblox toolchain

@@ -33,6 +33,11 @@ jobs:
             --output /tmp/rojo.zip
           unzip -q /tmp/rojo.zip -d /tmp/rojo
           install -m 0755 /tmp/rojo/rojo "$HOME/.local/bin/rojo"
+          curl --fail --silent --show-error --location \
+            "https://github.com/luau-lang/luau/releases/download/0.734/luau-ubuntu.zip" \
+            --output /tmp/luau.zip
+          unzip -q /tmp/luau.zip -d /tmp/luau
+          install -m 0755 /tmp/luau/luau "$HOME/.local/bin/luau"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Format & lint
         run: ./scripts/check.sh
