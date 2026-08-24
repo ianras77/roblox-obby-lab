@@ -2,6 +2,7 @@
 
 local Players = game:GetService("Players")
 local Maid = require(game:GetService("ReplicatedStorage"):WaitForChild("Util"):WaitForChild("Maid"))
+local RunRules = require(game:GetService("ReplicatedStorage"):WaitForChild("Util"):WaitForChild("RunRules"))
 
 local RunStateService = {}
 RunStateService.__index = RunStateService
@@ -93,7 +94,7 @@ function RunStateService:startAtGate(player: Player, gate: BasePart): boolean
 end
 
 function RunStateService:onChapterReached(player: Player, stageIndex: number): (number?, boolean)
-  if type(stageIndex) ~= "number" or stageIndex % 1 ~= 0 or stageIndex < 1 or stageIndex > self.totalStages then
+  if not RunRules.isValidStage(stageIndex, self.totalStages) then
     return nil, false
   end
   local state = self:get(player)
@@ -109,11 +110,8 @@ function RunStateService:onChapterReached(player: Player, stageIndex: number): (
   if stageIndex == self.totalStages and not state.completedAt then
     state.completedAt = os.clock()
     player:SetAttribute("RunCompleted", true)
-    if state.mode == "Practice" then
-      return nil, false
-    end
     local elapsed = state.completedAt - state.startedAt
-    if state.mode == "TimeTrial" and elapsed < self.minimumTimeTrialSeconds then
+    if not RunRules.isEligibleCompletion(state.mode, elapsed, self.minimumTimeTrialSeconds) then
       return elapsed, false
     end
     return elapsed, true
