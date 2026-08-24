@@ -77,6 +77,12 @@ and analytics consumers do not need to treat mutable labels as identity.
 The initial `GetObbyState` response carries the same presentation bundle, which
 prevents restored players from waiting for a new checkpoint to populate HUD
 chapter context.
+The post-load initialized progression event also carries restored settings and
+per-player key state, closing the asynchronous profile-load race for clients
+that invoke state before the profile is ready.
+The generated key total is counted before the checkpoint service starts its
+player-load tasks, so the first HUD synchronization cannot report a transient
+zero collectible total.
 
 World bootstrap validates that every shared event is actually a `RemoteEvent`
 and that `GetObbyState` is a `RemoteFunction`; a name collision with another

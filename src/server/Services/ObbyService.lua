@@ -257,6 +257,9 @@ function ObbyService.new()
     }
   end
   self.runState = RunStateService.new(self.world.totalStages, GameConfig.MinimumTimeTrialSeconds)
+  -- Count authored collectibles before CheckpointService can emit the first
+  -- initialized state to a player-loading task.
+  self.totalKeys = #CollectionService:GetTagged("KeyCollectible")
   self.checkpoints = CheckpointService.new(
     self.world.stages,
     self.world.progressEvent,
@@ -269,7 +272,6 @@ function ObbyService.new()
   self.checkpoints:bindCheckpoints()
   self.keyProgress = {}
   self.collectedKeys = {}
-  self.totalKeys = 0
   bindSettings(self)
   bindRunModes(self)
   bindPracticeStage(self)
@@ -908,6 +910,7 @@ function ObbyService:rebuild(seed)
     }
   end
   self.runState = RunStateService.new(self.world.totalStages, GameConfig.MinimumTimeTrialSeconds)
+  self.totalKeys = #CollectionService:GetTagged("KeyCollectible")
   self.checkpoints = CheckpointService.new(
     self.world.stages,
     self.world.progressEvent,
@@ -919,7 +922,6 @@ function ObbyService:rebuild(seed)
   )
   self.checkpoints:bindCheckpoints()
   self.keyProgress = {}
-  self.totalKeys = 0
   bindSettings(self)
   bindRunModes(self)
   bindPracticeStage(self)

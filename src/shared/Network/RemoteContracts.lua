@@ -5,7 +5,7 @@ local RemoteContracts = {
   Progress = {
     name = "ObbyProgress",
     direction = "server_to_client",
-    payload = "{ stage: number, total: number, mode: string, highestChapter: number?, chapterId: string?, chapterName: string?, mechanic: string?, flavor: string?, initialized: boolean?, runStarted: boolean?, elapsedMs: number? }",
+    payload = "{ stage: number, total: number, mode: string, highestChapter: number?, chapterId: string?, chapterName: string?, mechanic: string?, flavor: string?, initialized: boolean?, keys: number?, totalKeys: number?, collectedKeys: table?, settings: table?, runStarted: boolean?, elapsedMs: number? }",
   },
   Keys = {
     name = "KeyProgress",

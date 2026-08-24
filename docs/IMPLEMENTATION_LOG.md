@@ -1536,6 +1536,24 @@
   whitespace checks pass locally; live analytics delivery remains
   Studio-unverified.
 
+## 2026-08-23 — Close the restored-profile initialization race
+
+- Completed: the authoritative initialized progression event now synchronizes
+  restored keys, settings, and chapter presentation after asynchronous profile
+  loading; early state requests no longer leave the HUD with stale defaults.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; reconnect and Studio profile timing remain
+  unverified.
+
+## 2026-08-24 — Initialize collectible totals before profile events
+
+- Completed: generated key totals are counted before asynchronous checkpoint
+  profile loading starts, preventing an initialized HUD from caching `0/0`
+  collectibles during startup.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live startup scheduling remains
+  Studio-unverified.
+
 ## 2026-08-23 — Add original local vector art sources
 
 - Completed: added source-ready storybook railway-ticket branding and a Golden

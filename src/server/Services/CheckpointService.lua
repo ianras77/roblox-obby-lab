@@ -136,6 +136,16 @@ function CheckpointService:initializePlayer(player)
       chapterName = currentStage and currentStage.model:GetAttribute("ChapterName") or nil,
       mechanic = currentStage and currentStage.model:GetAttribute("PrimaryMechanic") or nil,
       flavor = currentStage and currentStage.model:GetAttribute("ChapterFlavor") or nil,
+      keys = (function()
+        local count = 0
+        for _ in pairs(self:getProfile(player).collectedKeys) do
+          count += 1
+        end
+        return count
+      end)(),
+      totalKeys = self.totalKeysProvider and self.totalKeysProvider() or nil,
+      collectedKeys = self:getProfile(player).collectedKeys,
+      settings = self:getProfile(player).settings,
       runStarted = run and run.running or false,
       elapsedMs = self.runState and math.floor(self.runState:getElapsed(player) * 1000) or 0,
     })

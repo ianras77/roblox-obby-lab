@@ -456,6 +456,21 @@ function UIController:bind()
 
   self.progressEvent.OnClientEvent:Connect(function(payload)
     self.lastProgressPayload = payload
+    if payload.initialized then
+      self.highestChapter = payload.highestChapter or self.highestChapter
+      self:updateKeys(payload.keys or 0, payload.totalKeys or 0)
+      self:applyCollectedKeys(payload.collectedKeys)
+      for key, enabled in pairs(payload.settings or {}) do
+        if self.settings[key] ~= nil and (type(enabled) == "boolean" or type(enabled) == "number") then
+          self.settings[key] = enabled
+          self.player:SetAttribute("Accessibility_" .. key, enabled)
+        end
+      end
+      self:applyUIScale()
+      self:applyAccessibility()
+      self:applyAudioVolumes()
+      self:refreshVolumeLabels()
+    end
     local stage = payload.stage or 0
     local total = payload.total or 1
     self:updateTimerState(payload)
