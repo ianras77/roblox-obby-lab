@@ -1646,3 +1646,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; malformed-world execution in Studio remains
   unverified.
+
+## 2026-08-24 — Reuse checkpoint type guard in validator
+
+- Completed: later checkpoint geometry validation now reuses the validated
+  `BasePart` predicate, preventing malformed non-Instance checkpoint values
+  from causing validator method-call errors.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; malformed-world Studio execution remains
+  unverified.

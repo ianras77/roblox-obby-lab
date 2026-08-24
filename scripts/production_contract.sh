@@ -26,7 +26,7 @@ grep -q 'center = zoneCFrame.Position' "$ROOT_DIR/src/server/WorldGen/WorldBuild
 grep -q 'zoneIndex = args.zoneIndex' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage zone ownership missing"
 grep -q 'local modelIsModel = typeof(stageModel) == "Instance"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator model guard missing"
 grep -q 'if typeof(stage.model) == "Instance" and stage.model:IsA("Model")' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator descendant guard missing"
-grep -q 'if stage.checkpoint and stage.checkpoint:IsA("BasePart")' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator checkpoint guard missing"
+grep -q 'if checkpointIsPart then' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator checkpoint guard missing"
 grep -q 'typeof(stage.entrance) == "CFrame"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator CFrame type guards missing"
 grep -q 'finiteVector(stage.bounds)' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator finite geometry guard missing"
 grep -q 'typeof(stage.bounds) ~= "Vector3"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator bounds type guard missing"

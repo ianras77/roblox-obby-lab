@@ -235,7 +235,7 @@ function WorldValidator.validate(
     if validSafeSpawn and not finiteVector(stage.safeSpawn.Position) then
       table.insert(errors, string.format("stage %s has invalid safe spawn position", stageLabel(stage)))
     end
-    if stage.checkpoint and stage.checkpoint:IsA("BasePart") then
+    if checkpointIsPart then
       if stage.checkpoint.Size.X < 4 or stage.checkpoint.Size.Z < 4 then
         table.insert(errors, string.format("stage %s checkpoint has insufficient standing room", stageLabel(stage)))
       end
