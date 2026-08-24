@@ -1331,6 +1331,20 @@ function StageTemplates.RoadsideConeSprint(ctx)
   )
   sidewalk.Material = Enum.Material.SmoothPlastic
 
+  -- A visible, riskier shortcut runs beside the marked road. It is optional:
+  -- the full-width road remains the reliable route for first-time players.
+  for i = 1, 5 do
+    local shortcut = basePlatform(
+      model,
+      ctx.origin * CFrame.new((length / 6) * i, 2.4, -WorldGenConfig.PathWidth * 0.52),
+      Color3.fromRGB(218, 166, 72),
+      Vector3.new(8, 0.8, 3.5)
+    )
+    shortcut.Name = "OptionalConeShortcut"
+    shortcut.Material = Enum.Material.WoodPlanks
+    Build.tag(shortcut, { "Beacon" })
+  end
+
   addSign(model, ctx.origin * CFrame.new(8, 6, -7), "Cone sprint!")
   addPathLights(model, ctx.origin, length, Color3.fromRGB(255, 210, 120), -WorldGenConfig.PathWidth * 0.45)
   return model, ctx.origin * CFrame.new(length + 8, 0, 0)
