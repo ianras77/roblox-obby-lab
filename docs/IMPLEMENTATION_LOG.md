@@ -1735,3 +1735,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: physical ride behavior still requires Studio execution.
 - Next executable step: verify the cart reaches the intended dismount area without premature reset.
+### 2026-08-24 - Guard finale spotlight parenting
+
+- Completed: finale spotlight effects now require a live character root; a missing root is handled by destroying the unparented light instead of attempting to parent it to Terrain.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: finale presentation remains Studio-only for visual verification.
+- Next executable step: trigger completion during respawn/loading and confirm no client Output error.

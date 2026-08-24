@@ -177,6 +177,7 @@ grep -q 'getApprovedId("checkpoint_feedback")' "$ROOT_DIR/src/shared/Util/Build.
 grep -q 'getApprovedId("key_pickup")' "$ROOT_DIR/src/shared/Util/Build.lua" || fail "key sound bypasses asset registry"
 grep -q 'getApprovedId("finale_firework")' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale particle bypasses asset registry"
 grep -q 'getApprovedId("finale_chime")' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale sound bypasses asset registry"
+grep -q 'spot:Destroy()' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale spotlight has an invalid fallback parent"
 if grep -R -q 'rbxassetid://' "$ROOT_DIR/src/server/WorldGen" "$ROOT_DIR/src/shared/Util"; then fail "generated visual assets bypass registry"; fi
 if grep -R -q 'AmbientSoundId' "$ROOT_DIR/src"; then fail "zone ambience bypasses asset registry"; fi
 grep -q 'getApprovedId(zoneConfig.AmbientSoundKey)' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "zone ambience is not approval-gated"

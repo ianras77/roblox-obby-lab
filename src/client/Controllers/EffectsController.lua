@@ -74,9 +74,13 @@ function EffectsController:finale()
     spot.Brightness = 4
     spot.Angle = 90
     spot.Range = 40
-    spot.Parent = root or workspace.Terrain
-    TweenService:Create(spot, TweenInfo.new(2, Enum.EasingStyle.Quad), { Brightness = 0 }):Play()
-    game.Debris:AddItem(spot, 3)
+    if root then
+      spot.Parent = root
+      TweenService:Create(spot, TweenInfo.new(2, Enum.EasingStyle.Quad), { Brightness = 0 }):Play()
+      game.Debris:AddItem(spot, 3)
+    else
+      spot:Destroy()
+    end
   end
 
   if not reduceFlashes then
