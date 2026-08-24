@@ -1777,3 +1777,9 @@
 - Tests run: formatting, contracts, and direct Luau progression/profile/run-rule/asset tests passed; current branch CI is the authoritative full-toolchain check.
 - Observed issues: live DataStore migration and persistence behavior remain unverified without Studio.
 - Next executable step: exercise malformed legacy records in Studio sandbox and verify safe recovery.
+### 2026-08-24 - Expand asset manifest confidence checks
+
+- Completed: asset tests now enforce unique logical keys and require type, source, note, and valid Roblox ID metadata for every registry entry.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: registry IDs remain unverified for ownership, permission, and playback.
+- Next executable step: complete Creator Hub review before marking release assets approved.
