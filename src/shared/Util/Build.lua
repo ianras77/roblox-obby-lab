@@ -131,7 +131,7 @@ function Build.collectibleKey(cframe, parent)
   return key
 end
 
-function Build.cart(cframe, parent)
+function Build.cart(cframe, parent, rideMaxDistance)
   local model = Build.model("ToadCart", parent)
   local base = Build.part({
     Name = "CartBase",
@@ -142,7 +142,7 @@ function Build.cart(cframe, parent)
     Material = Enum.Material.Wood,
     Anchored = false,
     Tags = { "Cart" },
-    Attributes = { RideMaxDistance = 68 },
+    Attributes = { RideMaxDistance = rideMaxDistance or 68 },
   })
   local seat = Instance.new("Seat")
   seat.Name = "Seat"

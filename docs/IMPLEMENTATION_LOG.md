@@ -1729,3 +1729,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: cart seating and multi-client ride feel remain unverified without Studio.
 - Next executable step: playtest boarding, route completion, missed boarding, and simultaneous riders.
+### 2026-08-24 - Couple cart safety to stage geometry
+
+- Completed: the Laundry Cart template now passes its authored route length into the cart builder, keeping the reset boundary aligned when stage dimensions change.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: physical ride behavior still requires Studio execution.
+- Next executable step: verify the cart reaches the intended dismount area without premature reset.
