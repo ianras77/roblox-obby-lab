@@ -109,3 +109,4 @@ it independently.
 
 Shutdown persistence is registered once at module scope and follows the active
 checkpoint service across Studio rebuilds, preventing duplicate save callbacks.
+`CameraController` owns restrained, player-local celebration motion and honors reduced-motion settings.

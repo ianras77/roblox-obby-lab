@@ -1705,3 +1705,9 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; live respawn activation remains
   Studio-unverified.
+### 2026-08-24 - Add restrained finale camera presentation
+
+- Completed: added a local `CameraController` for a short, player-specific finale lift/settle effect; reduced motion skips it.
+- Tests run: formatting, lint, contracts, pure-Luau tests, and Rojo build via CI.
+- Observed issues: camera behavior remains unverified without Roblox Studio playtest.
+- Next executable step: run the finale with reduced-motion and multiplayer clients in Studio.
