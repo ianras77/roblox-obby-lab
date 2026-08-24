@@ -1,6 +1,6 @@
 # Factual audit
 
-Audit baseline: 2026-08-23, branch `codex/toads-great-escape-next-level`.
+Audit baseline: 2026-08-24, branch `codex/toads-great-escape-next-level`.
 
 ## Repository and source of truth
 
@@ -12,7 +12,8 @@ manual Studio comparison before either is treated as authoritative.
 
 ## What exists
 
-- 3 configured zones and 18 named stage templates.
+- 3 configured zones and 18 named stage templates; generator provenance is
+  currently version `3`.
 - Deterministic seeded generation, CollectionService obstacle tags, a central
   `ObbyService`, checkpoint service, DataStore wrapper, HUD, and effects.
 - Development chat commands for rebuild, reseed, and stage teleport.
@@ -31,8 +32,9 @@ manual Studio comparison before either is treated as authoritative.
 - Keys are now authored deterministically with stable IDs and per-player credit;
   duplicate-ID validation is active.
 - Persistence now has an explicit environment gate, versioned profile schema,
-  bounded retry wrapper, autosave, and shutdown save. Migration coverage and
-  live DataStore behavior still require Studio validation.
+  bounded retry wrapper, autosave, concurrent bounded shutdown saves, and
+  executable pure-Luau migration/bounds tests. Live DataStore behavior still
+  requires Studio validation.
 - `ObbyService` uses a server Heartbeat for critical motion and bounded 10 Hz
   queries for wind and pressure pads; moving-platform rider correction remains
   a Studio physics validation item.
@@ -40,12 +42,16 @@ manual Studio comparison before either is treated as authoritative.
   anchored from zone bounds; Studio visual verification remains pending.
 - Asset references are inventoried and unverified IDs are gated from release
   music; asset permissions and playback remain pending Creator Hub/Studio.
-- UI now has an initial state handshake, settings, mode, and basic accessibility
-  controls; responsive device and gamepad behavior remain unverified.
+- UI now has an initial state handshake, settings, mode, responsive touch
+  targets, and accessibility controls; device and gamepad behavior remain
+  unverified.
+- Original local vector branding and Golden Key source art are present under
+  `art/`; Roblox upload and in-game rendering remain unverified.
 - Server capacity configuration is now intentionally left to Creator Hub;
   unused Lua capacity knobs are not treated as effective settings.
 - Automated confidence includes configuration, storyboard, production, Stylua,
-  Selene, and CI Rojo-build gates; runtime traversal still requires Studio.
+  Selene, pure-Luau progression/profile tests, and CI Rojo-build gates; runtime
+  traversal still requires Studio.
 
 ## Not claimed as tested
 

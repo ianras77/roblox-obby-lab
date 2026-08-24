@@ -1656,6 +1656,14 @@
   whitespace checks pass locally; malformed-world Studio execution remains
   unverified.
 
+## 2026-08-24 — Refresh factual audit baseline
+
+- Completed: `docs/AUDIT.md` now records generator version 3, executable profile
+  tests, concurrent shutdown saves, responsive HUD work, local art sources, and
+  the current Studio-only verification boundary.
+- Tests: documentation checked against current source and validation commands;
+  Roblox Studio and Creator Hub evidence remain pending.
+
 ## 2026-08-24 — Exclude dead characters from mechanic activation
 
 - Completed: proximity activation now requires a live Humanoid, so defeated or
