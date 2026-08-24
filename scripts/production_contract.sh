@@ -50,6 +50,7 @@ grep -q 'not measured correctly' "$ROOT_DIR/src/server/WorldGen/WorldValidator.l
 grep -q 'typeof(stageModel) == "Instance"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator instance type guards missing"
 grep -q 'local owned = false' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator collectible ownership scope missing"
 grep -q 'normalizeCheckpoint' "$ROOT_DIR/src/shared/Util/ProgressionRules.lua" || fail "checkpoint normalization guard missing"
+grep -q 'math.abs(value) < math.huge' "$ROOT_DIR/src/shared/Util/ProgressionRules.lua" || fail "non-finite progression values are not rejected"
 grep -q 'ProgressionRules.canAdvance' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "shared progression rules are not authoritative"
 grep -q 'function ProgressionRules.canAdvance' "$ROOT_DIR/src/shared/Util/ProgressionRules.lua" || fail "pure progression rule missing"
 if grep -q 'part:Destroy()' "$ROOT_DIR/src/server/Services/ObbyService.lua"; then

@@ -1681,6 +1681,14 @@
   pure-Luau checks pass locally; live datastore integration remains
   Studio-unverified.
 
+## 2026-08-24 — Reject non-finite progression inputs
+
+- Completed: pure progression rules now reject infinite checkpoint and route
+  size values before arithmetic, covering malformed numeric inputs at the
+  progression boundary.
+- Tests: progression and profile pure-Luau suites, configuration, profile,
+  storyboard, production, Stylua, and whitespace checks pass locally.
+
 ## 2026-08-24 — Exclude dead characters from mechanic activation
 
 - Completed: proximity activation now requires a live Humanoid, so defeated or
