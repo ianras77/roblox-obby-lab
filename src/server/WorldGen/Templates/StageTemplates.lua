@@ -1087,6 +1087,23 @@ end
 
 function StageTemplates.TavernBarrelHop(ctx)
   local model, endCFrame = StageTemplates.PubChaos(ctx)
+  local length = WorldGenConfig.StageLengthMax
+  for i = 1, 4 do
+    local barrel = Build.part({
+      Name = "TavernBarrel",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(length * (0.18 + i * 0.16), 2.2, (i % 2 == 0) and -4 or 4),
+      Size = Vector3.new(3.5, 3.5, 3.5),
+      Color = Color3.fromRGB(139, 86, 45),
+      Material = Enum.Material.WoodPlanks,
+      Tags = { "Rotator", "Beacon" },
+      Attributes = { RotSpeed = scaleSpeed(ctx, ObstacleConfig.RotatorSpeed * 0.8, 0.7, 1.25) },
+    })
+    barrel.Shape = Enum.PartType.Cylinder
+    barrel.Orientation = Vector3.new(0, 0, 90)
+    barrel.CanCollide = false
+    addSparkles(barrel, Color3.fromRGB(255, 210, 120), 3)
+  end
   addSign(model, ctx.origin * CFrame.new(8, 6, -7), "Barrel hop!")
   return model, endCFrame
 end
