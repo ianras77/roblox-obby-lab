@@ -11,5 +11,6 @@ cd "$ROOT_DIR"
 luau "$ROOT_DIR/tests/progression_rules_spec.lua"
 luau "$ROOT_DIR/tests/profile_schema_spec.lua"
 luau "$ROOT_DIR/tests/run_rules_spec.lua"
+luau "$ROOT_DIR/tests/asset_registry_spec.lua"
 stylua --check src tests
 selene src tests

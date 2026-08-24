@@ -1753,3 +1753,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: effect timing and cleanup still need Studio Output/playtest verification.
 - Next executable step: inspect the client Output during repeated checkpoints and finale resets.
+### 2026-08-24 - Test asset approval boundaries
+
+- Completed: added pure-Luau coverage for asset ID shape, unknown-key fallback, and rejection of every unverified/unapproved registry entry.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: actual asset availability and ownership still require Creator Hub verification.
+- Next executable step: approve confirmed assets in the registry and run preload checks in Studio.
