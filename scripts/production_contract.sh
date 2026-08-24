@@ -197,6 +197,7 @@ grep -q 'StageBuildResult' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || f
 grep -q 'No stage template registered' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "missing stage templates must fail closed"
 grep -q 'did not return a valid exit CFrame' "$ROOT_DIR/src/server/WorldGen/StageBuilder.lua" || fail "invalid template exits must fail closed"
 grep -q 'duplicate collectible id' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "duplicate collectible validation missing"
+grep -q 'expected %d owned collectibles' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "authored collectible count validation missing"
 grep -q 'does not progress forward' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "forward geometry validation missing"
 grep -q 'unanchored environment part' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "anchored environment validation missing"
 grep -q 'PhysicsDecor' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "intentional physics decoration marker missing"

@@ -290,6 +290,7 @@ function WorldValidator.validate(
       table.insert(errors, "missing checkpoint for stage " .. index)
     end
   end
+  local ownedKeyCount = 0
   for _, key in ipairs(CollectionService:GetTagged("KeyCollectible")) do
     local owned = false
     for _, stage in ipairs(stages) do
@@ -299,6 +300,7 @@ function WorldValidator.validate(
       end
     end
     if owned then
+      ownedKeyCount += 1
       local keyId = key:GetAttribute("KeyId")
       if type(keyId) ~= "string" or #keyId == 0 or #keyId > 80 then
         table.insert(errors, "collectible missing KeyId: " .. key:GetFullName())
@@ -308,6 +310,10 @@ function WorldValidator.validate(
         ids[keyId] = true
       end
     end
+  end
+  local expectedKeys = totalStages * math.max(0, GameConfig.AuthoredKeysPerChapter or 0)
+  if ownedKeyCount ~= expectedKeys then
+    table.insert(errors, string.format("expected %d owned collectibles, found %d", expectedKeys, ownedKeyCount))
   end
   for _, stage in ipairs(stages) do
     if typeof(stage.model) == "Instance" and stage.model:IsA("Model") then

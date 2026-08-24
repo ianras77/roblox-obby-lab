@@ -1801,3 +1801,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: long-session streaming memory behavior remains pending Studio profiling.
 - Next executable step: stream generated zones in and out repeatedly while watching client memory.
+### 2026-08-24 - Validate authored collectible count
+
+- Completed: world validation now checks that generated stages contain exactly the configured authored Golden Key count, while ignoring unrelated tagged content outside the generated stages.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: validator behavior against live Studio-tagged content remains unverified.
+- Next executable step: add an unrelated tagged key outside the generated root in Studio and confirm validation ignores it.
