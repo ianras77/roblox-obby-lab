@@ -1,8 +1,8 @@
 # Release checklist
 
 - [x] Local configuration, storyboard, production, and Stylua checks pass.
-- [ ] Selene and pure-Luau tests pass in a local toolchain; pure-Luau tests run
-      in CI, while Selene/Luau are not installed in this environment.
+- [x] Selene and pure-Luau tests pass in CI; local pure-Luau execution was
+      also verified with pinned Luau, while Selene is not installed here.
 - [x] CI produces a valid Rojo place artifact from `default.project.json` using
       the pinned official Rojo release binary.
 - [x] CI uses pinned official release binaries for Stylua and Selene.

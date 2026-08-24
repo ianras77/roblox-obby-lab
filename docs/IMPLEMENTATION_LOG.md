@@ -1664,6 +1664,14 @@
 - Tests: documentation checked against current source and validation commands;
   Roblox Studio and Creator Hub evidence remain pending.
 
+## 2026-08-24 — Reconcile release checklist with CI evidence
+
+- Completed: the release checklist now marks CI Selene/pure-Luau validation as
+  complete and retains only the local Selene toolchain limitation and actual
+  Studio/Creator Hub release gates as pending.
+- Tests: latest GitHub CI run passed its format, lint, pure-Luau, and Rojo build
+  steps; Studio and Creator Hub checks remain unverified.
+
 ## 2026-08-24 — Exclude dead characters from mechanic activation
 
 - Completed: proximity activation now requires a live Humanoid, so defeated or
