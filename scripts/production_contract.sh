@@ -6,7 +6,7 @@ fail() { echo "FAIL: $*" >&2; exit 1; }
 
 grep -q 'Name = "GeneratedObby"' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "generated ownership root missing"
 grep -q 'GeneratorOwner' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "generator ownership marker missing"
-grep -q 'GeneratorVersion = "2"' "$ROOT_DIR/src/shared/Config/WorldGenConfig.lua" || fail "canonical generator version missing"
+grep -q 'GeneratorVersion = "3"' "$ROOT_DIR/src/shared/Config/WorldGenConfig.lua" || fail "canonical generator version missing"
 grep -q 'unsupported generator version' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "generator version validation missing"
 grep -q 'generated root has an invalid seed' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "generated root seed validation missing"
 grep -q 'not parented to Workspace' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "generated root parent validation missing"

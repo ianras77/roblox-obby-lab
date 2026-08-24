@@ -1,6 +1,6 @@
 local WorldGenConfig = {
   -- Bump when structural generation changes so old seeds remain identifiable.
-  GeneratorVersion = "2",
+  GeneratorVersion = "3",
   StageTypes = {
     "RiverbankWelcome",
     "MoleBurrowBounce",

@@ -1628,3 +1628,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; generated vertical spacing remains
   Studio-unverified.
+
+## 2026-08-24 — Bump generator provenance for route changes
+
+- Completed: structural generator version advanced from `2` to `3` to identify
+  the corrected inter-zone contract and authored collectible lanes in generated
+  roots and rebuild diagnostics.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; cross-version Studio rebuild behavior remains
+  unverified.
