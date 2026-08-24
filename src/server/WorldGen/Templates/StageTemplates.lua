@@ -1198,6 +1198,27 @@ end
 
 function StageTemplates.BargeCrossing(ctx)
   local model, endCFrame = StageTemplates.RiverBarge(ctx)
+  local span = WorldGenConfig.StageLengthMax
+  for i = 1, 3 do
+    local cargo = Build.part({
+      Name = "BargeCargoCrate",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(span * (0.2 + i * 0.18), 2.1, (i % 2 == 0) and 5 or -5),
+      Size = Vector3.new(4, 3, 4),
+      Color = (i % 2 == 0) and Color3.fromRGB(188, 132, 72) or Color3.fromRGB(105, 76, 54),
+      Material = Enum.Material.WoodPlanks,
+      Tags = { "MovingPlatform", "Beacon" },
+      Attributes = {
+        Amplitude = 4,
+        Speed = scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.45, 0.7, 1.3),
+        Axis = Vector3.new(0, 0, 1),
+        CarryPlayers = true,
+        Phase = i * 0.9,
+      },
+    })
+    addSparkles(cargo, Color3.fromRGB(255, 220, 130), 3)
+  end
+  addSign(model, ctx.origin * CFrame.new(span * 0.42, 7, -8), "Mind the shifting cargo")
   addSign(model, ctx.origin * CFrame.new(8, 6, -8), "Barge crossing")
   return model, endCFrame
 end
