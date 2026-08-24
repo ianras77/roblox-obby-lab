@@ -1334,6 +1334,42 @@ function StageTemplates.ToadHallFireworks(ctx)
 
   addArch(model, ctx.origin * CFrame.new(length * 0.82, 0, 0), "Toad Hall Party", Color3.fromRGB(120, 80, 50))
 
+  -- The finish line is a small theatrical set rather than a bare checkpoint:
+  -- towers, bunting, and bells make the destination readable from the approach.
+  for _, side in ipairs({ -1, 1 }) do
+    local tower = Build.part({
+      Name = "FinaleBellTower",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(length * 0.82, 5, side * 8),
+      Size = Vector3.new(3, 10, 3),
+      Color = Color3.fromRGB(184, 164, 128),
+      Material = Enum.Material.Slate,
+    })
+    tower.CanCollide = false
+    local bell = Build.part({
+      Name = "FinaleBell",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(length * 0.82, 11, side * 8),
+      Size = Vector3.new(4, 2, 4),
+      Color = Color3.fromRGB(218, 166, 72),
+      Material = Enum.Material.Metal,
+    })
+    bell.Shape = Enum.PartType.Ball
+    bell.CanCollide = false
+  end
+
+  for i = 1, 7 do
+    local bunting = Build.part({
+      Name = "FinaleBunting",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(length * (0.58 + i * 0.05), 10 - math.abs(4 - i) * 0.45, 0),
+      Size = Vector3.new(3, 0.35, 5),
+      Color = (i % 2 == 0) and Color3.fromRGB(120, 240, 255) or Color3.fromRGB(255, 225, 110),
+      Material = Enum.Material.Fabric,
+    })
+    bunting.CanCollide = false
+  end
+
   for i = 1, 5 do
     local firework = Build.part({
       Name = "FinaleFirework",
