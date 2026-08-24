@@ -572,6 +572,33 @@ function StageTemplates.TrainTunnel(ctx)
     lantern.CanCollide = false
   end
 
+  -- Telegraph the train and give players readable recovery pockets. The
+  -- pockets sit outside the central track lane and are never required for
+  -- forward progress.
+  for i, pct in ipairs({ 0.24, 0.52, 0.8 }) do
+    for _, side in ipairs({ -1, 1 }) do
+      local alcove = basePlatform(
+        model,
+        ctx.origin * CFrame.new(length * pct, 1.2, side * (WorldGenConfig.PathWidth * 0.5 + 1.5)),
+        Color3.fromRGB(75, 80, 92),
+        Vector3.new(5, 0.8, 3.5)
+      )
+      alcove.Name = "TrainSafeAlcove"
+      alcove.Material = Enum.Material.Slate
+      local warning = Build.part({
+        Name = "TrainWarningLamp",
+        Parent = model,
+        CFrame = ctx.origin * CFrame.new(length * pct, 4, side * (WorldGenConfig.PathWidth * 0.5 + 1.5)),
+        Size = Vector3.new(1.2, 1.2, 1.2),
+        Color = (i % 2 == 0) and Color3.fromRGB(255, 210, 90) or Color3.fromRGB(120, 240, 255),
+        Material = Enum.Material.Neon,
+        Tags = { "Beacon" },
+      })
+      warning.CanCollide = false
+    end
+  end
+  addSign(model, ctx.origin * CFrame.new(length * 0.18, 6, -WorldGenConfig.PathWidth * 0.5), "Listen for the signal")
+
   return model, ctx.origin * CFrame.new(length + 14, 0, 0)
 end
 
