@@ -37,6 +37,15 @@ percentage, including the zero-key case.
 Also verify a new player cannot activate Time Trial, and that it becomes
 available only after an Adventure completion.
 
+For generated-world ownership, add a tagged key outside `Workspace.GeneratedObby`
+and confirm it does not change the HUD total, results exploration percentage, or
+server analytics. Deliberately alter a generated key's `StageIndex` and confirm
+`WorldValidator` rejects the build.
+
+For active mechanics, profile moving-platform riders, wind zones, and pressure
+pads with two clients while checking that overlap results remain bounded and
+that players are still detected when decorative parts overlap the query volume.
+
 Reset and death should clear residual velocity before safe-spawn teleport; test
 this at moving platforms, carts, and hazards.
 
