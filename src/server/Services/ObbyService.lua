@@ -46,6 +46,19 @@ local function countKeys(profile)
   return count
 end
 
+local function countOwnedKeyTags(root)
+  local count = 0
+  if not root then
+    return count
+  end
+  for _, part in ipairs(CollectionService:GetTagged("KeyCollectible")) do
+    if part:IsDescendantOf(root) then
+      count += 1
+    end
+  end
+  return count
+end
+
 local function getChapterPresentation(stages, stageIndex)
   local stage = stages[stageIndex]
   if not stage or not stage.model then
@@ -267,7 +280,7 @@ function ObbyService.new()
   self.runState = RunStateService.new(self.world.totalStages, GameConfig.MinimumTimeTrialSeconds)
   -- Count authored collectibles before CheckpointService can emit the first
   -- initialized state to a player-loading task.
-  self.totalKeys = #CollectionService:GetTagged("KeyCollectible")
+  self.totalKeys = countOwnedKeyTags(self.world.model)
   self.checkpoints = CheckpointService.new(
     self.world.stages,
     self.world.progressEvent,
@@ -655,7 +668,7 @@ function ObbyService:scanBehaviors()
     end))
   end)
 
-  self.totalKeys = #CollectionService:GetTagged("KeyCollectible")
+  self.totalKeys = countOwnedKeyTags(self.world.model)
 end
 
 -- Move any players riding on a platform by the same translation vector so they don't get left behind.
@@ -921,7 +934,7 @@ function ObbyService:rebuild(seed)
     }
   end
   self.runState = RunStateService.new(self.world.totalStages, GameConfig.MinimumTimeTrialSeconds)
-  self.totalKeys = #CollectionService:GetTagged("KeyCollectible")
+  self.totalKeys = countOwnedKeyTags(self.world.model)
   self.checkpoints = CheckpointService.new(
     self.world.stages,
     self.world.progressEvent,

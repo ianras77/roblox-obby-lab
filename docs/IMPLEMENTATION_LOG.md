@@ -1783,3 +1783,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: registry IDs remain unverified for ownership, permission, and playback.
 - Next executable step: complete Creator Hub review before marking release assets approved.
+### 2026-08-24 - Scope Golden Key totals to generated content
+
+- Completed: total Golden Key counts now include only `KeyCollectible` instances beneath the owned generated obby root, matching runtime registration and preventing unrelated Workspace content from changing exploration totals.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: coexistence with tagged user content still requires Studio validation.
+- Next executable step: place an unrelated tagged key outside the generated root in Studio and verify totals remain unchanged.
