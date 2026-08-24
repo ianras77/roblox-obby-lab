@@ -145,7 +145,7 @@ grep -q 'GetInstanceAddedSignal("KillBrick")' "$ROOT_DIR/src/client/Controllers/
 grep -q 'workspace.DescendantAdded' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "streamed particle accessibility is not reconciled"
 grep -q 'RemoteContracts.State.name' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "HUD state lookup is not contract-owned"
 grep -q 'RemoteContracts.State.name' "$ROOT_DIR/src/client/Controllers/EnvironmentController.lua" || fail "environment state lookup is not contract-owned"
-grep -q 'if root and not reducedMotion and not reduceFlashes then' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "reduced motion still emits finale particles"
+grep -q 'if root and not reducedMotion and not reduceFlashes and fireworkTexture ~= "" then' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "reduced motion still emits finale particles"
 grep -q 'MaxDevSeed' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "dev seed cap missing"
 grep -q 'SaveCheckpoints = true' "$ROOT_DIR/src/shared/Config/GameConfig.lua" || fail "production persistence default missing"
 if grep -q 'MaxPlayersPerServer' "$ROOT_DIR/src/shared/Config/GameConfig.lua"; then fail "fake server capacity knob remains"; fi
@@ -178,6 +178,7 @@ grep -q 'getApprovedId("key_pickup")' "$ROOT_DIR/src/shared/Util/Build.lua" || f
 grep -q 'getApprovedId("finale_firework")' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale particle bypasses asset registry"
 grep -q 'getApprovedId("finale_chime")' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale sound bypasses asset registry"
 grep -q 'spot:Destroy()' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale spotlight has an invalid fallback parent"
+grep -q 'fireworkTexture ~= ""' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale effects do not fail closed for missing assets"
 if grep -R -q 'rbxassetid://' "$ROOT_DIR/src/server/WorldGen" "$ROOT_DIR/src/shared/Util"; then fail "generated visual assets bypass registry"; fi
 if grep -R -q 'AmbientSoundId' "$ROOT_DIR/src"; then fail "zone ambience bypasses asset registry"; fi
 grep -q 'getApprovedId(zoneConfig.AmbientSoundKey)' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "zone ambience is not approval-gated"

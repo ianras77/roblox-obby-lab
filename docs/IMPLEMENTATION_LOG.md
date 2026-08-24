@@ -1741,3 +1741,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: finale presentation remains Studio-only for visual verification.
 - Next executable step: trigger completion during respawn/loading and confirm no client Output error.
+### 2026-08-24 - Fail closed on missing finale assets
+
+- Completed: finale fireworks and chime now instantiate only when their registry entries are approved and non-empty; unuploaded assets degrade to the results flow without empty effects.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: Creator Hub asset verification and final visual/audio balance remain pending.
+- Next executable step: verify normal, reduced-motion, and flash-reduction finale paths in Studio.

@@ -96,10 +96,12 @@ function EffectsController:finale()
   end
 
   -- Fireworks at the player
-  if root and not reducedMotion and not reduceFlashes then
+  local fireworkTexture = AssetRegistry.getApprovedId("finale_firework")
+  local finaleChime = AssetRegistry.getApprovedId("finale_chime")
+  if root and not reducedMotion and not reduceFlashes and fireworkTexture ~= "" then
     for _ = 1, 3 do
       local boom = Instance.new("ParticleEmitter")
-      boom.Texture = AssetRegistry.getApprovedId("finale_firework")
+      boom.Texture = fireworkTexture
       boom.Lifetime = NumberRange.new(1, 1.6)
       boom.Speed = NumberRange.new(32, 38)
       boom.Rate = self.player:GetAttribute("Accessibility_lowParticles") and 40 or 200
@@ -108,13 +110,15 @@ function EffectsController:finale()
       boom:Emit(self.player:GetAttribute("Accessibility_lowParticles") and 40 or 200)
       game.Debris:AddItem(boom, 2)
     end
-    local s = Instance.new("Sound")
-    s.SoundId = AssetRegistry.getApprovedId("finale_chime")
-    s.Volume = 1
-    s.SoundGroup = SoundGroups.ensure("SFX", 0.8)
-    s.Parent = root
-    s:Play()
-    game.Debris:AddItem(s, 3)
+    if finaleChime ~= "" then
+      local s = Instance.new("Sound")
+      s.SoundId = finaleChime
+      s.Volume = 1
+      s.SoundGroup = SoundGroups.ensure("SFX", 0.8)
+      s.Parent = root
+      s:Play()
+      game.Debris:AddItem(s, 3)
+    end
   end
 end
 
