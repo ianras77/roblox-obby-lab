@@ -216,7 +216,13 @@ function WorldValidator.validate(
     end
     if
       stage.bounds
-      and (not finiteVector(stage.bounds) or stage.bounds.X <= 0 or stage.bounds.Y <= 0 or stage.bounds.Z <= 0)
+      and (
+        typeof(stage.bounds) ~= "Vector3"
+        or not finiteVector(stage.bounds)
+        or stage.bounds.X <= 0
+        or stage.bounds.Y <= 0
+        or stage.bounds.Z <= 0
+      )
     then
       table.insert(errors, string.format("stage %s has invalid bounds", stageLabel(stage)))
     end

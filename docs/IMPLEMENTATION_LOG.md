@@ -1637,3 +1637,12 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; cross-version Studio rebuild behavior remains
   unverified.
+
+## 2026-08-24 — Fail closed on malformed stage bounds
+
+- Completed: `WorldValidator` now checks the bounds value type before vector
+  arithmetic, converting malformed stage manifests into diagnostics instead of
+  validator runtime errors.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; malformed-world execution in Studio remains
+  unverified.

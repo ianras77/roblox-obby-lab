@@ -29,6 +29,7 @@ grep -q 'if typeof(stage.model) == "Instance" and stage.model:IsA("Model")' "$RO
 grep -q 'if stage.checkpoint and stage.checkpoint:IsA("BasePart")' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator checkpoint guard missing"
 grep -q 'typeof(stage.entrance) == "CFrame"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator CFrame type guards missing"
 grep -q 'finiteVector(stage.bounds)' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator finite geometry guard missing"
+grep -q 'typeof(stage.bounds) ~= "Vector3"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator bounds type guard missing"
 grep -q 'stage.stageIndex % 1 == 0' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator stage index integer guard missing"
 grep -q 'stageLabel(stage)' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator diagnostic formatting is not malformed-input safe"
 grep -q 'type(stage.stageId) ~= "string"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator stage ID type guard missing"
