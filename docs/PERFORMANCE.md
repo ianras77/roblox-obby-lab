@@ -31,7 +31,7 @@ delegating movement authority to clients.
 Wind-zone and pressure-pad contact queries use the same activation radius, so
 distant environmental mechanics do not scan streamed gameplay parts every
 query tick. Gate state is retained until a nearby player reactivates the
-mechanic.
+mechanic, and dead characters do not count as active players.
 
 The world validator also reports unanchored generated environment parts, while
 allowing intentional cart ride assemblies. Static scenery should remain

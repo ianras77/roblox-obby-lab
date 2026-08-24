@@ -1655,3 +1655,11 @@
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; malformed-world Studio execution remains
   unverified.
+
+## 2026-08-24 — Exclude dead characters from mechanic activation
+
+- Completed: proximity activation now requires a live Humanoid, so defeated or
+  respawning characters do not keep distant moving/contact mechanics active.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live respawn activation remains
+  Studio-unverified.

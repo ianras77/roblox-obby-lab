@@ -75,7 +75,14 @@ local function hasNearbyPlayer(position, radius)
   for _, player in ipairs(Players:GetPlayers()) do
     local character = player.Character
     local root = character and character:FindFirstChild("HumanoidRootPart")
-    if root and root:IsA("BasePart") and (root.Position - position).Magnitude ^ 2 <= radiusSquared then
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+    if
+      root
+      and root:IsA("BasePart")
+      and humanoid
+      and humanoid.Health > 0
+      and (root.Position - position).Magnitude ^ 2 <= radiusSquared
+    then
       return true
     end
   end
