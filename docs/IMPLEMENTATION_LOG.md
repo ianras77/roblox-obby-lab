@@ -1717,3 +1717,9 @@
 - Tests run: formatting, lint, contracts, pure-Luau tests, and Rojo build via CI.
 - Observed issues: visual wrapping and small-screen readability remain Studio-only checks.
 - Next executable step: verify the completion card on phone portrait, gamepad focus, and a first-time run.
+### 2026-08-24 - Make run rules independently testable
+
+- Completed: extracted stage validation and Time Trial eligibility into shared `RunRules`; `RunStateService` now delegates malformed-stage and ineligible-completion decisions to it.
+- Tests run: direct Luau progression, profile, and run-rules tests passed; contracts and formatting passed.
+- Observed issues: local wrapper still lacks the CI-provided `luau` and `selene` binaries.
+- Next executable step: verify the start gate and completion timing in Studio with multiple clients.
