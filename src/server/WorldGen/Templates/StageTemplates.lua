@@ -997,6 +997,25 @@ function StageTemplates.RiverbankWelcome(ctx)
     addSparkles(pad, Color3.fromRGB(255, 250, 170), 4)
   end
 
+  for i = 1, 6 do
+    for _, side in ipairs({ -1, 1 }) do
+      local reed = Build.part({
+        Name = "RiverbankReed",
+        Parent = model,
+        CFrame = ctx.origin * CFrame.new(step * (i - 0.5), 2.2, side * (WorldGenConfig.PathWidth * 0.68)),
+        Size = Vector3.new(0.45, 4.4, 0.45),
+        Color = (i % 2 == 0) and Color3.fromRGB(76, 155, 92) or Color3.fromRGB(104, 180, 105),
+        Material = Enum.Material.Grass,
+        Tags = { "Beacon" },
+      })
+      reed.Shape = Enum.PartType.Cylinder
+      reed.Orientation = Vector3.new(0, 0, (side == 1) and 8 or -8)
+      reed.CanCollide = false
+      reed.CanTouch = false
+      reed.CanQuery = false
+    end
+  end
+
   addSign(model, ctx.origin * CFrame.new(8, 4, -7), "Riverbank start")
   addSign(model, ctx.origin * CFrame.new(34, 6, 7), "Toad has a plan!")
   addPathLights(model, ctx.origin, length, Color3.fromRGB(255, 245, 150), -WorldGenConfig.PathWidth * 0.45)
