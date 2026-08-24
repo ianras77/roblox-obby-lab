@@ -32,7 +32,8 @@ manual Studio comparison before either is treated as authoritative.
 - Checkpoint progress is now monotonic and state synchronization has an
   explicit initialization request; Studio respawn feel remains unverified.
 - Keys are now authored deterministically with stable IDs and per-player credit;
-  duplicate-ID validation is active.
+  duplicate-ID and configured authored-count validation are active, and totals
+  are scoped to the generated root.
 - Persistence now has an explicit environment gate, versioned profile schema,
   bounded retry wrapper, autosave, concurrent bounded shutdown saves, and
   executable pure-Luau migration/bounds tests. Live DataStore behavior still
