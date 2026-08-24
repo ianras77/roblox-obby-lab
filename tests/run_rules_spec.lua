@@ -18,6 +18,7 @@ expect(RunRules.isEligibleCompletion("Adventure", 1, 30), "adventure completion 
 expect(RunRules.isEligibleCompletion("TimeTrial", 30, 30), "minimum time trial is eligible")
 expect(not RunRules.isEligibleCompletion("TimeTrial", 29.9, 30), "short time trial is rejected")
 expect(not RunRules.isEligibleCompletion("Practice", 100, 30), "practice is never eligible")
+expect(not RunRules.isEligibleCompletion("Admin", 100, 0), "unsupported modes are never eligible")
 expect(not RunRules.isEligibleCompletion("Adventure", -1, 0), "negative elapsed time is rejected")
 expect(not RunRules.isEligibleCompletion("Adventure", math.huge, 0), "infinite elapsed time is rejected")
 
