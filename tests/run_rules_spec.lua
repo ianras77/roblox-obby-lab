@@ -13,6 +13,7 @@ expect(not RunRules.isValidStage(0, 18), "zero stage is rejected")
 expect(not RunRules.isValidStage(2.5, 18), "fractional stage is rejected")
 expect(not RunRules.isValidStage(19, 18), "overflow stage is rejected")
 expect(not RunRules.isValidStage(math.huge, 18), "infinite stage is rejected")
+expect(not RunRules.isValidStage(1, math.huge), "infinite route size is rejected")
 
 expect(RunRules.isEligibleCompletion("Adventure", 1, 30), "adventure completion is eligible")
 expect(RunRules.isEligibleCompletion("TimeTrial", 30, 30), "minimum time trial is eligible")

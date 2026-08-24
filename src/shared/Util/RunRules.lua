@@ -3,7 +3,14 @@
 local RunRules = {}
 
 function RunRules.isValidStage(stageIndex: unknown, totalStages: number): boolean
-  return type(stageIndex) == "number" and stageIndex % 1 == 0 and stageIndex >= 1 and stageIndex <= totalStages
+  return type(totalStages) == "number"
+    and totalStages % 1 == 0
+    and totalStages >= 1
+    and math.abs(totalStages) < math.huge
+    and type(stageIndex) == "number"
+    and stageIndex % 1 == 0
+    and stageIndex >= 1
+    and stageIndex <= totalStages
 end
 
 function RunRules.isEligibleCompletion(mode: string, elapsed: number, minimumTimeTrialSeconds: number): boolean
