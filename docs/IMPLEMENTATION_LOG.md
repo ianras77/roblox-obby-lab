@@ -1759,3 +1759,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: actual asset availability and ownership still require Creator Hub verification.
 - Next executable step: approve confirmed assets in the registry and run preload checks in Studio.
+### 2026-08-24 - Refresh audit evidence after release hardening
+
+- Completed: the factual audit now records the asset fail-closed path and the expanded pure-Luau test surface.
+- Tests run: documentation-only reconciliation; underlying contracts and direct Luau tests passed in the preceding implementation pass.
+- Observed issues: current-SHA CI and all Studio/Creator Hub checks must remain separately verified.
+- Next executable step: reconcile the audit again after current-SHA CI completes.

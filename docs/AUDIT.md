@@ -1,6 +1,8 @@
 # Factual audit
 
 Audit baseline: 2026-08-24, branch `codex/toads-great-escape-next-level`.
+Latest local implementation evidence includes asset-registry and run-rule
+tests in addition to the original progression/profile suites.
 
 ## Repository and source of truth
 
@@ -41,7 +43,8 @@ manual Studio comparison before either is treated as authoritative.
 - Lighting presentation now transitions locally by zone and decoration is
   anchored from zone bounds; Studio visual verification remains pending.
 - Asset references are inventoried and unverified IDs are gated from release
-  music; asset permissions and playback remain pending Creator Hub/Studio.
+  music and finale effects; asset permissions and playback remain pending
+  Creator Hub/Studio.
 - UI now has an initial state handshake, settings, mode, responsive touch
   targets, and accessibility controls; device and gamepad behavior remain
   unverified.
@@ -50,8 +53,8 @@ manual Studio comparison before either is treated as authoritative.
 - Server capacity configuration is now intentionally left to Creator Hub;
   unused Lua capacity knobs are not treated as effective settings.
 - Automated confidence includes configuration, storyboard, production, Stylua,
-  Selene, pure-Luau progression/profile tests, and CI Rojo-build gates; runtime
-  traversal still requires Studio.
+  Selene, pure-Luau progression/profile/run-rule/asset tests, and CI Rojo-build
+  gates; runtime traversal still requires Studio.
 
 ## Not claimed as tested
 
