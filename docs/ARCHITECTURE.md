@@ -88,6 +88,9 @@ that invoke state before the profile is ready.
 The generated key total is counted before the checkpoint service starts its
 player-load tasks, so the first HUD synchronization cannot report a transient
 zero collectible total.
+State responses also carry an explicit `ready` flag; clients defer profile
+application when a request races asynchronous loading and rely on the complete
+initialized event afterward.
 
 World bootstrap validates that every shared event is actually a `RemoteEvent`
 and that `GetObbyState` is a `RemoteFunction`; a name collision with another

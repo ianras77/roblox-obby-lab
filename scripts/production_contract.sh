@@ -257,6 +257,8 @@ grep -q 'highestChapter = self.checkpoints and self.checkpoints:getProfile(playe
 grep -q 'chapterId = stage.stageId' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "stable chapter ID is not synchronized"
 grep -q 'collectedKeys = self:getProfile(player).collectedKeys' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "initialized profile keys are not synchronized"
 grep -q 'if payload.initialized then' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "initialized profile state is not applied"
+grep -q 'payload.ready ~= false' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "early profile state is applied as ready"
+test "$(grep -c 'ready = self.checkpoints ~= nil' "$ROOT_DIR/src/server/Services/ObbyService.lua")" -ge 2 || fail "state readiness is not synchronized after rebuild"
 test "$(grep -c 'self.totalKeys = #CollectionService:GetTagged("KeyCollectible")' "$ROOT_DIR/src/server/Services/ObbyService.lua")" -ge 2 || fail "key total is initialized too late"
 grep -q 'chapter = getChapterPresentation(self.world.stages, stage)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "initial chapter presentation is not synchronized"
 test "$(grep -c 'chapter = getChapterPresentation(self.world.stages, stage)' "$ROOT_DIR/src/server/Services/ObbyService.lua")" -ge 2 || fail "rebuild state sync omits chapter presentation"

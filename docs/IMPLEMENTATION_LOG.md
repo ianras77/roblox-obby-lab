@@ -1689,6 +1689,15 @@
 - Tests: progression and profile pure-Luau suites, configuration, profile,
   storyboard, production, Stylua, and whitespace checks pass locally.
 
+## 2026-08-24 — Expose profile readiness in state handshake
+
+- Completed: `GetObbyState` now marks whether the server profile is loaded, and
+  the HUD ignores an early not-ready response instead of applying transient
+  defaults before the initialized event arrives.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  pure-Luau checks pass locally; live asynchronous join timing remains
+  Studio-unverified.
+
 ## 2026-08-24 — Exclude dead characters from mechanic activation
 
 - Completed: proximity activation now requires a live Humanoid, so defeated or

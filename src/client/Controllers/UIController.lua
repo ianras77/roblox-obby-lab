@@ -47,7 +47,7 @@ function UIController:syncInitialState()
   local ok, payload = pcall(function()
     return self.stateFunction:InvokeServer()
   end)
-  if ok and payload then
+  if ok and payload and payload.ready ~= false then
     self.highestChapter = payload.highestChapter or 0
     if type(payload.chapter) == "table" then
       self.currentChapter = payload.chapter
