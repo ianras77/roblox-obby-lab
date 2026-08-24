@@ -1771,3 +1771,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: contrast readability on actual device displays remains pending Studio validation.
 - Next executable step: verify hazard outlines against the safe route on mobile, desktop, and gamepad sessions.
+### 2026-08-24 - Harden profile numbers against non-finite input
+
+- Completed: profile sanitization rejects NaN and infinite values before clamping counters, times, splits, settings, or chapter progress.
+- Tests run: formatting, contracts, and direct Luau progression/profile/run-rule/asset tests passed; current branch CI is the authoritative full-toolchain check.
+- Observed issues: live DataStore migration and persistence behavior remain unverified without Studio.
+- Next executable step: exercise malformed legacy records in Studio sandbox and verify safe recovery.
