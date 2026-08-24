@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
+local Debris = game:GetService("Debris")
 local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
 local SoundGroups = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("SoundGroups"))
 local RemoteContracts = require(ReplicatedStorage:WaitForChild("Network"):WaitForChild("RemoteContracts"))
@@ -49,7 +50,7 @@ function EffectsController:checkpointPulse()
     BackgroundTransparency = 1,
     Size = UDim2.fromScale(0.3, 0.012),
   }):Play()
-  game.Debris:AddItem(gui, 0.5)
+  Debris:AddItem(gui, 0.5)
 end
 
 function EffectsController:finale()
@@ -66,7 +67,7 @@ function EffectsController:finale()
       TweenInfo.new(reducedMotion and 0.1 or 1.6, Enum.EasingStyle.Quad),
       { Size = reducedMotion and 0 or 10 }
     ):Play()
-    game.Debris:AddItem(blur, 2.5)
+    Debris:AddItem(blur, 2.5)
   end
 
   if not reducedMotion and not reduceFlashes then
@@ -77,7 +78,7 @@ function EffectsController:finale()
     if root then
       spot.Parent = root
       TweenService:Create(spot, TweenInfo.new(2, Enum.EasingStyle.Quad), { Brightness = 0 }):Play()
-      game.Debris:AddItem(spot, 3)
+      Debris:AddItem(spot, 3)
     else
       spot:Destroy()
     end
@@ -92,7 +93,7 @@ function EffectsController:finale()
       TweenInfo.new(reducedMotion and 0.1 or 0.8, Enum.EasingStyle.Quad),
       { Brightness = 0.25, Saturation = 0.3 }
     ):Play()
-    game.Debris:AddItem(color, 2)
+    Debris:AddItem(color, 2)
   end
 
   -- Fireworks at the player
@@ -108,7 +109,7 @@ function EffectsController:finale()
       boom.SpreadAngle = Vector2.new(360, 360)
       boom.Parent = root
       boom:Emit(self.player:GetAttribute("Accessibility_lowParticles") and 40 or 200)
-      game.Debris:AddItem(boom, 2)
+      Debris:AddItem(boom, 2)
     end
     if finaleChime ~= "" then
       local s = Instance.new("Sound")
@@ -117,7 +118,7 @@ function EffectsController:finale()
       s.SoundGroup = SoundGroups.ensure("SFX", 0.8)
       s.Parent = root
       s:Play()
-      game.Debris:AddItem(s, 3)
+      Debris:AddItem(s, 3)
     end
   end
 end

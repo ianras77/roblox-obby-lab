@@ -179,6 +179,7 @@ grep -q 'getApprovedId("finale_firework")' "$ROOT_DIR/src/client/Controllers/Eff
 grep -q 'getApprovedId("finale_chime")' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale sound bypasses asset registry"
 grep -q 'spot:Destroy()' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale spotlight has an invalid fallback parent"
 grep -q 'fireworkTexture ~= ""' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "finale effects do not fail closed for missing assets"
+grep -q 'local Debris = game:GetService("Debris")' "$ROOT_DIR/src/client/Controllers/EffectsController.lua" || fail "client effects use implicit Debris service"
 if grep -R -q 'rbxassetid://' "$ROOT_DIR/src/server/WorldGen" "$ROOT_DIR/src/shared/Util"; then fail "generated visual assets bypass registry"; fi
 if grep -R -q 'AmbientSoundId' "$ROOT_DIR/src"; then fail "zone ambience bypasses asset registry"; fi
 grep -q 'getApprovedId(zoneConfig.AmbientSoundKey)' "$ROOT_DIR/src/server/WorldGen/DecorBuilder.lua" || fail "zone ambience is not approval-gated"

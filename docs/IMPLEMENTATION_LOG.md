@@ -1747,3 +1747,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: Creator Hub asset verification and final visual/audio balance remain pending.
 - Next executable step: verify normal, reduced-motion, and flash-reduction finale paths in Studio.
+### 2026-08-24 - Make client effect cleanup explicit
+
+- Completed: `EffectsController` now resolves Roblox's Debris service explicitly for all temporary UI, lighting, particle, and audio effects.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: effect timing and cleanup still need Studio Output/playtest verification.
+- Next executable step: inspect the client Output during repeated checkpoints and finale resets.
