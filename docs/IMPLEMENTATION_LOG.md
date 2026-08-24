@@ -1807,3 +1807,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: validator behavior against live Studio-tagged content remains unverified.
 - Next executable step: add an unrelated tagged key outside the generated root in Studio and confirm validation ignores it.
+### 2026-08-24 - Use spatial overlap queries for active mechanics
+
+- Completed: moving-platform riders, wind zones, and pressure pads now use `GetPartsInPart` through one helper, while retaining their 20 Hz/10 Hz proximity bounds.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: actual query cost and collision-group behavior require Studio profiling.
+- Next executable step: profile Chapters 10-13 with two clients and compare server frame time.

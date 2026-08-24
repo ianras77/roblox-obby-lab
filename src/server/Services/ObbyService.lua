@@ -102,6 +102,10 @@ local function hasNearbyPlayer(position, radius)
   return false
 end
 
+local function getOverlappingParts(part)
+  return workspace:GetPartsInPart(part)
+end
+
 local function bindSettings(self)
   local events = ReplicatedStorage:FindFirstChild("SharedEvents")
   local event = events and events:FindFirstChild(RemoteContracts.SetSettings.name)
@@ -711,7 +715,7 @@ function ObbyService:startHeartbeat()
       self.riderQueryClock = 0
       for _, item in ipairs(self.behaviors.movingPlatforms) do
         if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, GameConfig.ActiveMechanicRadius) then
-          item.riders = item.part:GetTouchingParts()
+          item.riders = getOverlappingParts(item.part)
         else
           item.riders = {}
         end
@@ -767,7 +771,7 @@ function ObbyService:startHeartbeat()
       self.queryClock = 0
       for _, item in ipairs(self.behaviors.windZones) do
         if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, GameConfig.ActiveMechanicRadius) then
-          for _, touch in ipairs(item.part:GetTouchingParts()) do
+          for _, touch in ipairs(getOverlappingParts(item.part)) do
             local hrp = touch.Parent and touch.Parent:FindFirstChild("HumanoidRootPart")
             if hrp then
               hrp.AssemblyLinearVelocity = hrp.AssemblyLinearVelocity
@@ -780,7 +784,7 @@ function ObbyService:startHeartbeat()
       for _, pad in ipairs(self.behaviors.pads) do
         if pad.part and pad.part.Parent and hasNearbyPlayer(pad.part.Position, GameConfig.ActiveMechanicRadius) then
           pad.active = false
-          for _, p in ipairs(pad.part:GetTouchingParts()) do
+          for _, p in ipairs(getOverlappingParts(pad.part)) do
             if p.Parent and p.Parent:FindFirstChild("HumanoidRootPart") then
               pad.active = true
               break

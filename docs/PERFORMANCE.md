@@ -6,7 +6,7 @@ current environment. The known high-cost paths are the global Heartbeat, rider
 and permanent particle emitters. Studio profiling must measure generation,
 join, chapters 10/12/13/15/18, and a two-player session before release.
 
-Wind and pressure-pad contact queries are bounded to a 10 Hz server tick, and
+Wind and pressure-pad overlap queries are bounded to a 10 Hz server tick, and
 moving-platform rider sampling is bounded to a 20 Hz server tick. The obstacle
 transforms remain centralized, while rotators, gavel animation, and timed-tile
 state updates are bounded to a 30 Hz server tick. Moving-platform transforms
@@ -28,7 +28,7 @@ configured `GameConfig.ActiveMechanicRadius`; distant platforms retain their
 last transform until reactivated. This reduces idle server work without
 delegating movement authority to clients.
 
-Wind-zone and pressure-pad contact queries use the same activation radius, so
+Wind-zone and pressure-pad spatial overlap queries use the same activation radius, so
 distant environmental mechanics do not scan streamed gameplay parts every
 query tick. Gate state is retained until a nearby player reactivates the
 mechanic, and dead characters do not count as active players.

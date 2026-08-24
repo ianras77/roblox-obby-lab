@@ -174,6 +174,7 @@ grep -q 'local function finiteNumber' "$ROOT_DIR/src/shared/Config/ProfileSchema
 grep -q 'asset keys are unique' "$ROOT_DIR/tests/asset_registry_spec.lua" || fail "asset uniqueness test missing"
 grep -q 'profile_contract.sh' "$ROOT_DIR/scripts/check.sh" || fail "profile contract is not in the CI gate"
 grep -q 'GetRequestBudgetForRequestType' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "datastore request budget is not checked"
+grep -q 'workspace:GetPartsInPart(part)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "bounded mechanics use legacy contact polling"
 grep -q 'storeName .. "_StudioSandbox"' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "studio sandbox shares production datastore"
 grep -q 'DevCommandCooldownSeconds' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "dev command rate limit missing"
 grep -q 'for _, player in ipairs(Players:GetPlayers()) do' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "existing players do not receive dev commands"
