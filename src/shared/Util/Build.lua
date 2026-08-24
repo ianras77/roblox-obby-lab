@@ -142,6 +142,7 @@ function Build.cart(cframe, parent)
     Material = Enum.Material.Wood,
     Anchored = false,
     Tags = { "Cart" },
+    Attributes = { RideMaxDistance = 68 },
   })
   local seat = Instance.new("Seat")
   seat.Name = "Seat"

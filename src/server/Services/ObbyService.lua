@@ -569,6 +569,7 @@ function ObbyService:scanBehaviors()
       seat = part.Parent:FindFirstChild("Seat"),
       force = part:FindFirstChildOfClass("LinearVelocity"),
       origin = part.CFrame,
+      maxDistance = part:GetAttribute("RideMaxDistance") or 68,
       elapsed = 0,
       emptyTime = 0,
     })
@@ -835,9 +836,10 @@ function ObbyService:startHeartbeat()
           item.force.VectorVelocity = Vector3.new()
         end
         local fellAway = item.base.Position.Y < item.origin.Position.Y - 30
+        local reachedRouteEnd = (item.base.Position - item.origin.Position).Magnitude > item.maxDistance
         local timedOut = item.elapsed > 45
         local abandoned = item.elapsed > 0 and item.emptyTime > 5
-        if fellAway or timedOut or abandoned then
+        if fellAway or reachedRouteEnd or timedOut or abandoned then
           local occupant = item.seat and item.seat.Occupant
           if occupant then
             occupant.Sit = false

@@ -1723,3 +1723,9 @@
 - Tests run: direct Luau progression, profile, and run-rules tests passed; contracts and formatting passed.
 - Observed issues: local wrapper still lacks the CI-provided `luau` and `selene` binaries.
 - Next executable step: verify the start gate and completion timing in Studio with multiple clients.
+### 2026-08-24 - Bound cart rides to their authored route
+
+- Completed: cart rides now carry an explicit route-distance limit and reset safely at the end of the Laundry Cart route, in addition to fall, timeout, and abandonment recovery.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: cart seating and multi-client ride feel remain unverified without Studio.
+- Next executable step: playtest boarding, route completion, missed boarding, and simultaneous riders.
