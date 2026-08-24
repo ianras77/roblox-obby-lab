@@ -34,6 +34,10 @@ Profile updates merge monotonic chapter/death/completion values, union collected
 keys, and retain the fastest valid run inside `UpdateAsync` so concurrent saves
 do not overwrite progress.
 
+Shutdown saving starts one bounded save task per connected player and waits up
+to 25 seconds for the batch, avoiding sequential retry delays while still
+reporting when the platform close window expires.
+
 Settings are sanitized per session and the latest completed save supplies the
 preference snapshot; they are not treated as progression counters.
 

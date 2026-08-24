@@ -259,6 +259,8 @@ grep -q 'folder:FindFirstChild(RemoteContracts.Progress.name)' "$ROOT_DIR/src/se
 grep -q 'RemoteContracts.Finale.name' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "finale remote lookup is not contract-owned"
 grep -q 'must be a %s' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "remote class validation missing"
 grep -q 'ProfileSaveStatus' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "profile save status visibility missing"
+grep -q 'shutdown save window expired' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "shutdown save deadline missing"
+grep -q 'local remaining = #players' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "shutdown saves are not concurrent"
 grep -q 'ephemeral profile' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "datastore failure playability path missing"
 grep -q 'persistenceAllowed' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "failed reads are not write-gated"
 grep -q 'normalizeCheckpoint(player:GetAttribute("Checkpoint"))' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "save checkpoint normalization missing"

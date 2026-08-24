@@ -1594,3 +1594,12 @@
   layout for phone portrait use.
 - Tests: configuration, profile, storyboard, production, Stylua, and
   whitespace checks pass locally; device emulation remains Studio-unverified.
+
+## 2026-08-24 — Bound concurrent shutdown profile saves
+
+- Completed: `BindToClose` now starts one save task per connected player and
+  waits within a shared 25-second deadline, with an explicit pending-player
+  warning when the close window expires.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live shutdown timing remains
+  Studio-unverified.

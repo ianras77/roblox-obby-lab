@@ -67,8 +67,20 @@ function CheckpointService.new(stages, progressEvent, runState, analytics, total
     shutdownBound = true
     game:BindToClose(function()
       if activeService then
-        for _, player in ipairs(Players:GetPlayers()) do
-          activeService:saveCheckpoint(player)
+        local players = Players:GetPlayers()
+        local remaining = #players
+        for _, player in ipairs(players) do
+          task.spawn(function()
+            activeService:saveCheckpoint(player)
+            remaining -= 1
+          end)
+        end
+        local deadline = os.clock() + 25
+        while remaining > 0 and os.clock() < deadline do
+          task.wait(0.1)
+        end
+        if remaining > 0 then
+          warn(string.format("[DataStore] shutdown save window expired with %d player(s) pending", remaining))
         end
       end
     end)
