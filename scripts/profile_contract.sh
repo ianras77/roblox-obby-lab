@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 source = (Path(sys.argv[1]) / "src/shared/Config/ProfileSchema.lua").read_text()
+world = (Path(sys.argv[1]) / "src/shared/Config/WorldGenConfig.lua").read_text()
 for marker in (
     "schemaVersion = ProfileSchema.CurrentVersion",
     "highestChapter = 0",
@@ -36,5 +37,8 @@ for marker in (
 ):
     if marker not in source:
         raise SystemExit(f"missing profile contract marker: {marker}")
+stage_count = world.count('    "')
+if stage_count != 18:
+    raise SystemExit(f"canonical route stage count changed: {stage_count}")
 print("profile contract ok: defaults, migration, bounds, settings, and key cap")
 PY
