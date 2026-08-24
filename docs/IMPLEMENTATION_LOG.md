@@ -1711,3 +1711,9 @@
 - Tests run: formatting, lint, contracts, pure-Luau tests, and Rojo build via CI.
 - Observed issues: camera behavior remains unverified without Roblox Studio playtest.
 - Next executable step: run the finale with reduced-motion and multiplayer clients in Studio.
+### 2026-08-24 - Surface chapter medals in completion results
+
+- Completed: completion results now count stored chapter bests and present them alongside route completion and Golden Key exploration.
+- Tests run: formatting, lint, contracts, pure-Luau tests, and Rojo build via CI.
+- Observed issues: visual wrapping and small-screen readability remain Studio-only checks.
+- Next executable step: verify the completion card on phone portrait, gamepad focus, and a first-time run.
