@@ -398,7 +398,13 @@ function ObbyService:registerKey(part)
   self.totalKeys = self.totalKeys + 1
   self.maid:Give(part.Touched:Connect(function(hit)
     local player = Players:GetPlayerFromCharacter(hit.Parent)
-    if not player or not part.Parent or not self.checkpoints:isLoaded(player) then
+    if
+      not player
+      or not part.Parent
+      or not self.world.model
+      or not part:IsDescendantOf(self.world.model)
+      or not self.checkpoints:isLoaded(player)
+    then
       return
     end
     local root = hit.Parent:FindFirstChild("HumanoidRootPart")

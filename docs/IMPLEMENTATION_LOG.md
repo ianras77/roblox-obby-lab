@@ -1789,3 +1789,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: coexistence with tagged user content still requires Studio validation.
 - Next executable step: place an unrelated tagged key outside the generated root in Studio and verify totals remain unchanged.
+### 2026-08-24 - Enforce key ownership at touch time
+
+- Completed: Golden Key touch handlers now re-check generated-world ancestry before awarding progress, adding defense in depth beyond owned behavior scanning.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: live multi-player collectible behavior remains pending Studio validation.
+- Next executable step: test tagged keys both inside and outside the generated root in a two-client Studio session.

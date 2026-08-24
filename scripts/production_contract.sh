@@ -81,6 +81,7 @@ grep -q 'humanoid.Health <= 0' "$ROOT_DIR/src/server/Services/RunStateService.lu
 grep -q 'local function getLivePlayerRoot' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "physics touch authority helper missing"
 grep -q 'inst:IsDescendantOf(self.world.model)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "behavior scan is not ownership-scoped"
 grep -q 'countOwnedKeyTags' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "total key count is not ownership-scoped"
+grep -q 'part:IsDescendantOf(self.world.model)' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "key touch authority is not ownership-scoped"
 grep -q 'RunStartGate' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "time trial start gate missing"
 grep -q 'startAtGate' "$ROOT_DIR/src/server/Services/ObbyService.lua" || fail "server time trial gate handling missing"
 grep -q 'resetForTimeTrial' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "time trial checkpoint reset missing"
