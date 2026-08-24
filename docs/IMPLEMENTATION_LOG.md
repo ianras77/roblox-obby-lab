@@ -1765,3 +1765,9 @@
 - Tests run: documentation-only reconciliation; underlying contracts and direct Luau tests passed in the preceding implementation pass.
 - Observed issues: current-SHA CI and all Studio/Creator Hub checks must remain separately verified.
 - Next executable step: reconcile the audit again after current-SHA CI completes.
+### 2026-08-24 - Add non-color hazard contrast cues
+
+- Completed: high-contrast hazards now receive a black outline highlight in addition to color/material changes, so hazard identity is not communicated by color alone.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: contrast readability on actual device displays remains pending Studio validation.
+- Next executable step: verify hazard outlines against the safe route on mobile, desktop, and gamepad sessions.

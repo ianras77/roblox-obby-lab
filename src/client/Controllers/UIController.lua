@@ -27,6 +27,7 @@ function UIController.new()
   }
   self.originalHazardColors = {}
   self.originalHazardMaterials = {}
+  self.hazardHighlights = setmetatable({}, { __mode = "k" })
   self.collectedKeys = {}
   self.gui = self:createGui()
   local events = ReplicatedStorage:WaitForChild("SharedEvents")
@@ -112,6 +113,18 @@ function UIController:applyAccessibilityToHazard(part)
   self.originalHazardMaterials[part] = self.originalHazardMaterials[part] or part.Material
   part.Color = self.settings.highContrast and Color3.fromRGB(255, 255, 255) or self.originalHazardColors[part]
   part.Material = self.settings.highContrast and Enum.Material.Neon or self.originalHazardMaterials[part]
+  local highlight = self.hazardHighlights[part]
+  if not highlight then
+    highlight = Instance.new("Highlight")
+    highlight.Name = "HazardContrastOutline"
+    highlight.Adornee = part
+    highlight.FillTransparency = 1
+    highlight.OutlineColor = Color3.fromRGB(20, 20, 20)
+    highlight.Parent = part
+    self.hazardHighlights[part] = highlight
+  end
+  highlight.Enabled = self.settings.highContrast
+  highlight.OutlineTransparency = self.settings.highContrast and 0 or 1
 end
 
 function UIController:hideCollectedKey(keyId)
