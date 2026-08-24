@@ -65,6 +65,9 @@ function Wrapper:SetAsync(key, value)
   if not self.enabled then
     return
   end
+  -- Keep the persistence boundary defensive even if a future caller passes a
+  -- mutable or malformed profile table.
+  value = ProfileSchema.sanitize(value)
   for attempt = 1, self.maxAttempts do
     if not hasBudget(Enum.DataStoreRequestType.UpdateAsync) then
       warn("[DataStore] UpdateAsync budget exhausted; preserving unsaved session state")

@@ -41,6 +41,10 @@ reporting when the platform close window expires.
 Settings are sanitized per session and the latest completed save supplies the
 preference snapshot; they are not treated as progression counters.
 
+The datastore wrapper sanitizes the write again at its own boundary, so future
+callers cannot persist an unbounded or malformed profile by bypassing service
+conventions.
+
 Run state is server-owned and distinguishes `Adventure`, `TimeTrial`, and
 `Practice`. Practice completion is deliberately ineligible for a time-trial
 score. Timing and leaderboard submission still require Studio validation.

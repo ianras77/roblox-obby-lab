@@ -115,6 +115,7 @@ grep -q 'merged.bestChapterMs' "$ROOT_DIR/src/server/Services/DataStoreServiceWr
 grep -q 'chapterNumber <= ProfileSchema.MaxChapter' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "chapter split merge is not bounded"
 grep -q 'merged.settings' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "concurrent settings merge missing"
 grep -q 'Settings are session-owned preferences' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "session settings merge policy missing"
+grep -q 'value = ProfileSchema.sanitize(value)' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "datastore write boundary is not sanitized"
 grep -q 'showResults' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results presentation missing"
 grep -q 'TimeTrialButton' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results replay actions missing"
 grep -q 'Golden Keys' "$ROOT_DIR/src/client/Controllers/UIController.lua" || fail "results key metric missing"

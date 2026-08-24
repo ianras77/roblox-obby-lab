@@ -1672,6 +1672,15 @@
 - Tests: latest GitHub CI run passed its format, lint, pure-Luau, and Rojo build
   steps; Studio and Creator Hub checks remain unverified.
 
+## 2026-08-24 — Sanitize profiles at datastore boundary
+
+- Completed: `DataStoreServiceWrapper:SetAsync` now sanitizes every write
+  internally before retry/merge logic, independently defending against future
+  malformed callers.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  pure-Luau checks pass locally; live datastore integration remains
+  Studio-unverified.
+
 ## 2026-08-24 — Exclude dead characters from mechanic activation
 
 - Completed: proximity activation now requires a live Humanoid, so defeated or
