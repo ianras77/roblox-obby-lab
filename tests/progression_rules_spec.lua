@@ -1,4 +1,5 @@
 --!strict
+-- selene: allow(incorrect_standard_library_use)
 
 local ProgressionRules = require("../src/shared/Util/ProgressionRules")
 
