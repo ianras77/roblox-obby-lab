@@ -1813,3 +1813,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: actual query cost and collision-group behavior require Studio profiling.
 - Next executable step: profile Chapters 10-13 with two clients and compare server frame time.
+### 2026-08-24 - Validate collectible stage ownership
+
+- Completed: world validation now checks each generated key's declared `StageIndex` against the stage model that owns it, catching metadata drift before runtime registration.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: live malformed-content validation remains pending Studio.
+- Next executable step: deliberately alter a generated key's stage metadata in Studio and confirm the validator fails closed.

@@ -293,9 +293,11 @@ function WorldValidator.validate(
   local ownedKeyCount = 0
   for _, key in ipairs(CollectionService:GetTagged("KeyCollectible")) do
     local owned = false
+    local owningStageIndex = nil
     for _, stage in ipairs(stages) do
       if stage.model and typeof(stage.model) == "Instance" and key:IsDescendantOf(stage.model) then
         owned = true
+        owningStageIndex = stage.stageIndex
         break
       end
     end
@@ -308,6 +310,10 @@ function WorldValidator.validate(
         table.insert(errors, "duplicate collectible id: " .. keyId)
       else
         ids[keyId] = true
+      end
+      local declaredStage = key:GetAttribute("StageIndex")
+      if declaredStage ~= owningStageIndex then
+        table.insert(errors, string.format("collectible %s has incorrect stage ownership", tostring(keyId)))
       end
     end
   end
