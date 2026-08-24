@@ -1819,3 +1819,9 @@
 - Tests run: formatting, contracts, and direct Luau tests passed.
 - Observed issues: live malformed-content validation remains pending Studio.
 - Next executable step: deliberately alter a generated key's stage metadata in Studio and confirm the validator fails closed.
+### 2026-08-24 - Keep developer stage limits aligned
+
+- Completed: the configuration contract now rejects a developer `/stage` limit that diverges from the canonical route length.
+- Tests run: configuration contract passed.
+- Observed issues: Studio command authorization and live command behavior remain pending Studio validation.
+- Next executable step: verify authorized and unauthorized `/stage` attempts in Studio.

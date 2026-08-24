@@ -25,6 +25,9 @@ if display_names != stage_types:
     raise SystemExit("display names do not match canonical stage order")
 if chapter_keys != stage_types:
     raise SystemExit("chapter metadata does not match canonical stage order")
+game_max = re.search(r"MaxDevStage\s*=\s*(\d+)", (root / "src/shared/Config/GameConfig.lua").read_text())
+if not game_max or int(game_max.group(1)) != len(stage_types):
+    raise SystemExit("developer stage limit does not match canonical route")
 if "id = string.lower(stageType" not in stage:
     raise SystemExit("stable stage ID derivation is missing")
 print("config contract ok: 18 unique ordered chapters with matching metadata")
