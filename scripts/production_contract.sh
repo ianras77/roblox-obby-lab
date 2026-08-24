@@ -167,6 +167,7 @@ grep -q 'function CheckpointService:teleportToCFrame' "$ROOT_DIR/src/server/Serv
 grep -q 'MaxCollectedKeys = 100' "$ROOT_DIR/src/shared/Config/ProfileSchema.lua" || fail "profile key bound missing"
 grep -q 'type(keyId) ~= "string"' "$ROOT_DIR/src/server/WorldGen/WorldValidator.lua" || fail "validator collectible ID type guard missing"
 grep -q 'ProfileSchema.MaxCollectedKeys' "$ROOT_DIR/src/server/Services/CheckpointService.lua" || fail "runtime key bound missing"
+grep -q 'local function finiteNumber' "$ROOT_DIR/src/shared/Config/ProfileSchema.lua" || fail "profile non-finite number guard missing"
 grep -q 'profile_contract.sh' "$ROOT_DIR/scripts/check.sh" || fail "profile contract is not in the CI gate"
 grep -q 'GetRequestBudgetForRequestType' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "datastore request budget is not checked"
 grep -q 'storeName .. "_StudioSandbox"' "$ROOT_DIR/src/server/Services/DataStoreServiceWrapper.lua" || fail "studio sandbox shares production datastore"

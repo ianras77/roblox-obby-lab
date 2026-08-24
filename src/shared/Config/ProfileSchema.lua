@@ -17,6 +17,14 @@ ProfileSchema.MaxCollectedKeys = 100
 ProfileSchema.MaxChapter = 18
 ProfileSchema.MaxCounter = 1000000000
 
+local function finiteNumber(value: any): number?
+  local number = tonumber(value)
+  if not number or number ~= number or math.abs(number) == math.huge then
+    return nil
+  end
+  return number
+end
+
 function ProfileSchema.default(): PlayerProfile
   return {
     schemaVersion = ProfileSchema.CurrentVersion,
@@ -49,19 +57,23 @@ function ProfileSchema.sanitize(raw: any): PlayerProfile
   profile.schemaVersion = ProfileSchema.CurrentVersion
   -- Migrate the original checkpoint-only record without trusting its shape.
   local legacyChapter = raw.checkpoint
-  profile.highestChapter =
-    math.clamp(math.max(0, math.floor(tonumber(raw.highestChapter or legacyChapter) or 0)), 0, ProfileSchema.MaxChapter)
-  profile.totalDeaths = math.clamp(math.max(0, math.floor(tonumber(raw.totalDeaths) or 0)), 0, ProfileSchema.MaxCounter)
+  profile.highestChapter = math.clamp(
+    math.max(0, math.floor(finiteNumber(raw.highestChapter or legacyChapter) or 0)),
+    0,
+    ProfileSchema.MaxChapter
+  )
+  profile.totalDeaths =
+    math.clamp(math.max(0, math.floor(finiteNumber(raw.totalDeaths) or 0)), 0, ProfileSchema.MaxCounter)
   profile.completionCount =
-    math.clamp(math.max(0, math.floor(tonumber(raw.completionCount) or 0)), 0, ProfileSchema.MaxCounter)
-  local bestRunMs = tonumber(raw.bestRunMs)
+    math.clamp(math.max(0, math.floor(finiteNumber(raw.completionCount) or 0)), 0, ProfileSchema.MaxCounter)
+  local bestRunMs = finiteNumber(raw.bestRunMs)
   if bestRunMs and bestRunMs > 0 and bestRunMs < 86400000 then
     profile.bestRunMs = math.floor(bestRunMs)
   end
   if type(raw.bestChapterMs) == "table" then
     for chapter, timeMs in pairs(raw.bestChapterMs) do
-      local chapterNumber = tonumber(chapter)
-      local validTime = tonumber(timeMs)
+      local chapterNumber = finiteNumber(chapter)
+      local validTime = finiteNumber(timeMs)
       if
         chapterNumber
         and validTime
@@ -93,12 +105,12 @@ function ProfileSchema.sanitize(raw: any): PlayerProfile
         profile.settings[key] = raw.settings[key]
       end
     end
-    local uiScale = tonumber(raw.settings.uiScale)
+    local uiScale = finiteNumber(raw.settings.uiScale)
     if uiScale and uiScale >= 0.8 and uiScale <= 1.5 then
       profile.settings.uiScale = uiScale
     end
     for _, key in ipairs({ "masterVolume", "musicVolume", "sfxVolume" }) do
-      local volume = tonumber(raw.settings[key])
+      local volume = finiteNumber(raw.settings[key])
       if volume and volume >= 0 and volume <= 1 then
         profile.settings[key] = volume
       end

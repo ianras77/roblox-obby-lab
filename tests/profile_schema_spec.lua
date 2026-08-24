@@ -51,4 +51,8 @@ expect(bounded.bestRunMs == nil, "zero personal best is rejected")
 expect(bounded.settings.uiScale == 1, "invalid scale uses default")
 expect(bounded.settings.musicVolume == 1, "invalid volume uses default")
 
+local nonFinite = ProfileSchema.sanitize({ highestChapter = math.huge, bestRunMs = -math.huge })
+expect(nonFinite.highestChapter == 0, "non-finite chapter uses default")
+expect(nonFinite.bestRunMs == nil, "non-finite personal best is rejected")
+
 print("profile schema tests passed")
