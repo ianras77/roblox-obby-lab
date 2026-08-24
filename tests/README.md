@@ -2,6 +2,7 @@
 
 This folder contains pure-Luau tests that do not require Roblox services. CI
 installs the pinned Luau 0.734 runner and executes them through scripts/check.sh.
+They cover both progression rules and profile-schema migration/bounds.
 Roblox-only behavior is still explicitly tracked as pending rather than
 reported as green.
 

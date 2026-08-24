@@ -1611,3 +1611,11 @@
 - Tests: local contract and Stylua checks pass; Luau execution is CI-verified
   after the new runner installation, while Roblox runtime behavior remains
   Studio-unverified.
+
+## 2026-08-24 — Add executable profile-schema tests
+
+- Completed: pure-Luau assertions now cover default profiles, legacy checkpoint
+  migration, counter and timing bounds, settings validation, and the collectible
+  cap.
+- Tests: both pure-Luau suites pass locally with pinned Luau 0.734; Roblox
+  DataStore integration and Studio persistence behavior remain unverified.
