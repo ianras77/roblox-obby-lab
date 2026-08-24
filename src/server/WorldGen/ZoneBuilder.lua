@@ -45,7 +45,9 @@ function ZoneBuilder.buildZone(args)
     currentCFrame = result.exit * CFrame.new(0, args.elevationStep, 0)
   end
 
-  return zoneModel, stages, currentCFrame
+  -- Return the actual final stage exit. The world builder owns the connector
+  -- between zones and applies the configured elevation exactly once.
+  return zoneModel, stages, previousExit
 end
 
 return ZoneBuilder

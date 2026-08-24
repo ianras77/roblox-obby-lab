@@ -72,6 +72,11 @@ World construction does not broadcast a fake Stage 0 state. A client requests
 its authoritative restored state through `GetObbyState`, then receives later
 server-owned progression events.
 
+Stage templates return their actual exit; `ZoneBuilder` returns the final stage
+exit without hidden travel, and `WorldBuilder` owns the single inter-zone
+elevation connector. This keeps connector measurements and generated spacing
+auditable.
+
 Progression events include the stable chapter ID as well as display text, so UI
 and analytics consumers do not need to treat mutable labels as identity.
 The initial `GetObbyState` response carries the same presentation bundle, which

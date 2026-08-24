@@ -16,6 +16,7 @@ grep -q 'seed ~= seed' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail 
 grep -q 'stageId = result.model:GetAttribute("StageId")' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage manifest IDs missing"
 grep -q 'connectorLength = connectorLength' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "stage connector measurements missing"
 grep -q 'previousExit = args.previousExit' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "cross-zone connector origin missing"
+grep -q 'return zoneModel, stages, previousExit' "$ROOT_DIR/src/server/WorldGen/ZoneBuilder.lua" || fail "zone exit contract double-advances elevation"
 grep -q 'previousExit = previousZoneExit' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "world builder does not pass prior zone exit"
 grep -q 'local zones = {}' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "world zone manifest missing"
 grep -q 'zones = zones' "$ROOT_DIR/src/server/WorldGen/WorldBuilder.lua" || fail "world zone manifest is not returned"

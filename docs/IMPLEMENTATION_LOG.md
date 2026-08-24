@@ -1619,3 +1619,12 @@
   cap.
 - Tests: both pure-Luau suites pass locally with pinned Luau 0.734; Roblox
   DataStore integration and Studio persistence behavior remain unverified.
+
+## 2026-08-24 — Remove double inter-zone elevation
+
+- Completed: `ZoneBuilder` now returns the actual final stage exit instead of an
+  already-advanced CFrame; `WorldBuilder` remains the sole owner of the
+  inter-zone elevation connector.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; generated vertical spacing remains
+  Studio-unverified.
