@@ -1554,6 +1554,13 @@
   whitespace checks pass locally; live startup scheduling remains
   Studio-unverified.
 
+## 2026-08-24 — Update CI checkout runtime
+
+- Completed: GitHub Actions now uses `actions/checkout@v5`, matching the
+  runner's Node 24 transition and removing the checkout deprecation warning.
+- Tests: workflow syntax reviewed and commit will be verified by the next
+  GitHub CI run.
+
 ## 2026-08-23 — Add original local vector art sources
 
 - Completed: added source-ready storybook railway-ticket branding and a Golden

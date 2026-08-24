@@ -7,6 +7,7 @@
       the pinned official Rojo release binary.
 - [x] CI uses pinned official release binaries for Stylua and Selene.
 - [x] Superseded branch CI runs are cancelled by workflow concurrency.
+- [x] CI checkout action uses the Node 24-compatible release line.
 - [ ] Studio full run and multiplayer run have evidence.
 - [ ] Creator Hub max players, supported devices, icon, thumbnails, badges,
       private staging place, and approved audio are configured.
