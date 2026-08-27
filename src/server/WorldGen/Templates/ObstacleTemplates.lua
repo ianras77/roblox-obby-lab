@@ -26,7 +26,7 @@ function ObstacleTemplates.movingPlatform(parent, cframe, amplitude, speed, prop
     Tags = { "MovingPlatform" },
     Attributes = {
       Amplitude = amplitude,
-      Speed = speed,
+      PeriodSeconds = (props and props.PeriodSeconds) or 4,
       Axis = props and props.Axis,
       Phase = props and props.Phase,
       CarryPlayers = props and props.CarryPlayers,

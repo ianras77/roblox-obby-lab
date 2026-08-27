@@ -119,11 +119,6 @@ function StageBuilder.buildStage(args)
     key:SetAttribute("StageIndex", args.stageIndex)
   end
 
-  -- Optional cart at start of some stages
-  if args.stageIndex % 3 == 0 then
-    Build.cart(args.origin * CFrame.new(-4, 1.5, 0), model)
-  end
-
   local _, bounds = model:GetBoundingBox()
   return {
     model = model,

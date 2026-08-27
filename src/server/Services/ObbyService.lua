@@ -6,6 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
 local ObstacleConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("ObstacleConfig"))
+local PlayabilityConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("PlayabilityConfig"))
 local WorldBuilder = require(script.Parent.Parent.WorldGen.WorldBuilder)
 local CheckpointService = require(script.Parent.CheckpointService)
 local Maid = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Maid"))
@@ -35,7 +36,12 @@ local function resolveDirection(part)
       return Vector3.new(0, 0, -1)
     end
   end
-  -- Default keeps backward-compatible motion along local Z
+  -- Stage-local forward is +X. Explicit attributes override this safely.
+  if axisAttr == "Forward" or axisAttr == nil then
+    return part.CFrame.RightVector
+  elseif axisAttr == "Backward" then
+    return -part.CFrame.RightVector
+  end
   return Vector3.new(0, 0, 1)
 end
 
@@ -481,7 +487,7 @@ function ObbyService:scanBehaviors()
       part = part,
       origin = part.CFrame,
       amplitude = amplitude,
-      speed = part:GetAttribute("Speed") or ObstacleConfig.MovingPlatformSpeed,
+      period = math.max(1, part:GetAttribute("PeriodSeconds") or ObstacleConfig.MovingPlatformPeriod),
       direction = resolveDirection(part),
       phase = part:GetAttribute("Phase") or 0,
       carryPlayers = part:GetAttribute("CarryPlayers") ~= false,
@@ -517,13 +523,16 @@ function ObbyService:scanBehaviors()
   add("Conveyor", function(part)
     table.insert(self.behaviors.conveyors, {
       part = part,
-      speed = part:GetAttribute("Speed") or ObstacleConfig.ConveyorSpeed,
+      speed = math.clamp(part:GetAttribute("Speed") or ObstacleConfig.ConveyorSpeed, 0, 24),
+      direction = part:GetAttribute("Direction") or "Forward",
     })
     self.maid:Give(part.Touched:Connect(function(hit)
       local humanoidRoot = getLivePlayerRoot(hit)
       if humanoidRoot then
         local vel = humanoidRoot.AssemblyLinearVelocity
-        local direction = part.CFrame.LookVector * (part:GetAttribute("Speed") or ObstacleConfig.ConveyorSpeed)
+        local axis = part:GetAttribute("Direction")
+        local directionVector = axis == "Backward" and -part.CFrame.RightVector or part.CFrame.RightVector
+        local direction = directionVector * (part:GetAttribute("Speed") or ObstacleConfig.ConveyorSpeed)
         humanoidRoot.AssemblyLinearVelocity = Vector3.new(direction.X, vel.Y, direction.Z)
       end
     end))
@@ -544,7 +553,11 @@ function ObbyService:scanBehaviors()
   add("WindZone", function(part)
     table.insert(self.behaviors.windZones, {
       part = part,
-      force = part:GetAttribute("Force") or ObstacleConfig.WindForce,
+      force = math.clamp(
+        part:GetAttribute("Force") or ObstacleConfig.WindForce,
+        0,
+        PlayabilityConfig.Limits.AdventureWindVelocity
+      ),
     })
   end)
 
@@ -727,7 +740,8 @@ function ObbyService:startHeartbeat()
     end
     for _, item in ipairs(self.behaviors.movingPlatforms) do
       if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, GameConfig.ActiveMechanicRadius) then
-        local offsetScalar = math.sin(tickNow * item.speed + item.phase) * item.amplitude
+        local omega = (2 * math.pi) / item.period
+        local offsetScalar = math.sin(tickNow * omega + item.phase) * item.amplitude
         local offset = item.direction * offsetScalar
         local cf = item.origin * CFrame.new(offset)
         local lastPos = item.lastPos or item.part.Position
@@ -778,8 +792,11 @@ function ObbyService:startHeartbeat()
           for _, touch in ipairs(getOverlappingParts(item.part)) do
             local hrp = touch.Parent and touch.Parent:FindFirstChild("HumanoidRootPart")
             if hrp then
-              hrp.AssemblyLinearVelocity = hrp.AssemblyLinearVelocity
-                + item.part.CFrame.RightVector * item.force * queryDt
+              local velocity = hrp.AssemblyLinearVelocity
+              local target = item.part.CFrame.RightVector * item.force
+              local lateral = Vector3.new(velocity.X, 0, velocity.Z)
+              local nextVelocity = lateral:Lerp(target, math.clamp(4 * queryDt, 0, 1))
+              hrp.AssemblyLinearVelocity = Vector3.new(nextVelocity.X, velocity.Y, nextVelocity.Z)
             end
           end
         end

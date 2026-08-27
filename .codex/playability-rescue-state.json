@@ -1,0 +1,13 @@
+{
+  "branch": "codex/toads-great-escape-next-level",
+  "baseCommit": "fd2e263",
+  "phase": "phase 1 runtime tuning foundation",
+  "completedTasks": ["branch/worktree verified", "rescue state initialized", "generic cart spawning removed", "period-based moving motion added", "explicit forward conveyor default added", "bounded wind added", "forgiving Adventure obstacle defaults added"],
+  "verifiedFindings": ["legacy aggressive obstacle defaults present", "ambiguous Speed mechanics present", "known geometry and motion audit targets present"],
+  "unresolvedBlockers": ["Studio and device evidence not yet available", "luau and rojo unavailable", "geometry/routes/hazards/assist/tests pending"],
+  "testsRun": ["./scripts/check.sh", "rojo build default.project.json", "stylua", "git diff --check"],
+  "testsPassed": ["contracts before Luau invocation", "stylua", "git diff --check"],
+  "studioTestsPerformed": [],
+  "studioTestsRequired": ["isolated five-pass chapter QA", "three full Adventure runs", "mobile", "gamepad", "two-player", "Output/performance review"],
+  "nextAction": "implement explicit stage geometry helpers and required-route metadata"
+}

@@ -1825,3 +1825,7 @@
 - Tests run: configuration contract passed.
 - Observed issues: Studio command authorization and live command behavior remain pending Studio validation.
 - Next executable step: verify authorized and unauthorized `/stage` attempts in Studio.
+- 2026-08-27 — Playability rescue phase 1
+- Completed: initialized durable rescue state; removed generic every-third-stage carts; made moving-platform timing period-based; made conveyor default stage-local +X; bounded wind velocity; reduced Adventure obstacle defaults.
+- Tests: existing shell contracts passed until missing `luau`; `rojo` unavailable; Stylua and `git diff --check` passed.
+- Unverified: geometry, required-route traversal, Studio/device/multiplayer QA, and remaining hazard systems.
