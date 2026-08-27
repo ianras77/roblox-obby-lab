@@ -1,0 +1,1839 @@
+# Implementation log
+
+## 2026-08-23 — Route results Practice through chapter selection
+
+- Completed: the completion-card Practice action now opens the existing
+  server-validated chapter selector instead of switching to Practice without a
+  target stage.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: results-to-practice interaction and device layout require Studio.
+
+## 2026-08-23 — Remove misleading placeholder test
+
+- Completed: removed the unused always-pass `tests/placeholder.lua`; executable
+  confidence gates remain explicitly maintained under `scripts/` and CI.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: dynamic Luau runtime tests still require a Roblox/Luau runner.
+
+## 2026-08-23 — Scope collectible validation to generated stages
+
+- Completed: validator duplicate/missing-key checks now inspect only
+  `KeyCollectible` instances inside generated stage models, matching the
+  ownership scope used by runtime registration.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: coexistence with tagged user content requires Studio testing.
+
+## 2026-08-23 — Scope obstacle discovery to owned world
+
+- Completed: CollectionService-tagged obstacle, cart, and collectible scans
+  now register only instances beneath the current generated world, preventing
+  unrelated Workspace content from entering runtime behavior or key totals.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live tagged user-content coexistence requires Studio testing.
+
+## 2026-08-23 — Add original art source briefs
+
+- Completed: added organized source-art prompt briefs for the logo, icon, and
+  eighteen-card chapter package without claiming generated files or uploaded
+  Roblox assets.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: raster generation, originality review, and Creator Hub uploads
+  require the unavailable art workflow and manual review.
+
+## 2026-08-23 — Make validator instance guards type-safe
+
+- Completed: model and checkpoint validation now checks Luau instance type
+  before calling Roblox `IsA`/descendant APIs, preventing malformed scalar
+  fields from crashing world validation.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: malformed live template output remains a Studio-only check.
+
+## 2026-08-23 — Gate cart motion on riders
+
+- Completed: generated carts now remain stationary until their server-owned
+  seat has an occupant, stop while empty, and reset after five seconds of
+  abandonment or after the existing route timeout/fall recovery.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: seat boarding, dismount, and multiplayer cart behavior require
+  Studio playtesting.
+
+## 2026-08-23 — Reject non-finite stage geometry
+
+- Completed: world validation now rejects NaN/infinite bounds and stage
+  entrance, exit, or safe-spawn positions before geometry arithmetic.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: malformed numeric values in live Studio remain unverified.
+
+## 2026-08-23 — Validate structured stage result types
+
+- Completed: world validation now checks CFrame, Vector3, and mechanics-table
+  types before using stage result fields in geometry checks, making malformed
+  template returns fail with diagnostics instead of runtime errors.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: malformed-template behavior in live Studio remains unverified.
+
+## 2026-08-23 — Bound checkpoint root readiness
+
+- Completed: safe checkpoint teleports now wait up to five seconds for a
+  character `HumanoidRootPart` and verify its type, preventing slow character
+  assembly from silently skipping restored placement.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: real device spawn timing requires Studio testing.
+
+## 2026-08-23 — Guard checkpoint binding at runtime
+
+- Completed: checkpoint event binding now requires a `BasePart` and warns on
+  invalid manifest entries, adding runtime defense beyond world-build
+  validation.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: malformed live rebuild behavior requires Studio testing.
+
+## 2026-08-23 — Restrict physics touches to live players
+
+- Completed: conveyor and bounce-pad forces now require a live player
+  character, preventing arbitrary HumanoidRootPart-bearing objects from
+  activating gameplay physics.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live NPC/multiplayer physics behavior requires Studio testing.
+
+## 2026-08-23 — Guard profile loads after player departure
+
+- Completed: profile-load coroutines now stop and clear session tables when a
+  player leaves while `GetAsync` is yielding, preventing late event-handler
+  installation and stale in-memory profiles.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live leave-during-load behavior requires staging DataStore tests.
+
+## 2026-08-23 — Bind developer commands across service lifecycle
+
+- Completed: allowlisted developer command handlers now bind both existing and
+  future players, so service startup and Studio rebuilds do not leave present
+  operators without `/rebuild`, `/reseed`, or `/stage` access.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live chat command behavior requires Studio testing.
+
+## 2026-08-23 — Snapshot profiles before datastore writes
+
+- Completed: saves now sanitize a stable profile snapshot before entering the
+  yielding `UpdateAsync` path, preventing concurrent touches/settings changes
+  from mutating the value mid-save.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live concurrent save behavior requires staging DataStore tests.
+
+## 2026-08-23 — Require a live character at the Time Trial gate
+
+- Completed: Time Trial gate admission now requires a live Humanoid in addition
+  to a valid root and distance check, preventing dead characters from arming
+  the server clock.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live gate touch timing requires Studio playtesting.
+
+## 2026-08-23 — Baseline and correctness foundation
+
+- Completed: repository audit and development branch creation.
+- Completed: identified stage spacing, ownership, checkpoint, collectible,
+  persistence, and state-sync risks.
+- Tests: storyboard contract passed; `git diff --check` passed; full local check
+  is blocked by missing `selene` in the environment.
+- Observed: Studio-only gameplay and performance verification remains pending.
+- Next executable step: wire stable stage metadata and world validation, then
+  migrate progression and keys to server-owned state.
+
+## 2026-08-23 — Ownership and progression contracts
+
+- Completed: generated-world ownership markers and versioned seed metadata.
+- Completed: stable stage IDs, validator wiring, monotonic checkpoints, and
+  per-player key credit without global key destruction.
+- Tests: storyboard and production contracts pass; Stylua check passes;
+  Selene is unavailable in this environment.
+- Next executable step: replace the checkpoint-only wrapper with a versioned
+  profile service and explicit client state synchronization.
+
+## 2026-08-23 — Replay-safe run state
+
+- Completed: server-owned Adventure, TimeTrial, and Practice run state, chapter
+  timing, and split storage; Practice completion cannot qualify.
+- Completed: initialization synchronization includes run mode and timing data.
+- Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
+
+## 2026-08-23 — DataStore key correctness
+
+- Completed: profile reads/writes now use stable string keys prefixed with
+  `player:` as required by the Roblox DataStore API.
+- Tests: local contracts and formatting remain the baseline; live DataStore
+  availability and migration behavior remain unverified.
+- Unverified: time-trial UX, leaderboard policy, and Studio gameplay.
+
+## 2026-08-23 — Persisted accessibility settings
+
+- Completed: allowlisted, rate-limited settings remote and profile-backed
+  accessibility settings restoration through `GetObbyState`.
+- Tests: storyboard, production contracts, Stylua, and whitespace checks
+  remain the local validation baseline.
+- Unverified: settings behavior across real device respawn and Studio clients.
+
+## 2026-08-23 — Replay controls and results presentation
+
+- Completed: server-validated mode selection and a completion results panel for
+  Adventure, Time Trial, and Practice.
+- Completed: Practice remains explicitly ineligible in server run state.
+- Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
+- Unverified: device layout, actual timing flow, and Studio multiplayer behavior.
+
+## 2026-08-23 — Server-owned run results
+
+- Completed: qualifying completions update personal best and completion count;
+  deaths update profile totals; results show the personal best.
+- Completed: Practice completions remain excluded from personal-best updates.
+- Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
+- Unverified: real Studio timing, reset semantics, and leaderboard publication.
+
+## 2026-08-23 — Removed startup state race
+
+- Completed: removed the synthetic global Stage 0 broadcast; restored client
+  state now comes only from `GetObbyState` and per-player events.
+- Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
+
+## 2026-08-23 — CI build confidence
+
+- Completed: CI now installs pinned Rojo and builds a place artifact after
+  source checks, so project-tree/mapping failures fail the pipeline.
+- Tests: local storyboard, production contracts, Stylua, and whitespace checks
+  remain passing; CI execution and Rojo installation are not available locally.
+
+## 2026-08-23 — Legacy profile migration
+
+- Completed: sanitizer migrates legacy checkpoint records and bounds run/chapter
+  timing fields before storing them.
+- Tests: storyboard, production contracts, Stylua, and whitespace checks pass.
+- Unverified: live migration against Roblox DataStore records.
+
+## 2026-08-23 — No-op-safe analytics boundary
+
+- Completed: allowlisted server analytics wrapper wired to joins, chapter
+  checkpoints, key discovery, and qualifying run completion.
+- Completed: analytics is disabled in Studio and by default; no raw chat or
+  arbitrary client event payloads are accepted.
+- Tests: storyboard, production contracts, Stylua, Selene, and Rojo CI passed
+  on the prior validated branch state; this update needs a fresh CI run.
+
+## 2026-08-23 — Vision and art-direction artifacts
+
+- Completed: added the required game-vision and art-direction source documents.
+- Scope: documents preserve the literary/public-domain identity and define the
+  implemented readability/accessibility direction without claiming uploaded
+  assets or Studio visual validation.
+
+## 2026-08-23 — GitHub CI green
+
+- Completed: draft PR CI run `32657495468` passed Stylua, Selene, contract
+  checks, and the pinned Rojo place build.
+- Evidence: GitHub Actions job completed successfully; this does not replace
+  Roblox Studio playtesting or device/multiplayer validation.
+
+## 2026-08-23 — Operator documentation alignment
+
+- Completed: README and test documentation now describe the production contract
+  gate and Rojo artifact build rather than the original prototype-only checks.
+- Tests: no runtime code changed; prior local and GitHub validation remains the
+  evidence baseline.
+
+## 2026-08-23 — Canonical route contract
+
+- Completed: added a deterministic configuration contract for the ordered 18-
+  chapter route, unique stage types, matching display names, matching chapter
+  presentation metadata, and stable ID derivation.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: actual Roblox Studio traversal, physics, device layout, and
+  multiplayer behavior.
+
+## 2026-08-23 — Checkpoint geometry validation
+
+- Completed: WorldValidator now rejects non-positive stage bounds, undersized
+  checkpoint standing areas, safe spawns that are not above their checkpoint,
+  and checkpoint/hazard overlap.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: physical jump feasibility and respawn feel still require Studio.
+
+## 2026-08-23 — Obstacle lifecycle hardening
+
+- Completed: conveyor motion now preserves the player's vertical velocity
+  instead of multiplying it by conveyor speed; centralized animation/query
+  loops skip destroyed or detached obstacle instances safely.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: moving-platform rider feel and networked physics still require
+  multi-client Studio playtesting.
+
+## 2026-08-23 — Generator fail-closed behavior
+
+- Completed: StageBuilder no longer substitutes the warm-up chapter when a
+  template is missing, and now rejects invalid template models, exits, and
+  presentation metadata before creating progression objects.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: Studio-only geometry traversal remains pending.
+
+## 2026-08-23 — Contextual hazard authority
+
+- Completed: kill hazards now require a live player character with a root part
+  and use a short server-side humanoid debounce before applying death.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: latency behavior and full failure/respawn feel still require
+  Studio playtesting.
+
+## 2026-08-23 — Profile-safe collectible handoff
+
+- Completed: key touches now wait for the player's profile load, validate the
+  stable key identity type and length, and ignore detached collectible parts.
+  This prevents an early touch from being overwritten by asynchronous profile
+  loading.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: live DataStore latency and Studio multi-client collection remain
+  pending.
+
+## 2026-08-23 — Explicit Time Trial start gate
+
+- Completed: Time Trial runs now arm on mode selection and start only when the
+  player crosses a server-owned start gate within a validated distance. The
+  Adventure and Practice clocks retain their immediate-start behavior.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: timing feel, reset behavior, and multiplayer gate crossings still
+  require Studio playtesting.
+
+## 2026-08-23 — Fail-closed world acceptance
+
+- Completed: WorldBuilder now destroys and rejects generated content when
+  WorldValidator reports any error, instead of warning and serving an invalid
+  layout.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: validator behavior against live Studio physics remains pending.
+
+## 2026-08-23 — Safe DataStore read failure
+
+- Completed: DataStore reads now return an explicit success flag. A failed
+  profile load supplies temporary defaults for gameplay but marks the player
+  unavailable for persistence, preventing shutdown/autosave from overwriting
+  existing data with defaults.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: live request-budget behavior and recovery after transient Roblox
+  DataStore outages require Studio/production-like testing.
+
+## 2026-08-23 — Structured completion results
+
+- Completed: completion now presents a structured player-local results card
+  with time, personal best, deaths, Golden Keys, completion percentage, and
+  Replay/Time Trial/Practice actions using the existing server-validated mode
+  contract.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: responsive layout and gamepad focus still require Studio device
+  testing.
+
+## 2026-08-23 — Authorized practice-stage selection
+
+- Completed: Practice now has a server-validated stage-selection contract that
+  accepts only integer chapters already reached by the player's loaded profile,
+  resets the run state to Practice, and teleports through the existing safe
+  checkpoint path.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: selector presentation and multiplayer practice transitions still
+  require Studio testing.
+
+## 2026-08-23 — Live Practice unlock synchronization
+
+- Completed: the client now advances its unlocked Practice chapter state from
+  monotonic progress events, so a newly reached chapter becomes selectable in
+  the current session.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: device layout and multiplayer UI behavior remain pending Studio.
+
+## 2026-08-23 — Explicit stage manifest cardinality
+
+- Completed: WorldValidator now checks stage order and index uniqueness
+  independently of sparse checkpoint arrays, verifies the configured total
+  stage count, and reports missing stage indices separately from missing
+  checkpoints.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: live generated geometry traversal remains pending Studio.
+
+## 2026-08-23 — DataStore budget gates
+
+- Completed: profile reads and writes now check Roblox request budget before
+  each attempt. Exhausted budgets fail safely, retaining session defaults or
+  unsaved in-memory progress rather than adding more pressure to the service.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: live budget values and outage recovery require production-like
+  Roblox testing.
+
+## 2026-08-23 — Owned rebuild deletion guard
+
+- Completed: rebuild cleanup now verifies the generated root's
+  `GeneratorOwner` attribute before deleting it and fails closed for an
+  unknown or user-created `GeneratedObby` model.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: Studio rebuild behavior with user-authored Workspace content
+  remains pending.
+
+## 2026-08-23 — World seed boundary validation
+
+- Completed: the world-generation entry point now accepts only finite,
+  non-negative integer seeds within the configured developer range, preventing
+  direct callers from bypassing reseed input limits.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: Studio rebuild behavior with extreme but valid seeds remains
+  pending.
+
+## 2026-08-23 — Immediate checkpoint profile consistency
+
+- Completed: checkpoint advancement now updates the loaded in-memory profile as
+  well as player attributes, keeping server Practice authorization consistent
+  with the chapter just reached before autosave runs.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: Studio persistence timing and reconnect behavior remain pending.
+
+## 2026-08-23 — Moving-platform rider deduplication
+
+- Completed: platform carrying now updates each character at most once per
+  frame, applies platform horizontal velocity without accumulating it, and
+  preserves the rider's vertical velocity.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: actual rider comfort, edge standing, latency, and multi-client
+  physics require Studio testing.
+
+## 2026-08-23 — Feedback asset approval boundary
+
+- Completed: checkpoint and Golden Key feedback sounds now resolve through
+  AssetRegistry and remain silent until an asset is both verified and approved
+  for release.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: Roblox asset ownership, moderation, and playback require Creator
+  Hub/Studio verification.
+
+## 2026-08-23 — Client finale asset gate
+
+- Completed: client fireworks texture and finale chime now use AssetRegistry;
+  unapproved assets produce safe empty fallbacks, and reduced-particle mode
+  also lowers the emitted burst count.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: asset playback and finale presentation remain Studio-dependent.
+
+## 2026-08-23 — Reversible high-contrast hazards
+
+- Completed: high-contrast mode now snapshots and restores hazard materials as
+  well as colors, so toggling the accessibility setting does not leave a
+  permanent client-side visual mutation.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: visual readability on real devices remains pending Studio.
+
+## 2026-08-23 — Subtle checkpoint feedback
+
+- Completed: ordinary checkpoint progress now uses a small HUD pulse rather
+  than a full-screen white flash; the pulse respects reduced-motion and
+  reduced-flash settings while finale presentation remains separate.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: visual timing and accessibility perception require Studio device
+  testing.
+
+## 2026-08-23 — Generated visual asset gate
+
+- Completed: generated particle textures and the legacy chapter decal now
+  resolve through AssetRegistry; direct Roblox asset literals were removed
+  from builders and shared build utilities.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: ownership, moderation, and visual playback require Creator
+  Hub/Studio verification.
+
+## 2026-08-23 — Zone ambience asset gate
+
+- Completed: all three zone ambience references now use logical registry keys
+  and resolve through AssetRegistry approval instead of assigning raw IDs from
+  zone configuration.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally; GitHub CI was green before this change.
+- Unverified: ambience ownership, moderation, and playback remain Creator
+  Hub/Studio checks.
+
+## 2026-08-23 — Bounded collectible profile input
+
+- Completed: profile sanitization and runtime key credit now cap stored
+  collectible identities at 100, bounding malformed persistence payloads while
+  leaving the authored 18-key route unaffected.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: live migration of oversized legacy records remains pending.
+
+## 2026-08-23 — Live Time Trial HUD timer
+
+- Completed: added a client-rendered Time Trial timer synchronized from server
+  mode/start events; it displays elapsed time only and does not participate in
+  eligibility, completion, or record decisions.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: clock presentation, drift, and device layout require Studio.
+
+## 2026-08-23 — Merge chapter splits and settings safely
+
+- Completed: concurrent profile updates now preserve the best chapter split and
+  boolean settings from the existing record, while retaining bounded key-state
+  merging.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: concurrent live DataStore conflict behavior requires a staging
+  Roblox environment.
+
+## 2026-08-23 — Bound merged collectible records
+
+- Completed: concurrent profile merging now rebuilds the key set from both
+  records with type, length, and 100-key bounds, instead of copying an
+  unbounded table and only limiting one side.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live DataStore conflict and migration behavior still require
+  staging Roblox validation.
+
+## 2026-08-23 — Make world validation fail closed
+
+- Completed: malformed stage manifests with missing or non-Model instances now
+  produce validation errors instead of crashing during attribute, hazard, or
+  descendant inspection.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: validator execution against live generated instances remains a
+  Studio-only check.
+
+## 2026-08-23 — Bound persisted chapter progress
+
+- Completed: profile sanitization now clamps legacy and current
+  `highestChapter` values to the canonical 18-chapter route, preventing
+  malformed records from advertising impossible progression.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live migration of malicious or corrupt records requires staging
+  DataStore validation.
+
+## 2026-08-23 — Bound persisted profile counters
+
+- Completed: death and completion counters are now clamped to a sane upper
+  bound during profile sanitization, preventing corrupt records from inflating
+  HUD values or concurrent-save merges.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live migration of extreme counter values requires staging
+  DataStore validation.
+
+## 2026-08-23 — Gate progression on profile readiness
+
+- Completed: checkpoint advancement now requires a successfully loaded player
+  profile before accepting touches, preventing early-join progression from
+  mutating session defaults during a DataStore load race.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: join/load timing under live DataStore latency requires Studio or
+  staging validation.
+
+## 2026-08-23 — Establish checkpoint state on profile load
+
+- Completed: profile loading now clears stale checkpoint attributes before
+  applying sanitized saved progress, including explicit zero-progress state;
+  this prevents old-world state from surviving a rebuild or new load.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live reconnect and rebuild timing require Studio/staging tests.
+
+## 2026-08-23 — Repair character position after profile load
+
+- Completed: when a profile load finishes after character spawn, the service
+  now teleports the existing character to the sanitized saved checkpoint;
+  future `CharacterAdded` events retain the same safe-spawn path.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live join latency and spawn ordering require Studio/staging.
+
+## 2026-08-23 — Reset run completion state
+
+- Completed: server run initialization and mode changes now clear the previous
+  `RunCompleted` attribute before a new run begins, preventing stale completion
+  state from leaking into replay or future reward logic.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: full replay attribute behavior requires Studio playtesting.
+
+## 2026-08-23 — Tear down services before rebuild
+
+- Completed: developer rebuilds now destroy the old checkpoint/run services and
+  reset runtime clocks before constructing the replacement world, preventing
+  stale touch handlers and timing state from overlapping a rebuild.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: repeated Studio rebuilds and active-player behavior require
+  Studio testing.
+
+## 2026-08-23 — Gate settings and modes on profile readiness
+
+- Completed: accessibility-settings and run-mode remotes now reject requests
+  until the server has loaded the player's profile, preventing initialization
+  races from mutating or replacing session defaults.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: remote timing under live DataStore latency requires Studio or
+  staging validation.
+
+## 2026-08-23 — Align live network payload contracts
+
+- Completed: progress contracts now document server-synchronized timer fields,
+  and Golden Key pickup feedback includes the stable server-assigned key ID.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live client compatibility and multiplayer pickup presentation
+  require Studio testing.
+
+## 2026-08-23 — Bound concurrent chapter split merges
+
+- Completed: `UpdateAsync` now accepts existing chapter splits only for integer
+  chapters 1–18 and finite positive times below the profile timing ceiling,
+  preventing malformed legacy fields from being reintroduced during saves.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live malformed-record migration requires staging DataStore
+  testing.
+
+## 2026-08-23 — Guard invalid checkpoint instances
+
+- Completed: the world validator now inspects checkpoint geometry only after
+  confirming the checkpoint is a `BasePart`, so malformed checkpoint instances
+  return validation errors without crashing the build.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live malformed-instance coverage still requires Studio.
+
+## 2026-08-23 — Restart Time Trials from a clean start
+
+- Completed: selecting Time Trial, including using Reset while already in a
+  trial, now clears the server-owned checkpoint before the character respawns.
+  Adventure resets retain ordinary checkpoint behavior.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: respawn placement and gate re-entry timing require Studio.
+
+## 2026-08-23 — Bounded rider contact queries
+
+- Completed: moving-platform contact detection now samples `GetTouchingParts()`
+  at 20 Hz and reuses the contact list for per-frame translation, while still
+  deduplicating characters and preserving vertical velocity.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: contact freshness and ride feel under latency require Studio
+  multiplayer testing.
+
+## 2026-08-23 — Isolated Studio sandbox store
+
+- Completed: `StudioSandbox` now appends `_StudioSandbox` to the configured
+  DataStore name, preventing test profiles from sharing production records;
+  `Production` remains blocked while running in Studio.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: Roblox API access and sandbox request budgets require Studio
+  verification.
+
+## 2026-08-23 — Explicit completion payload contract
+
+- Completed: RemoteContracts now documents the chapter metadata and completion
+  metrics actually sent by the server, including timing, deaths, keys, and
+  chapter splits.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: runtime payload observation requires Studio client testing.
+
+## 2026-08-23 — Scrollable settings panel
+
+- Completed: the settings/mode panel now uses automatic vertical canvas sizing
+  and scrolling so all accessibility, replay, and mode controls remain
+  reachable when the panel exceeds the viewport height.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: touch scrolling and gamepad focus order require Studio device
+  testing.
+
+## 2026-08-23 — Time Trial plausibility guard
+
+- Completed: server-owned Time Trial completion now requires a conservative
+  minimum elapsed duration before updating personal-best data; implausibly fast
+  runs still complete for the player but are ineligible for record updates.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: threshold tuning against real movement and latency requires
+  Studio playtesting.
+
+## 2026-08-23 — Cross-input HUD activation
+
+- Completed: reset, settings, mode, and accessibility controls now use the
+  cross-input `Activated` event, matching the intended touch/gamepad/desktop
+  surface.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: actual gamepad focus order and device ergonomics require Studio.
+
+## 2026-08-23 — Explicit selectable HUD controls
+
+- Completed: reset, settings, mode, Practice chapter, accessibility, and
+  results actions are explicitly marked selectable for gamepad navigation.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: actual selection order and console safe-area behavior require
+  Studio testing.
+
+## 2026-08-23 — Canonical Time Trial start
+
+- Completed: crossing the validated Time Trial gate now clears the player's
+  saved checkpoint attributes before starting the clock, preventing late-game
+  checkpoint progress from producing an invalid shortened run.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: reset/spawn timing and full-run plausibility require Studio.
+
+## 2026-08-23 — Rate-limit lifecycle cleanup
+
+- Completed: settings, run-mode, and Practice remote rate-limit maps now remove
+  disconnected players, preventing stale player-keyed state from accumulating
+  across repeated joins.
+- Tests: configuration, storyboard, production, Stylua, and whitespace checks
+  pass locally.
+- Unverified: long-lived server memory behavior requires live server soak tests.
+
+## 2026-08-23 — Profile contract gate
+
+- Completed: added an executable profile contract covering required defaults,
+  legacy checkpoint migration, timing bounds, boolean settings validation, and
+  the bounded collectible-key set; integrated it into `scripts/check.sh` and CI.
+- Tests: configuration, profile, storyboard, production, Stylua, and whitespace
+  checks pass locally.
+- Unverified: dynamic Luau execution and live DataStore migration still require
+  Studio/production-like testing.
+
+## 2026-08-23 — Bound stored values during concurrent saves
+
+- Completed: `UpdateAsync` now applies the profile chapter and counter ceilings
+  to existing stored records as well as the current session value.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: live malformed-record migration requires staging DataStore tests.
+
+## 2026-08-23 — Preserve monotonic progress on save
+
+- Completed: profile saves now retain the greater of stored session progress and
+  the current checkpoint attribute, so Time Trial resets cannot lower a
+  player's saved Adventure progression before `UpdateAsync` runs.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: leave-during-trial and live save ordering require Studio/staging.
+
+## 2026-08-23 — Submit allowlisted analytics events
+
+- Completed: the server analytics wrapper now submits allowlisted events to
+  Roblox AnalyticsService when explicitly enabled outside Studio, using a
+  protected call and fixed low-cardinality value.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: Creator Hub analytics availability and delivery require staging.
+
+## 2026-08-23 — Reconcile persistence and performance documentation
+
+- Completed: corrected release documentation to describe the implemented
+  versioned profile/persistence path and the actual 10 Hz wind/pad and 20 Hz
+  moving-platform query cadence.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: Roblox DataStore behavior and runtime performance still require
+  staging/Studio measurement.
+
+## 2026-08-23 — Bound non-critical obstacle updates
+
+- Completed: rotators, gavel animation, and timed-tile state updates now run at
+  a bounded 30 Hz server tick, while moving-platform and critical hazard paths
+  retain their existing authority cadence.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: server cost and perceived motion quality require Studio
+  profiling and playtesting.
+
+## 2026-08-23 — Synchronize initial environment presentation
+
+- Completed: the local environment controller now requests `GetObbyState` on
+  startup and applies the restored chapter's zone presentation before later
+  progress events arrive.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: visual transition quality and lighting replication require
+  Studio/device testing.
+
+## 2026-08-23 — Bound environment transition lifecycle
+
+- Completed: zone presentation now cancels prior Lighting, Atmosphere, and
+  ColorCorrection tweens before starting a new transition, preventing stacked
+  animations during rapid progression.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally.
+- Unverified: visual smoothness and device performance require Studio testing.
+
+## 2026-08-23 — Return Time Trial players to the start gate
+
+- Completed: the generated start gate is exposed in the world result, and
+  selecting Time Trial clears progression and returns the live character to a
+  safe position behind the gate.
+- Tests: configuration, profile, storyboard, production, and Stylua checks
+  pass locally; the aggregate check is blocked here because `selene` is not
+  installed.
+- Unverified: the respawn/teleport presentation and gate crossing still
+  require Roblox Studio playtesting.
+
+## 2026-08-23 — Make Practice chapter respawns coherent
+
+- Completed: selecting an unlocked Practice chapter now assigns a temporary
+  server-owned checkpoint before teleporting, so death respawns within the
+  selected chapter without changing persisted highest progress.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: multi-client Practice/reset behavior requires Studio testing.
+
+## 2026-08-23 — Persist Time Trial timer visibility
+
+- Completed: `showTimer` is now part of the validated profile defaults and
+  settings UI; hiding it affects presentation only, while server timing and
+  eligibility remain unchanged.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: settings persistence and device-specific HUD placement require
+  Studio testing.
+
+## 2026-08-23 — Align chapter split bounds with the canonical route
+
+- Completed: profile sanitization now rejects chapter split records beyond
+  `ProfileSchema.MaxChapter`, preventing stale or malformed records from
+  creating split entries outside the 18-chapter route.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: migration behavior against live legacy records requires a
+  Studio sandbox DataStore run.
+
+## 2026-08-23 — Route audio through production SoundGroups
+
+- Completed: server startup now creates shared Music, Ambience, SFX, and UI
+  buses; approved music, zone ambience, and finale feedback are assigned to
+  the appropriate groups while unapproved assets still resolve to silence.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: actual audio playback, permissions, and device mixing require
+  Creator Hub and Studio verification.
+
+## 2026-08-23 — Move developer commands to TextChatService
+
+- Completed: `/rebuild`, `/reseed`, and `/stage` now use explicit server-side
+  `TextChatCommand` aliases with the existing allowlist, bounds, and cooldown;
+  legacy `Player.Chatted` is retained only as a compatibility fallback.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: command behavior in current Roblox Studio chat channels requires
+  Studio testing.
+
+## 2026-08-23 — Add zone-relative story landmarks
+
+- Completed: `DecorBuilder` now places anchored, non-collidable landmark kits
+  from measured zone bounds, giving the three zones distinct silhouettes and
+  orientation cues without adding gameplay-path geometry.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: landmark composition, occlusion, and mobile render cost require
+  Studio/device inspection.
+
+## 2026-08-23 — Sleep distant cosmetic mechanics
+
+- Completed: non-critical rotators, gavel presentation, timed-tile visuals, and
+  beacons now use a bounded 180-stud proximity check; critical hazards,
+  moving-platform transforms, and transport authority remain active.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: actual server frame-time savings and wake-up presentation require
+  Roblox MicroProfiler and multi-player Studio testing.
+
+## 2026-08-23 — Emit the documented chapter-start event
+
+- Completed: the server now emits the allowlisted `chapter_started` event at
+  the first monotonic checkpoint transition for a chapter, alongside the
+  existing completion event; client payloads cannot create analytics events.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: production telemetry delivery remains disabled until analytics
+  policy and destination approval.
+
+## 2026-08-23 — Hide collected keys per player
+
+- Completed: initial state synchronization and key pickup feedback now apply
+  local visibility for collected stable key IDs; the shared physical key is
+  never destroyed, preserving independent multiplayer collection.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: late streaming of key instances and two-client visual isolation
+  require Studio multiplayer testing.
+
+## 2026-08-23 — Make finale reduced-motion safe
+
+- Completed: Reduced Motion now suppresses finale fireworks and spotlight
+  animation while retaining the completion transition and results presentation.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: nausea/accessibility review and device behavior require Studio
+  testing with the setting enabled.
+
+## 2026-08-23 — Keep Adventure runs out of Time Trial bests
+
+- Completed: final completion still increments the unlock counter in Adventure,
+  but `bestRunMs` is now updated only for eligible Time Trial runs; Practice
+  remains ineligible.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: end-to-end PB preservation across real profile saves requires
+  Studio sandbox DataStore testing.
+
+## 2026-08-23 — Correct settings and test-status documentation
+
+- Completed: documentation now reflects six supported boolean accessibility
+  settings, including `showTimer`, and no longer implies that a missing Luau
+  test runner exists locally.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: runtime test execution still requires Roblox Studio or a chosen
+  Luau runner.
+
+## 2026-08-23 — Make Adventure Replay restart from the start
+
+- Completed: selecting Adventure now clears the live checkpoint and returns
+  the character to the start gate, while preserving persisted unlock progress,
+  keys, and Time Trial personal bests.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: Results Replay positioning and persistence preservation require
+  Studio playtesting.
+
+## 2026-08-23 — Route checkpoint and key sounds through SFX
+
+- Completed: generated checkpoint and Golden Key feedback now use the shared
+  SFX SoundGroup alongside finale feedback; no sound path bypasses the common
+  mix buses.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: approved asset playback and final mix balance require Creator Hub
+  and Studio verification.
+
+## 2026-08-23 — Make SoundGroup setup startup-order safe
+
+- Completed: shared `SoundGroups.ensure` now idempotently creates and assigns
+  the Music, Ambience, SFX, and UI buses from every sound creation path, even
+  if the compatibility bootstrap starts before `ServerMain`.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: Studio script scheduling and final device mix still require
+  Roblox testing.
+
+## 2026-08-23 — Add persistent local audio controls
+
+- Completed: players can cycle master, music, and effects volume from the
+  responsive settings panel; values are range-validated, persisted in the
+  profile, and applied locally to the shared SoundGroup buses.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: actual device mixing, mute ergonomics, and persistence in a live
+  profile require Studio testing.
+
+## 2026-08-23 — Preserve numeric settings during concurrent saves
+
+- Completed: `UpdateAsync` now retains bounded numeric volume and UI-scale
+  settings from the existing profile record instead of merging booleans only.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: real concurrent-session conflict behavior requires a staging
+  DataStore test.
+
+## 2026-08-23 — Apply persisted UI scale
+
+- Completed: the persisted `uiScale` setting now has a bounded server contract,
+  a settings-panel control, and a client HUD scale application that composes
+  with the larger-text accessibility multiplier.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: device ergonomics and large-text clipping require Studio testing.
+
+## 2026-08-23 — Apply settings before initial HUD presentation
+
+- Completed: the client now applies persisted accessibility and audio settings
+  before rendering the initial timer, progress, key state, and effects, avoiding
+  a transient default presentation during join synchronization.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: visible join-time behavior under real network latency requires
+  Studio testing.
+
+## 2026-08-23 — Record and validate connector ownership
+
+- Completed: the stage manifest now records each stage's measured connector
+  length and expected zone index; `WorldValidator` rejects mismatches, overly
+  long links, nonzero first-stage connectors, and incorrect zone ownership.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: generated CFrame spacing and traversal feasibility still require
+  Studio inspection.
+
+## 2026-08-23 — Measure cross-zone connectors
+
+- Completed: connector measurement now carries the prior zone exit into the
+  next zone, so the first stage of each zone records and validates the actual
+  elevation-transition link instead of falsely starting at zero.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: cross-zone traversal remains a Studio geometry/playtest check.
+
+## 2026-08-23 — Bind zone ownership to generated models
+
+- Completed: each generated stage model now carries its `ZoneIndex`, and the
+  validator compares that marker with the stage manifest and expected route
+  zone before accepting the world.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live Studio inspection of generated hierarchy remains pending.
+
+## 2026-08-23 — Validate stage zone hierarchy
+
+- Completed: manifests retain each stage's zone container reference, and the
+  validator rejects stages whose parent no longer matches that container even
+  when their `ZoneIndex` attribute is unchanged.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live hierarchy mutation behavior remains a Studio-only check.
+
+## 2026-08-23 — Fail closed on missing zone containers
+
+- Completed: `WorldValidator` now requires a typed zone-model reference before
+  evaluating parent identity, rejecting manifests that omit the container and
+  would otherwise bypass hierarchy validation.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: malformed live instances still require Studio mutation tests.
+
+## 2026-08-23 — Validate stage mechanic metadata
+
+- Completed: generated stage manifests now require a non-empty list of bounded
+  string mechanic names; malformed or empty mechanic metadata fails world
+  validation before runtime systems consume it.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: malformed live metadata injection remains a Studio-only test.
+
+## 2026-08-23 — Cross-check canonical stage identity
+
+- Completed: `WorldValidator` now compares each manifest stage ID and type with
+  the canonical `StageConfig`/`WorldGenConfig` entry for its index, rejecting
+  identity drift before persistence or presentation can consume it.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live malformed stage identity injection remains a Studio-only
+  test.
+
+## 2026-08-23 — Cross-check model identity attributes
+
+- Completed: `WorldValidator` now compares generated model `StageId` and
+  `StageIndex` attributes with the stage manifest in addition to canonical
+  configuration, preventing metadata drift between runtime instances and
+  persistence-facing records.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live attribute mutation remains a Studio-only test.
+
+## 2026-08-23 — Validate the structured zone manifest
+
+- Completed: world generation now validates zone count/order, generated-root
+  ownership, entrance/exit CFrames, finite positive bounds, and transition
+  lengths before accepting the zone manifest.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live zone mutation and traversal remain Studio-only checks.
+
+## 2026-08-23 — Fail closed on collectible identity types
+
+- Completed: world validation now requires non-empty bounded string `KeyId`
+  values, preventing malformed numeric or oversized collectible IDs from
+  reaching duplicate checks or string diagnostics.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: malformed live collectible attributes remain a Studio-only test.
+
+## 2026-08-23 — Harden malformed stage diagnostics
+
+- Completed: `WorldValidator` now requires bounded string stage IDs and finite
+  integer stage indices, and uses safe labels while formatting errors so bad
+  manifest values produce validation errors instead of formatter crashes.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: malformed live instance injection remains a Studio-only test.
+
+## 2026-08-23 — Add explicit stage path corridors
+
+- Completed: stage build results now carry a gameplay path corridor descriptor,
+  and the world validator requires a finite positive corridor width and CFrame
+  center for every stage.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: corridor width against real Humanoid movement and jump feasibility
+  requires Studio playtesting.
+
+## 2026-08-23 — Expose a structured zone manifest
+
+- Completed: `WorldBuilder` now returns authoritative zone records containing
+  model, index, entrance, exit, measured bounds, and center, enabling future
+  presentation and inspection code to use zone geometry without recomputing it.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: runtime zone presentation and streamed-world inspection require
+  Studio testing.
+
+## 2026-08-23 — Separate route and exploration completion
+
+- Completed: the results screen now reports route completion separately from
+  Golden Key exploration percentage, preventing a finished run with missing
+  optional keys from appearing fully explored.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: final-results readability on mobile and large-text settings
+  requires Studio device testing.
+
+## 2026-08-23 — Bound respawn death connections
+
+- Completed: checkpoint lifecycle now tracks one Humanoid death connection per
+  player, replaces it on respawn, and disconnects it on departure or rebuild.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: long-lived server soak behavior requires Roblox Studio testing.
+
+## 2026-08-23 — Reconcile release checklist with CI evidence
+
+- Completed: the release checklist now marks only the CI artifact, pinned
+  toolchain, and concurrency items proven by successful GitHub runs; Studio,
+  Creator Hub, asset, persistence, and publication items remain unchecked.
+- Tests: latest recorded GitHub CI run passes; local configuration, profile,
+  storyboard, production, Stylua, and whitespace checks pass.
+- Unverified: all Roblox Studio and Creator Hub checklist items remain pending.
+
+## 2026-08-23 — Validate zone spatial presentation data
+
+- Completed: zone manifests now reject non-finite entrance/exit positions and
+  invalid centers before presentation systems consume them.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live streamed-zone presentation still requires Roblox Studio
+  testing.
+
+## 2026-08-23 — Cross-check checkpoint identity
+
+- Completed: world validation now requires each checkpoint's stable `StageId` to
+  match its stage manifest.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live checkpoint touch behavior still requires Roblox Studio.
+
+## 2026-08-23 — Validate checkpoint ownership
+
+- Completed: world validation now rejects checkpoints that are not descendants
+  of their recorded stage model, preventing a manifest from pointing at an
+  unrelated live part.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live checkpoint touch behavior still requires Roblox Studio.
+
+## 2026-08-23 — Expose profile save diagnostics
+
+- Completed: profile load and save outcomes are now visible as diagnostic
+  player attributes, including the last successful save timestamp, while
+  progression remains gated by the server's loaded-profile state.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live DataStore outage and shutdown-save behavior still require
+  Roblox Studio/private staging testing.
+
+## 2026-08-23 — Distinguish skipped persistence
+
+- Completed: diagnostic saves now distinguish an intentional environment
+  no-op (`Skipped`) from a failed write; production failures remain visible as
+  `Failed`.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live DataStore outage and shutdown-save behavior still require
+  Roblox Studio/private staging testing.
+
+## 2026-08-23 — Harden runtime checkpoint authority
+
+- Completed: checkpoint touches now verify the server-owned stage mapping,
+  model ownership, stable stage ID, and stage index before advancing progress.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live touch behavior and multiplayer timing still require Roblox
+  Studio/private staging testing.
+
+## 2026-08-23 — Safely recover occupied carts
+
+- Completed: cart timeout, fall, and abandonment recovery now dismounts an
+  occupant and places them at a cleared recovery position before resetting the
+  cart, avoiding rider flings and soft-locks.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live cart behavior remains Studio-unverified.
+
+## 2026-08-23 — Enforce contiguous checkpoint progression
+
+- Completed: the server now rejects forward checkpoint skips while preserving
+  monotonic saved progress and Practice's selected starting chapter.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live traversal and multiplayer checkpoint timing still require
+  Roblox Studio/private staging testing.
+
+## 2026-08-23 — Centralize generator version provenance
+
+- Completed: the structural generator version is now owned by world-generation
+  configuration and validated against the generated root alongside its seed.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: cross-version rebuild behavior in Roblox Studio remains pending.
+
+## 2026-08-23 — Extract pure progression rules
+
+- Completed: contiguous checkpoint sequencing and malformed-value normalization
+  now live in a shared pure module used by the server checkpoint service.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: standalone Luau execution and live multiplayer checkpoint timing
+  require the project toolchain and Roblox Studio respectively.
+
+## 2026-08-23 — Restore replay state on initialization
+
+- Completed: initial state responses now include the saved highest chapter, so
+  returning players retain access to unlocked Practice chapters immediately.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: reconnect behavior with live DataStore profiles still requires
+  Roblox Studio/private staging testing.
+
+## 2026-08-23 — Keep gameplay available during profile outages
+
+- Completed: failed profile reads now provide a sanitized session-only profile;
+  checkpoint and key gameplay remains available while persistence writes stay
+  disabled until a read is confirmed successful.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live DataStore outage recovery and reconnect behavior still
+  require Roblox Studio/private staging testing.
+
+## 2026-08-23 — Normalize persisted checkpoint state
+
+- Completed: saves now normalize and clamp the live checkpoint attribute before
+  merging it into the profile, preventing malformed runtime state from
+  breaking persistence.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Selene remains CI-only in this environment.
+- Unverified: live DataStore outage and shutdown-save behavior still require
+  Roblox Studio/private staging testing.
+
+## 2026-08-23 — Make production contracts runner-portable
+
+- Completed: CI contracts no longer depend on `rg`, which is absent from the
+  pinned GitHub runner image; recursive asset and UI scans now use portable
+  `grep` equivalents.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; current-SHA GitHub CI verification is pending.
+- Unverified: Roblox Studio and Creator Hub checks remain pending.
+
+## 2026-08-23 — Resolve generated-world physics validation conflict
+
+- Completed: motorcar cones are now anchored deterministic scenery, while the
+  intentionally rope-suspended Wild Wood lanterns carry an explicit
+  `PhysicsDecor` marker accepted by the validator.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; current-SHA GitHub CI verification is
+  pending.
+- Unverified: live physics behavior and generated-world traversal still require
+  Roblox Studio testing.
+
+## 2026-08-23 — Validate generated seed provenance
+
+- Completed: `WorldValidator` now applies the same finite, integer, nonnegative,
+  and bounded seed contract as `WorldBuilder`.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Roblox Studio traversal remains unverified.
+- Unverified: malformed-root behavior against a live DataModel requires Studio
+  or a standalone Luau test runner.
+
+## 2026-08-23 — Isolate cosmetic beacon animation
+
+- Completed: beacon bobbing now excludes gameplay-tagged and constrained physics
+  parts, preventing the cosmetic loop from overwriting authoritative obstacle
+  motion.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Roblox Studio traversal remains unverified.
+- Unverified: moving-platform and rope-physics behavior still requires Studio.
+
+## 2026-08-23 — Add the Laundry Cart signature ride
+
+- Completed: Chapter 10 now includes a server-controlled guided cart with a
+  safe floor recovery route, instead of relying only on moving laundry baskets.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; cart boarding and multiplayer physics remain
+  unverified without Roblox Studio.
+
+## 2026-08-23 — Validate generated root placement
+
+- Completed: world validation now rejects a correctly named/owned generated
+  model that is not actually parented directly beneath `Workspace`.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live DataModel validation remains pending.
+
+## 2026-08-23 — Reduce multiplayer body blocking
+
+- Completed: server-created player collision isolation prevents player
+  characters from body-blocking one another while preserving obby collision.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; multi-client collision behavior remains
+  Studio-unverified.
+
+## 2026-08-23 — Require authorized Practice selection
+
+- Completed: the generic run-mode remote can no longer enter Practice directly;
+  Practice requires the server-validated completed-chapter selector and its
+  temporary respawn checkpoint.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; hostile-client behavior remains
+  Studio-unverified.
+
+## 2026-08-23 — Defend Practice authorization at service boundary
+
+- Completed: the checkpoint service independently verifies that a Practice
+  target is already unlocked, preventing future callers from bypassing the
+  selector's authorization guard.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; hostile-client behavior remains
+  Studio-unverified.
+
+## 2026-08-23 — Bound hazard debounce lifetime
+
+- Completed: kill-brick debounce tables now use weak Humanoid keys, avoiding
+  retention of defeated character instances during long server sessions.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; long-lived server soak behavior remains
+  Studio-unverified.
+
+## 2026-08-23 — Keep high-contrast hazards stream-safe
+
+- Completed: hazards added after UI initialization now receive the active
+  high-contrast color/material treatment, including streamed or rebuilt parts.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; device presentation remains Studio-unverified.
+
+## 2026-08-23 — Harden results layout constraints
+
+- Completed: the completion card now has bounded responsive sizing and replay
+  actions retain a minimum 44-pixel touch target for small screens.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; device and gamepad ergonomics remain
+  Studio-unverified.
+
+## 2026-08-23 — Bound mode teleport startup timing
+
+- Completed: mode resets now wait briefly for a character root before applying
+  the authoritative start-gate teleport, reducing missed replay resets during
+  character startup.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; reset timing remains Studio-unverified.
+
+## 2026-08-23 — Bound run-state chapter input
+
+- Completed: server run-state completion logic now rejects non-integer or
+  out-of-route chapter indices before recording timing or completion.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live run timing remains Studio-unverified.
+
+## 2026-08-23 — Maintain collision isolation across character rebuilds
+
+- Completed: newly added character parts inherit the player collision group,
+  and per-player descendant connections are cleaned up on character removal.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; multi-client collision behavior remains
+  Studio-unverified.
+
+## 2026-08-23 — Synchronize stable chapter identity
+
+- Completed: server progression payloads now include the canonical chapter ID;
+  the client stores it separately from display name and flavor text.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live payload observation remains
+  Studio-unverified.
+
+## 2026-08-23 — Synchronize restored chapter presentation
+
+- Completed: `GetObbyState` and initialized progression now include the
+  canonical chapter presentation for restored players, not only numeric
+  checkpoint state.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live state-function observation remains
+  Studio-unverified.
+
+## 2026-08-23 — Centralize state-function contract ownership
+
+- Completed: world remote creation now uses the shared `GetObbyState` contract
+  instead of duplicating its name in the builder.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live remote construction remains
+  Studio-unverified.
+
+## 2026-08-23 — Preserve session-owned settings on profile saves
+
+- Completed: concurrent profile writes retain monotonic progression while the
+  sanitized latest session supplies its own accessibility and audio settings;
+  stale stored preferences no longer overwrite an active session's changes.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live concurrent DataStore behavior remains
+  Studio-unverified.
+
+## 2026-08-23 — Keep server remote lookups contract-owned
+
+- Completed: generated remote lookup now uses the shared contract for progress,
+  keys, finale, and state-function names instead of duplicating configuration
+  aliases at the server boundary.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live remote construction remains
+  Studio-unverified.
+
+## 2026-08-23 — Fail closed on unknown persistence environments
+
+- Completed: DataStore access now has an explicit Staging/Production allowlist,
+  a separate StudioSandbox path with a suffixed store, and a fail-closed path
+  for unknown environment names.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; Studio API access and live DataStore behavior
+  remain unverified.
+
+## 2026-08-23 — Validate shared remote instance classes
+
+- Completed: world bootstrap now rejects same-name non-remote instances and
+  creates/returns only the classes required by each network contract.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live DataModel collision behavior remains
+  Studio-unverified.
+
+## 2026-08-23 — Preserve chapter state after development rebuilds
+
+- Completed: the rebuilt world's `GetObbyState` handler now returns the same
+  restored chapter presentation as the initial world, avoiding a rebuild-only
+  HUD regression.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live rebuild and client resynchronization
+  remain Studio-unverified.
+
+## 2026-08-23 — Sleep distant moving-platform mechanics
+
+- Completed: moving platforms skip transform and rider-contact work outside
+  the configured activation radius, while remaining server-authoritative when
+  a player is nearby.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; platform reactivation and server load remain
+  Studio-unverified.
+
+## 2026-08-23 — Bound wind and pressure contact queries
+
+- Completed: wind zones and pressure pads now skip distant `GetTouchingParts`
+  scans while retaining server-authoritative behavior near active players.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live mechanic activation and load remain
+  Studio-unverified.
+
+## 2026-08-23 — Honor flash reduction in finale presentation
+
+- Completed: the finale now suppresses blur, color correction, spotlight, and
+  local firework bursts when the persistent `reduceFlashes` setting is enabled.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; device-level accessibility behavior remains
+  Studio-unverified.
+
+## 2026-08-23 — Reconcile streamed particle accessibility
+
+- Completed: non-critical particle emitters added after HUD initialization now
+  inherit the current low-particles setting, including rebuilt world content.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; streamed-device behavior remains
+  Studio-unverified.
+
+## 2026-08-23 — Use shared contracts in client controllers
+
+- Completed: HUD, environment, and effects controllers now resolve progress,
+  state, key, and finale remotes through `RemoteContracts` rather than
+  duplicate GameConfig names.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live client bootstrap remains
+  Studio-unverified.
+
+## 2026-08-23 — Reconcile performance documentation
+
+- Completed: performance notes now distinguish proximity-slept moving
+  platforms from always-authoritative critical hazards and no longer describe
+  platform sleeping as future work.
+- Tests: documentation consistency reviewed against current runtime code;
+  MicroProfiler and device measurements remain Studio-unverified.
+
+## 2026-08-23 — Make Golden Key lanes authored
+
+- Completed: chapter key positions now use a stable authored lane pattern,
+  independent of decorative seed variation, while retaining per-player server
+  collection and optional-route intent.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; key reachability remains Studio-unverified.
+
+## 2026-08-23 — Bind analytics bounds to route configuration
+
+- Completed: analytics chapter-value validation now derives its upper bound
+  from the configured zone and chapter counts instead of duplicating `18`.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live analytics delivery remains
+  Studio-unverified.
+
+## 2026-08-23 — Close the restored-profile initialization race
+
+- Completed: the authoritative initialized progression event now synchronizes
+  restored keys, settings, and chapter presentation after asynchronous profile
+  loading; early state requests no longer leave the HUD with stale defaults.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; reconnect and Studio profile timing remain
+  unverified.
+
+## 2026-08-24 — Initialize collectible totals before profile events
+
+- Completed: generated key totals are counted before asynchronous checkpoint
+  profile loading starts, preventing an initialized HUD from caching `0/0`
+  collectibles during startup.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live startup scheduling remains
+  Studio-unverified.
+
+## 2026-08-24 — Update CI checkout runtime
+
+- Completed: GitHub Actions now uses `actions/checkout@v5`, matching the
+  runner's Node 24 transition and removing the checkout deprecation warning.
+- Tests: workflow syntax reviewed and commit will be verified by the next
+  GitHub CI run.
+
+## 2026-08-23 — Add original local vector art sources
+
+- Completed: added source-ready storybook railway-ticket branding and a Golden
+  Key icon under `art/`, with upload status recorded in the asset manifest.
+- Tests: SVG files recognized as valid SVG images; configuration, profile,
+  storyboard, production, Stylua, and whitespace checks pass locally. Roblox
+  upload and in-game rendering remain unverified.
+
+## 2026-08-23 — Restore clean CI after remote bootstrap hardening
+
+- Completed: the validated state remote is now returned directly from the
+  bootstrap helper, removing the Selene unused-local warning introduced by the
+  class-validation refactor.
+- Tests: local contracts, Stylua, and whitespace checks pass; GitHub CI failure
+  reproduction was identified from the Selene log and requires the new commit
+  to rerun.
+
+## 2026-08-23 — Preserve bounded chapter context in analytics
+
+- Completed: allowlisted chapter events now submit their validated numeric
+  chapter as the Roblox custom-event value; arbitrary fields and key IDs remain
+  excluded from telemetry.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live analytics delivery remains
+  Studio-unverified.
+
+## 2026-08-23 — Raise responsive HUD touch targets
+
+- Completed: settings, mode, volume, practice, and reset controls now use the
+  shared minimum touch size, with a narrower minimum panel width and scrolling
+  layout for phone portrait use.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; device emulation remains Studio-unverified.
+
+## 2026-08-24 — Bound concurrent shutdown profile saves
+
+- Completed: `BindToClose` now starts one save task per connected player and
+  waits within a shared 25-second deadline, with an explicit pending-player
+  warning when the close window expires.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live shutdown timing remains
+  Studio-unverified.
+
+## 2026-08-24 — Add executable pure-Luau progression tests
+
+- Completed: core checkpoint normalization and contiguous progression rules now
+  have executable assertions under tests/, run by CI with pinned Luau 0.734.
+- Tests: local contract and Stylua checks pass; Luau execution is CI-verified
+  after the new runner installation, while Roblox runtime behavior remains
+  Studio-unverified.
+
+## 2026-08-24 — Add executable profile-schema tests
+
+- Completed: pure-Luau assertions now cover default profiles, legacy checkpoint
+  migration, counter and timing bounds, settings validation, and the collectible
+  cap.
+- Tests: both pure-Luau suites pass locally with pinned Luau 0.734; Roblox
+  DataStore integration and Studio persistence behavior remain unverified.
+
+## 2026-08-24 — Remove double inter-zone elevation
+
+- Completed: `ZoneBuilder` now returns the actual final stage exit instead of an
+  already-advanced CFrame; `WorldBuilder` remains the sole owner of the
+  inter-zone elevation connector.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; generated vertical spacing remains
+  Studio-unverified.
+
+## 2026-08-24 — Bump generator provenance for route changes
+
+- Completed: structural generator version advanced from `2` to `3` to identify
+  the corrected inter-zone contract and authored collectible lanes in generated
+  roots and rebuild diagnostics.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; cross-version Studio rebuild behavior remains
+  unverified.
+
+## 2026-08-24 — Fail closed on malformed stage bounds
+
+- Completed: `WorldValidator` now checks the bounds value type before vector
+  arithmetic, converting malformed stage manifests into diagnostics instead of
+  validator runtime errors.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; malformed-world execution in Studio remains
+  unverified.
+
+## 2026-08-24 — Reuse checkpoint type guard in validator
+
+- Completed: later checkpoint geometry validation now reuses the validated
+  `BasePart` predicate, preventing malformed non-Instance checkpoint values
+  from causing validator method-call errors.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; malformed-world Studio execution remains
+  unverified.
+
+## 2026-08-24 — Refresh factual audit baseline
+
+- Completed: `docs/AUDIT.md` now records generator version 3, executable profile
+  tests, concurrent shutdown saves, responsive HUD work, local art sources, and
+  the current Studio-only verification boundary.
+- Tests: documentation checked against current source and validation commands;
+  Roblox Studio and Creator Hub evidence remain pending.
+
+## 2026-08-24 — Reconcile release checklist with CI evidence
+
+- Completed: the release checklist now marks CI Selene/pure-Luau validation as
+  complete and retains only the local Selene toolchain limitation and actual
+  Studio/Creator Hub release gates as pending.
+- Tests: latest GitHub CI run passed its format, lint, pure-Luau, and Rojo build
+  steps; Studio and Creator Hub checks remain unverified.
+
+## 2026-08-24 — Sanitize profiles at datastore boundary
+
+- Completed: `DataStoreServiceWrapper:SetAsync` now sanitizes every write
+  internally before retry/merge logic, independently defending against future
+  malformed callers.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  pure-Luau checks pass locally; live datastore integration remains
+  Studio-unverified.
+
+## 2026-08-24 — Reject non-finite progression inputs
+
+- Completed: pure progression rules now reject infinite checkpoint and route
+  size values before arithmetic, covering malformed numeric inputs at the
+  progression boundary.
+- Tests: progression and profile pure-Luau suites, configuration, profile,
+  storyboard, production, Stylua, and whitespace checks pass locally.
+
+## 2026-08-24 — Expose profile readiness in state handshake
+
+- Completed: `GetObbyState` now marks whether the server profile is loaded, and
+  the HUD ignores an early not-ready response instead of applying transient
+  defaults before the initialized event arrives.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  pure-Luau checks pass locally; live asynchronous join timing remains
+  Studio-unverified.
+
+## 2026-08-24 — Exclude dead characters from mechanic activation
+
+- Completed: proximity activation now requires a live Humanoid, so defeated or
+  respawning characters do not keep distant moving/contact mechanics active.
+- Tests: configuration, profile, storyboard, production, Stylua, and
+  whitespace checks pass locally; live respawn activation remains
+  Studio-unverified.
+### 2026-08-24 - Add restrained finale camera presentation
+
+- Completed: added a local `CameraController` for a short, player-specific finale lift/settle effect; reduced motion skips it.
+- Tests run: formatting, lint, contracts, pure-Luau tests, and Rojo build via CI.
+- Observed issues: camera behavior remains unverified without Roblox Studio playtest.
+- Next executable step: run the finale with reduced-motion and multiplayer clients in Studio.
+### 2026-08-24 - Surface chapter medals in completion results
+
+- Completed: completion results now count stored chapter bests and present them alongside route completion and Golden Key exploration.
+- Tests run: formatting, lint, contracts, pure-Luau tests, and Rojo build via CI.
+- Observed issues: visual wrapping and small-screen readability remain Studio-only checks.
+- Next executable step: verify the completion card on phone portrait, gamepad focus, and a first-time run.
+### 2026-08-24 - Make run rules independently testable
+
+- Completed: extracted stage validation and Time Trial eligibility into shared `RunRules`; `RunStateService` now delegates malformed-stage and ineligible-completion decisions to it.
+- Tests run: direct Luau progression, profile, and run-rules tests passed; contracts and formatting passed.
+- Observed issues: local wrapper still lacks the CI-provided `luau` and `selene` binaries.
+- Next executable step: verify the start gate and completion timing in Studio with multiple clients.
+### 2026-08-24 - Bound cart rides to their authored route
+
+- Completed: cart rides now carry an explicit route-distance limit and reset safely at the end of the Laundry Cart route, in addition to fall, timeout, and abandonment recovery.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: cart seating and multi-client ride feel remain unverified without Studio.
+- Next executable step: playtest boarding, route completion, missed boarding, and simultaneous riders.
+### 2026-08-24 - Couple cart safety to stage geometry
+
+- Completed: the Laundry Cart template now passes its authored route length into the cart builder, keeping the reset boundary aligned when stage dimensions change.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: physical ride behavior still requires Studio execution.
+- Next executable step: verify the cart reaches the intended dismount area without premature reset.
+### 2026-08-24 - Guard finale spotlight parenting
+
+- Completed: finale spotlight effects now require a live character root; a missing root is handled by destroying the unparented light instead of attempting to parent it to Terrain.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: finale presentation remains Studio-only for visual verification.
+- Next executable step: trigger completion during respawn/loading and confirm no client Output error.
+### 2026-08-24 - Fail closed on missing finale assets
+
+- Completed: finale fireworks and chime now instantiate only when their registry entries are approved and non-empty; unuploaded assets degrade to the results flow without empty effects.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: Creator Hub asset verification and final visual/audio balance remain pending.
+- Next executable step: verify normal, reduced-motion, and flash-reduction finale paths in Studio.
+### 2026-08-24 - Make client effect cleanup explicit
+
+- Completed: `EffectsController` now resolves Roblox's Debris service explicitly for all temporary UI, lighting, particle, and audio effects.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: effect timing and cleanup still need Studio Output/playtest verification.
+- Next executable step: inspect the client Output during repeated checkpoints and finale resets.
+### 2026-08-24 - Test asset approval boundaries
+
+- Completed: added pure-Luau coverage for asset ID shape, unknown-key fallback, and rejection of every unverified/unapproved registry entry.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: actual asset availability and ownership still require Creator Hub verification.
+- Next executable step: approve confirmed assets in the registry and run preload checks in Studio.
+### 2026-08-24 - Refresh audit evidence after release hardening
+
+- Completed: the factual audit now records the asset fail-closed path and the expanded pure-Luau test surface.
+- Tests run: documentation-only reconciliation; underlying contracts and direct Luau tests passed in the preceding implementation pass.
+- Observed issues: current-SHA CI and all Studio/Creator Hub checks must remain separately verified.
+- Next executable step: reconcile the audit again after current-SHA CI completes.
+### 2026-08-24 - Add non-color hazard contrast cues
+
+- Completed: high-contrast hazards now receive a black outline highlight in addition to color/material changes, so hazard identity is not communicated by color alone.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: contrast readability on actual device displays remains pending Studio validation.
+- Next executable step: verify hazard outlines against the safe route on mobile, desktop, and gamepad sessions.
+### 2026-08-24 - Harden profile numbers against non-finite input
+
+- Completed: profile sanitization rejects NaN and infinite values before clamping counters, times, splits, settings, or chapter progress.
+- Tests run: formatting, contracts, and direct Luau progression/profile/run-rule/asset tests passed; current branch CI is the authoritative full-toolchain check.
+- Observed issues: live DataStore migration and persistence behavior remain unverified without Studio.
+- Next executable step: exercise malformed legacy records in Studio sandbox and verify safe recovery.
+### 2026-08-24 - Expand asset manifest confidence checks
+
+- Completed: asset tests now enforce unique logical keys and require type, source, note, and valid Roblox ID metadata for every registry entry.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: registry IDs remain unverified for ownership, permission, and playback.
+- Next executable step: complete Creator Hub review before marking release assets approved.
+### 2026-08-24 - Scope Golden Key totals to generated content
+
+- Completed: total Golden Key counts now include only `KeyCollectible` instances beneath the owned generated obby root, matching runtime registration and preventing unrelated Workspace content from changing exploration totals.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: coexistence with tagged user content still requires Studio validation.
+- Next executable step: place an unrelated tagged key outside the generated root in Studio and verify totals remain unchanged.
+### 2026-08-24 - Enforce key ownership at touch time
+
+- Completed: Golden Key touch handlers now re-check generated-world ancestry before awarding progress, adding defense in depth beyond owned behavior scanning.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: live multi-player collectible behavior remains pending Studio validation.
+- Next executable step: test tagged keys both inside and outside the generated root in a two-client Studio session.
+### 2026-08-24 - Bound streamed hazard accessibility caches
+
+- Completed: original hazard colors/materials are stored in weak-key tables, allowing streamed-out parts and their local accessibility metadata to be collected.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: long-session streaming memory behavior remains pending Studio profiling.
+- Next executable step: stream generated zones in and out repeatedly while watching client memory.
+### 2026-08-24 - Validate authored collectible count
+
+- Completed: world validation now checks that generated stages contain exactly the configured authored Golden Key count, while ignoring unrelated tagged content outside the generated stages.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: validator behavior against live Studio-tagged content remains unverified.
+- Next executable step: add an unrelated tagged key outside the generated root in Studio and confirm validation ignores it.
+### 2026-08-24 - Use spatial overlap queries for active mechanics
+
+- Completed: moving-platform riders, wind zones, and pressure pads now use `GetPartsInPart` through one helper, while retaining their 20 Hz/10 Hz proximity bounds.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: actual query cost and collision-group behavior require Studio profiling.
+- Next executable step: profile Chapters 10-13 with two clients and compare server frame time.
+### 2026-08-24 - Validate collectible stage ownership
+
+- Completed: world validation now checks each generated key's declared `StageIndex` against the stage model that owns it, catching metadata drift before runtime registration.
+- Tests run: formatting, contracts, and direct Luau tests passed.
+- Observed issues: live malformed-content validation remains pending Studio.
+- Next executable step: deliberately alter a generated key's stage metadata in Studio and confirm the validator fails closed.
+### 2026-08-24 - Keep developer stage limits aligned
+
+- Completed: the configuration contract now rejects a developer `/stage` limit that diverges from the canonical route length.
+- Tests run: configuration contract passed.
+- Observed issues: Studio command authorization and live command behavior remain pending Studio validation.
+- Next executable step: verify authorized and unauthorized `/stage` attempts in Studio.
+- 2026-08-27 — Playability rescue phase 1
+- Completed: initialized durable rescue state; removed generic every-third-stage carts; made moving-platform timing period-based; made conveyor default stage-local +X; bounded wind velocity; reduced Adventure obstacle defaults.
+- Tests: existing shell contracts passed until missing `luau`; `rojo` unavailable; Stylua and `git diff --check` passed.
+- Unverified: geometry, required-route traversal, Studio/device/multiplayer QA, and remaining hazard systems.
+- 2026-08-27 — Playability rescue phase 2
+- Completed: added stage-local `courseFloor` geometry helper; repaired long required floors for Toad Hall Gate, Library Tumble, and Jailbreak; added stable required-route anchors to every stage definition.
+- Tests: config contract, Stylua, and `git diff --check` passed; full check remains blocked by missing `luau`, and Rojo is unavailable.
+- Next: fail-closed structural playability validator and focused regression tests.
+- 2026-08-27 — Playability rescue phase 3
+- Completed: WorldValidator now fail-closes malformed required routes, undersized landings, missing conveyor directions, excessive moving-platform peak velocity, and unfair falling delays. Timed tiles synchronize visibility, collision, and touch lethality. Authored moving platforms and conveyors now declare safe parameters.
+- Tests: config contract, Stylua, and `git diff --check` passed. Luau and Rojo remain unavailable.
+- Next: focused playability tests and deterministic train/cart/hazard hardening.

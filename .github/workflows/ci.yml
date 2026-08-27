@@ -6,16 +6,40 @@ on:
   pull_request:
     branches: ["*"]
 
+concurrency:
+  group: obby-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
+      - uses: actions/checkout@v5
       - name: Install format and lint tools
         run: |
-          cargo install stylua --version 2.3.1 --locked
-          cargo install selene --version 0.29.0 --locked
+          mkdir -p "$HOME/.local/bin"
+          curl --fail --silent --show-error --location \
+            "https://github.com/JohnnyMorganz/StyLua/releases/download/v2.3.1/stylua-linux-x86_64.zip" \
+            --output /tmp/stylua.zip
+          unzip -q /tmp/stylua.zip -d /tmp/stylua
+          install -m 0755 /tmp/stylua/stylua "$HOME/.local/bin/stylua"
+          curl --fail --silent --show-error --location \
+            "https://github.com/Kampfkarren/selene/releases/download/0.29.0/selene-0.29.0-linux.zip" \
+            --output /tmp/selene.zip
+          unzip -q /tmp/selene.zip -d /tmp/selene
+          install -m 0755 /tmp/selene/selene "$HOME/.local/bin/selene"
+          curl --fail --silent --show-error --location \
+            "https://github.com/rojo-rbx/rojo/releases/download/v7.4.4/rojo-7.4.4-linux-x86_64.zip" \
+            --output /tmp/rojo.zip
+          unzip -q /tmp/rojo.zip -d /tmp/rojo
+          install -m 0755 /tmp/rojo/rojo "$HOME/.local/bin/rojo"
+          curl --fail --silent --show-error --location \
+            "https://github.com/luau-lang/luau/releases/download/0.734/luau-ubuntu.zip" \
+            --output /tmp/luau.zip
+          unzip -q /tmp/luau.zip -d /tmp/luau
+          install -m 0755 /tmp/luau/luau "$HOME/.local/bin/luau"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Format & lint
         run: ./scripts/check.sh
+      - name: Build place artifact
+        run: rojo build default.project.json -o /tmp/toads-great-escape.rbxlx

@@ -1,42 +1,153 @@
 local DataStoreService = game:GetService("DataStoreService")
 local RunService = game:GetService("RunService")
 local GameConfig = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("GameConfig"))
+local ProfileSchema = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("ProfileSchema"))
 
 local Wrapper = {}
 Wrapper.__index = Wrapper
 
+local function hasBudget(requestType)
+  local ok, budget = pcall(function()
+    return DataStoreService:GetRequestBudgetForRequestType(requestType)
+  end)
+  return ok and budget >= 1
+end
+
 function Wrapper.new(name)
   local self = setmetatable({}, Wrapper)
-  self.enabled = GameConfig.UseDataStore and not RunService:IsStudio()
-  self.store = self.enabled and DataStoreService:GetDataStore(name or GameConfig.DataStoreName) or nil
+  local isStudioSandbox = RunService:IsStudio() and GameConfig.Environment == "StudioSandbox"
+  local environmentAllowsPersistence = GameConfig.Environment == "Staging"
+    or GameConfig.Environment == "Production"
+    or isStudioSandbox
+  self.enabled = GameConfig.UseDataStore and GameConfig.SaveCheckpoints and environmentAllowsPersistence
+  if not environmentAllowsPersistence then
+    warn(string.format("[DataStore] Persistence disabled for environment %s", tostring(GameConfig.Environment)))
+  end
+  if RunService:IsStudio() and GameConfig.Environment == "Production" then
+    warn("[DataStore] Production environment is blocked in Studio")
+    self.enabled = false
+  end
+  local storeName = name or GameConfig.DataStoreName
+  if RunService:IsStudio() and GameConfig.Environment == "StudioSandbox" then
+    storeName = storeName .. "_StudioSandbox"
+  end
+  self.store = self.enabled and DataStoreService:GetDataStore(storeName) or nil
+  self.maxAttempts = 3
   return self
+end
+
+function Wrapper:isEnabled(): boolean
+  return self.enabled
 end
 
 function Wrapper:GetAsync(key)
   if not self.enabled then
-    return nil
+    return nil, true
   end
-  local ok, result = pcall(function()
-    return self.store:GetAsync(key)
-  end)
-  if ok then
-    return result
-  else
-    warn("DataStore get failed", result)
+  for attempt = 1, self.maxAttempts do
+    if not hasBudget(Enum.DataStoreRequestType.GetAsync) then
+      warn("[DataStore] GetAsync budget exhausted; keeping session defaults")
+      return nil, false
+    end
+    local ok, result = pcall(function()
+      return self.store:GetAsync(key)
+    end)
+    if ok then
+      return result, true
+    end
+    warn(string.format("DataStore get failed (attempt %d): %s", attempt, tostring(result)))
+    task.wait(2 ^ (attempt - 1))
   end
-  return nil
+  return nil, false
 end
 
 function Wrapper:SetAsync(key, value)
   if not self.enabled then
     return
   end
-  local ok, err = pcall(function()
-    self.store:SetAsync(key, value)
-  end)
-  if not ok then
-    warn("DataStore set failed", err)
+  -- Keep the persistence boundary defensive even if a future caller passes a
+  -- mutable or malformed profile table.
+  value = ProfileSchema.sanitize(value)
+  for attempt = 1, self.maxAttempts do
+    if not hasBudget(Enum.DataStoreRequestType.UpdateAsync) then
+      warn("[DataStore] UpdateAsync budget exhausted; preserving unsaved session state")
+      return false
+    end
+    local ok, err = pcall(function()
+      self.store:UpdateAsync(key, function(current)
+        if type(current) ~= "table" then
+          return value
+        end
+        local merged = table.clone(value)
+        merged.highestChapter = math.clamp(
+          math.max(tonumber(current.highestChapter) or 0, value.highestChapter or 0),
+          0,
+          ProfileSchema.MaxChapter
+        )
+        merged.totalDeaths =
+          math.clamp(math.max(tonumber(current.totalDeaths) or 0, value.totalDeaths or 0), 0, ProfileSchema.MaxCounter)
+        merged.completionCount = math.clamp(
+          math.max(tonumber(current.completionCount) or 0, value.completionCount or 0),
+          0,
+          ProfileSchema.MaxCounter
+        )
+        local mergedKeys = {}
+        local keyCount = 0
+        local function mergeKeys(source)
+          if type(source) ~= "table" then
+            return
+          end
+          for keyId, collected in pairs(source) do
+            if keyCount >= ProfileSchema.MaxCollectedKeys then
+              return
+            end
+            if type(keyId) == "string" and #keyId <= 100 and collected == true and not mergedKeys[keyId] then
+              mergedKeys[keyId] = true
+              keyCount += 1
+            end
+          end
+        end
+        mergeKeys(value.collectedKeys)
+        mergeKeys(current.collectedKeys)
+        merged.collectedKeys = mergedKeys
+        local currentBest = tonumber(current.bestRunMs)
+        if currentBest and currentBest > 0 and (not merged.bestRunMs or currentBest < merged.bestRunMs) then
+          merged.bestRunMs = currentBest
+        end
+        if type(current.bestChapterMs) == "table" then
+          merged.bestChapterMs = table.clone(value.bestChapterMs or {})
+          for chapter, timeMs in pairs(current.bestChapterMs) do
+            local chapterNumber = tonumber(chapter)
+            local oldTime = tonumber(timeMs)
+            local newTime = tonumber(merged.bestChapterMs[chapter])
+            if
+              chapterNumber
+              and chapterNumber % 1 == 0
+              and chapterNumber >= 1
+              and chapterNumber <= ProfileSchema.MaxChapter
+              and oldTime
+              and oldTime > 0
+              and oldTime < 86400000
+              and (not newTime or newTime < 1 or oldTime < newTime)
+            then
+              merged.bestChapterMs[chapter] = math.floor(oldTime)
+            end
+          end
+        end
+        -- Settings are session-owned preferences. The sanitized session
+        -- snapshot supplies this write; progression fields above use
+        -- monotonic merges because they must survive concurrent sessions.
+        merged.settings = table.clone(value.settings or {})
+        return merged
+      end)
+    end)
+    if ok then
+      return true
+    end
+    warn(string.format("DataStore set failed (attempt %d): %s", attempt, tostring(err)))
+    task.wait(2 ^ (attempt - 1))
   end
+  return false
 end
 
 return Wrapper

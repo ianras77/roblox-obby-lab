@@ -10,20 +10,21 @@ local GameConfig = {
   ElevationPerZone = 10,
   AllowlistUserIds = { 0 }, -- Kid Notes: add your userId here to unlock /reseed, /rebuild, /stage
   DevCommandsEnabled = true,
-  SaveCheckpoints = false, -- Kid Notes: flip to true when testing DataStore saves
-  UseDataStore = false, -- keep off in Studio to avoid errors
-  DataStoreName = "ObbyOfLegends_Checkpoints",
-  -- Cycle through these until one preloads; swap in your own IDs if they error.
-  MusicIds = {
-    "rbxassetid://1843521234",
-    "rbxassetid://1837468655",
-    "rbxassetid://6065479763",
-  },
-  MaxPlayersPerServer = 12,
+  MaxDevSeed = 2147483647,
+  MaxDevStage = 18,
+  DevCommandCooldownSeconds = 2,
+  MinimumTimeTrialSeconds = 30,
+  Environment = "StudioDevelopment", -- StudioDevelopment, StudioSandbox, Staging, Production
+  SaveCheckpoints = true, -- Environment controls whether the store can write.
+  UseDataStore = true, -- StudioDevelopment is blocked by DataStoreServiceWrapper.
+  AutosaveSeconds = 120,
+  ActiveMechanicRadius = 220,
+  EnableAnalytics = false,
+  DataStoreName = "ToadsGreatEscape_Profile_v1",
   ProgressRemote = "ObbyProgress",
   KeyRemote = "KeyProgress",
   FinaleRemote = "FinaleSpotlight",
-  KeySpawnChance = 0.6,
+  AuthoredKeysPerChapter = 1,
 }
 
 return GameConfig

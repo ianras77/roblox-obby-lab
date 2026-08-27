@@ -1,4 +1,7 @@
 local CollectionService = game:GetService("CollectionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
+local SoundGroups = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("SoundGroups"))
 
 local Build = {}
 
@@ -85,13 +88,14 @@ function Build.checkpoint(name, cframe, size, parent)
   text.Parent = gui
 
   local sound = Instance.new("Sound")
-  sound.SoundId = "rbxassetid://12222152"
+  sound.SoundId = AssetRegistry.getApprovedId("checkpoint_feedback")
   sound.Volume = 0.4
+  sound.SoundGroup = SoundGroups.ensure("SFX", 0.8)
   sound.Parent = cp
 
   local burst = Instance.new("ParticleEmitter")
   burst.Name = "CheckpointBurst"
-  burst.Texture = "rbxassetid://241594419"
+  burst.Texture = AssetRegistry.getApprovedId("soft_particle")
   burst.Lifetime = NumberRange.new(0.6, 0.9)
   burst.Speed = NumberRange.new(8, 12)
   burst.Rate = 0
@@ -112,21 +116,22 @@ function Build.collectibleKey(cframe, parent)
     Anchored = true,
   })
   local spark = Instance.new("ParticleEmitter")
-  spark.Texture = "rbxassetid://241594419"
+  spark.Texture = AssetRegistry.getApprovedId("soft_particle")
   spark.Lifetime = NumberRange.new(0.6, 1)
   spark.Speed = NumberRange.new(4, 7)
   spark.Rate = 18
   spark.Parent = key
 
   local sound = Instance.new("Sound")
-  sound.SoundId = "rbxassetid://12222058"
+  sound.SoundId = AssetRegistry.getApprovedId("key_pickup")
   sound.Volume = 0.6
+  sound.SoundGroup = SoundGroups.ensure("SFX", 0.8)
   sound.Parent = key
 
   return key
 end
 
-function Build.cart(cframe, parent)
+function Build.cart(cframe, parent, rideMaxDistance)
   local model = Build.model("ToadCart", parent)
   local base = Build.part({
     Name = "CartBase",
@@ -137,6 +142,7 @@ function Build.cart(cframe, parent)
     Material = Enum.Material.Wood,
     Anchored = false,
     Tags = { "Cart" },
+    Attributes = { RideMaxDistance = rideMaxDistance or 68 },
   })
   local seat = Instance.new("Seat")
   seat.Name = "Seat"

@@ -7,7 +7,7 @@ local ZoneConfig = {
     SkyColor = Color3.fromRGB(255, 252, 220),
     FogEnd = 340,
     ClockTime = 14,
-    AmbientSoundId = "rbxassetid://1846220524", -- gentle courtyard birds
+    AmbientSoundKey = "zone_1_ambience", -- verify in Creator Hub before release
   },
   {
     Name = "Trouble and Escape",
@@ -17,7 +17,7 @@ local ZoneConfig = {
     SkyColor = Color3.fromRGB(255, 238, 202),
     FogEnd = 340,
     ClockTime = 16,
-    AmbientSoundId = "rbxassetid://1837483576", -- distant bustle
+    AmbientSoundKey = "zone_2_ambience", -- verify in Creator Hub before release
   },
   {
     Name = "Wild Wood Homecoming",
@@ -27,7 +27,7 @@ local ZoneConfig = {
     SkyColor = Color3.fromRGB(235, 250, 255),
     FogEnd = 350,
     ClockTime = 17,
-    AmbientSoundId = "rbxassetid://1837635151", -- light wind
+    AmbientSoundKey = "zone_3_ambience", -- verify in Creator Hub before release
   },
 }
 

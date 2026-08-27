@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Build = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Build"))
 local ObstacleConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("ObstacleConfig"))
 local WorldGenConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("WorldGenConfig"))
+local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("AssetRegistry"))
 
 local StageTemplates = {}
 
@@ -24,6 +25,13 @@ local function basePlatform(parent, cframe, color, size)
     Material = Enum.Material.Concrete,
   })
   return part
+end
+
+-- Required floors use stage-local +X and begin at the stage origin. Keeping
+-- this contract in one helper prevents exits from floating past a centered
+-- platform.
+local function courseFloor(parent, origin, color, length, width)
+  return basePlatform(parent, origin * CFrame.new(length / 2, 0, 0), color, Vector3.new(length, 1, width))
 end
 
 local function addSign(parent, cframe, text)
@@ -97,7 +105,7 @@ function StageTemplates.Warmup(ctx)
     light.CanCollide = false
 
     local sparkle = Instance.new("ParticleEmitter")
-    sparkle.Texture = "rbxassetid://260430117"
+    sparkle.Texture = AssetRegistry.getApprovedId("sparkle_particle")
     sparkle.Rate = 12
     sparkle.Speed = NumberRange.new(2, 4)
     sparkle.Lifetime = NumberRange.new(0.4, 0.8)
@@ -139,7 +147,7 @@ function StageTemplates.BouncyClouds(ctx)
     })
     cloudPart.Transparency = 0.25
     local puff = Instance.new("ParticleEmitter")
-    puff.Texture = "rbxassetid://241594419"
+    puff.Texture = AssetRegistry.getApprovedId("soft_particle")
     puff.Lifetime = NumberRange.new(0.8, 1.2)
     puff.Speed = NumberRange.new(2, 4)
     puff.Rate = 12
@@ -219,7 +227,7 @@ end
 function StageTemplates.ToadLibrary(ctx)
   local model = Build.model("Stage_ToadLibrary", ctx.parent)
   local length = WorldGenConfig.StageLengthMin
-  basePlatform(model, ctx.origin, ctx.color, Vector3.new(length, 1, WorldGenConfig.PathWidth))
+  courseFloor(model, ctx.origin, ctx.color, length + 12, WorldGenConfig.PathWidth)
 
   for i = 0, 3 do
     local armor = Build.part({
@@ -267,7 +275,7 @@ end
 function StageTemplates.ToadHallGate(ctx)
   local model = Build.model("Stage_ToadHallGate", ctx.parent)
   local width = 20
-  basePlatform(model, ctx.origin, ctx.color, Vector3.new(width, 1, WorldGenConfig.PathWidth))
+  courseFloor(model, ctx.origin, ctx.color, width + 12, WorldGenConfig.PathWidth)
   addSign(model, ctx.origin * CFrame.new(width * 0.25, 4, -WorldGenConfig.PathWidth * 0.3), "TOAD HALL")
   local arch = Build.part({
     Name = "Arch",
@@ -300,7 +308,7 @@ function StageTemplates.ToadHallGate(ctx)
   })
   portrait.CanCollide = false
   local decal = Instance.new("Decal")
-  decal.Texture = "rbxassetid://148274626" -- kid-safe frog decal
+  decal.Texture = AssetRegistry.getApprovedId("frog_decal") -- kid-safe frog decal
   decal.Face = Enum.NormalId.Front
   decal.Parent = portrait
   return model, ctx.origin * CFrame.new(width + 12, 0, 0)
@@ -317,6 +325,7 @@ function StageTemplates.CaravanChase(ctx)
     Vector3.new(span, 1, WorldGenConfig.PathWidth)
   )
   conveyor:SetAttribute("Speed", scaleSpeed(ctx, ObstacleConfig.ConveyorSpeed * 1.2, 0.6, 1.4))
+  conveyor:SetAttribute("Direction", "Forward")
   Build.tag(conveyor, { "Conveyor" })
 
   for i = 0, math.floor(span / WorldGenConfig.LaneLightSpacing) do
@@ -365,7 +374,7 @@ end
 function StageTemplates.JailBreak(ctx)
   local model = Build.model("Stage_JailBreak", ctx.parent)
   local length = WorldGenConfig.StageLengthMin
-  basePlatform(model, ctx.origin, ctx.color, Vector3.new(length, 1, WorldGenConfig.PathWidth - 4))
+  courseFloor(model, ctx.origin, ctx.color, length + 8, WorldGenConfig.PathWidth - 4)
   for i = 1, 4 do
     local bar = Build.part({
       Name = "CellBar",
@@ -412,7 +421,7 @@ function StageTemplates.RiverBarge(ctx)
   })
   water.Transparency = 0.3
   local bubbles = Instance.new("ParticleEmitter")
-  bubbles.Texture = "rbxassetid://241594419"
+  bubbles.Texture = AssetRegistry.getApprovedId("soft_particle")
   bubbles.Rate = 12
   bubbles.Lifetime = NumberRange.new(0.6, 1)
   bubbles.Speed = NumberRange.new(3, 6)
@@ -424,7 +433,7 @@ function StageTemplates.RiverBarge(ctx)
     local boat = basePlatform(model, cframe, Color3.fromRGB(180, 140, 90), Vector3.new(12, 1, 6))
     boat:SetAttribute("Amplitude", 8)
     boat:SetAttribute("Axis", Vector3.new(0, 0, 1))
-    boat:SetAttribute("Speed", scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.6, 0.6, 1.4))
+    boat:SetAttribute("PeriodSeconds", 4)
     Build.tag(boat, { "MovingPlatform" })
   end
 
@@ -478,6 +487,7 @@ function StageTemplates.PubChaos(ctx)
           0.6,
           1.5
         ),
+        Direction = "Forward",
       },
     })
   end
@@ -545,8 +555,8 @@ function StageTemplates.TrainTunnel(ctx)
     Material = Enum.Material.Metal,
     Tags = { "MovingPlatform", "KillBrick" },
     Attributes = {
-      Amplitude = length + 16,
-      Speed = scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.4, 0.6, 1.5),
+      Amplitude = 8,
+      PeriodSeconds = 5,
       Axis = Vector3.new(1, 0, 0),
       CarryPlayers = true,
     },
@@ -570,6 +580,33 @@ function StageTemplates.TrainTunnel(ctx)
     })
     lantern.CanCollide = false
   end
+
+  -- Telegraph the train and give players readable recovery pockets. The
+  -- pockets sit outside the central track lane and are never required for
+  -- forward progress.
+  for i, pct in ipairs({ 0.24, 0.52, 0.8 }) do
+    for _, side in ipairs({ -1, 1 }) do
+      local alcove = basePlatform(
+        model,
+        ctx.origin * CFrame.new(length * pct, 1.2, side * (WorldGenConfig.PathWidth * 0.5 + 1.5)),
+        Color3.fromRGB(75, 80, 92),
+        Vector3.new(5, 0.8, 3.5)
+      )
+      alcove.Name = "TrainSafeAlcove"
+      alcove.Material = Enum.Material.Slate
+      local warning = Build.part({
+        Name = "TrainWarningLamp",
+        Parent = model,
+        CFrame = ctx.origin * CFrame.new(length * pct, 4, side * (WorldGenConfig.PathWidth * 0.5 + 1.5)),
+        Size = Vector3.new(1.2, 1.2, 1.2),
+        Color = (i % 2 == 0) and Color3.fromRGB(255, 210, 90) or Color3.fromRGB(120, 240, 255),
+        Material = Enum.Material.Neon,
+        Tags = { "Beacon" },
+      })
+      warning.CanCollide = false
+    end
+  end
+  addSign(model, ctx.origin * CFrame.new(length * 0.18, 6, -WorldGenConfig.PathWidth * 0.5), "Listen for the signal")
 
   return model, ctx.origin * CFrame.new(length + 14, 0, 0)
 end
@@ -648,7 +685,7 @@ function StageTemplates.CourtroomChaos(ctx)
     })
     beam.CanCollide = false
     local sparks = Instance.new("ParticleEmitter")
-    sparks.Texture = "rbxassetid://260430117"
+    sparks.Texture = AssetRegistry.getApprovedId("sparkle_particle")
     sparks.Lifetime = NumberRange.new(0.3, 0.5)
     sparks.Speed = NumberRange.new(4, 8)
     sparks.Rate = 16
@@ -689,6 +726,7 @@ function StageTemplates.MotorMadness(ctx)
   )
   road.Material = Enum.Material.Asphalt
   road:SetAttribute("Speed", scaleSpeed(ctx, ObstacleConfig.ConveyorSpeed * 1.6, 0.6, 1.6))
+  road:SetAttribute("Direction", "Forward")
   Build.tag(road, { "Conveyor" })
 
   -- Narrow sidewalk on the side for a safe (slower) path
@@ -710,7 +748,7 @@ function StageTemplates.MotorMadness(ctx)
       Size = Vector3.new(1.5, 2.6, 1.5),
       Color = Color3.fromRGB(255, 140, 40),
       Material = Enum.Material.Plastic,
-      Anchored = false,
+      Anchored = true,
     })
     cone.Shape = Enum.PartType.Cylinder
   end
@@ -747,7 +785,7 @@ function StageTemplates.WildWoods(ctx)
   wind.Anchored = true
   wind.CanCollide = false
   local leaves = Instance.new("ParticleEmitter")
-  leaves.Texture = "rbxassetid://484084159"
+  leaves.Texture = AssetRegistry.getApprovedId("leaf_particle")
   leaves.Rate = 18
   leaves.Lifetime = NumberRange.new(1, 1.4)
   leaves.Speed = NumberRange.new(6, 10)
@@ -788,7 +826,7 @@ function StageTemplates.WildWoods(ctx)
       Tags = { "MovingPlatform" },
       Attributes = {
         Amplitude = 5,
-        Speed = scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.55, 0.7, 1.5),
+        PeriodSeconds = 4,
         Axis = Vector3.new(0, 0, 1),
         CarryPlayers = true,
         Phase = (i - 1) * math.pi / 2,
@@ -818,6 +856,7 @@ function StageTemplates.WildWoods(ctx)
       Material = Enum.Material.Neon,
       Anchored = false,
       Tags = { "Beacon" },
+      Attributes = { PhysicsDecor = true },
     })
     local light = Instance.new("PointLight")
     light.Range = 16
@@ -855,14 +894,14 @@ function StageTemplates.FinaleRing(ctx)
     basePlatform(model, ctx.origin * CFrame.new(x, 0, z), ctx.color)
   end
   local emitter = Instance.new("ParticleEmitter")
-  emitter.Texture = "rbxassetid://258128463"
+  emitter.Texture = AssetRegistry.getApprovedId("finale_firework")
   emitter.Rate = 24
   emitter.Lifetime = NumberRange.new(1, 1.5)
   emitter.Speed = NumberRange.new(25, 35)
   emitter.Parent = model
 
   local confetti = Instance.new("ParticleEmitter")
-  confetti.Texture = "rbxassetid://12824333"
+  confetti.Texture = AssetRegistry.getApprovedId("confetti_particle")
   confetti.Rate = 40
   confetti.Lifetime = NumberRange.new(1, 1.2)
   confetti.Speed = NumberRange.new(12, 16)
@@ -895,7 +934,7 @@ end
 
 local function addSparkles(part, color, rate)
   local sparkles = Instance.new("ParticleEmitter")
-  sparkles.Texture = "rbxassetid://241594419"
+  sparkles.Texture = AssetRegistry.getApprovedId("soft_particle")
   sparkles.Rate = rate or 10
   sparkles.Lifetime = NumberRange.new(0.6, 1.1)
   sparkles.Speed = NumberRange.new(2, 5)
@@ -966,6 +1005,25 @@ function StageTemplates.RiverbankWelcome(ctx)
     local pad = basePlatform(model, ctx.origin * CFrame.new(step * i, 0, 0), padColor, Vector3.new(11, 1, 11))
     pad.Material = Enum.Material.Grass
     addSparkles(pad, Color3.fromRGB(255, 250, 170), 4)
+  end
+
+  for i = 1, 6 do
+    for _, side in ipairs({ -1, 1 }) do
+      local reed = Build.part({
+        Name = "RiverbankReed",
+        Parent = model,
+        CFrame = ctx.origin * CFrame.new(step * (i - 0.5), 2.2, side * (WorldGenConfig.PathWidth * 0.68)),
+        Size = Vector3.new(0.45, 4.4, 0.45),
+        Color = (i % 2 == 0) and Color3.fromRGB(76, 155, 92) or Color3.fromRGB(104, 180, 105),
+        Material = Enum.Material.Grass,
+        Tags = { "Beacon" },
+      })
+      reed.Shape = Enum.PartType.Cylinder
+      reed.Orientation = Vector3.new(0, 0, (side == 1) and 8 or -8)
+      reed.CanCollide = false
+      reed.CanTouch = false
+      reed.CanQuery = false
+    end
   end
 
   addSign(model, ctx.origin * CFrame.new(8, 4, -7), "Riverbank start")
@@ -1057,7 +1115,7 @@ function StageTemplates.RattyRiverStones(ctx)
       Tags = { "MovingPlatform", "Beacon" },
       Attributes = {
         Amplitude = 5,
-        Speed = scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.45, 0.7, 1.3),
+        PeriodSeconds = 4,
         Axis = Vector3.new(0, 0, 1),
         CarryPlayers = true,
         Phase = i,
@@ -1085,6 +1143,23 @@ end
 
 function StageTemplates.TavernBarrelHop(ctx)
   local model, endCFrame = StageTemplates.PubChaos(ctx)
+  local length = WorldGenConfig.StageLengthMax
+  for i = 1, 4 do
+    local barrel = Build.part({
+      Name = "TavernBarrel",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(length * (0.18 + i * 0.16), 2.2, (i % 2 == 0) and -4 or 4),
+      Size = Vector3.new(3.5, 3.5, 3.5),
+      Color = Color3.fromRGB(139, 86, 45),
+      Material = Enum.Material.WoodPlanks,
+      Tags = { "Rotator", "Beacon" },
+      Attributes = { RotSpeed = scaleSpeed(ctx, ObstacleConfig.RotatorSpeed * 0.8, 0.7, 1.25) },
+    })
+    barrel.Shape = Enum.PartType.Cylinder
+    barrel.Orientation = Vector3.new(0, 0, 90)
+    barrel.CanCollide = false
+    addSparkles(barrel, Color3.fromRGB(255, 210, 120), 3)
+  end
   addSign(model, ctx.origin * CFrame.new(8, 6, -7), "Barrel hop!")
   return model, endCFrame
 end
@@ -1106,6 +1181,10 @@ function StageTemplates.LaundryCartEscape(ctx)
     Vector3.new(length, 1, WorldGenConfig.PathWidth)
   )
   floor.Material = Enum.Material.WoodPlanks
+
+  -- This chapter's signature ride is a guided, server-controlled cart. The
+  -- floor gives players a safe recovery route if they miss the boarding seat.
+  Build.cart(ctx.origin * CFrame.new(5, 1.5, 0), model, length + 8)
 
   for i = 1, 4 do
     local sheet = Build.part({
@@ -1132,7 +1211,7 @@ function StageTemplates.LaundryCartEscape(ctx)
       Tags = { "MovingPlatform", "Beacon" },
       Attributes = {
         Amplitude = 5,
-        Speed = scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.5, 0.8, 1.5),
+        PeriodSeconds = 4,
         Axis = Vector3.new(0, 0, 1),
         CarryPlayers = true,
         Phase = i * 0.8,
@@ -1148,6 +1227,27 @@ end
 
 function StageTemplates.BargeCrossing(ctx)
   local model, endCFrame = StageTemplates.RiverBarge(ctx)
+  local span = WorldGenConfig.StageLengthMax
+  for i = 1, 3 do
+    local cargo = Build.part({
+      Name = "BargeCargoCrate",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(span * (0.2 + i * 0.18), 2.1, (i % 2 == 0) and 5 or -5),
+      Size = Vector3.new(4, 3, 4),
+      Color = (i % 2 == 0) and Color3.fromRGB(188, 132, 72) or Color3.fromRGB(105, 76, 54),
+      Material = Enum.Material.WoodPlanks,
+      Tags = { "MovingPlatform", "Beacon" },
+      Attributes = {
+        Amplitude = 4,
+        PeriodSeconds = 4,
+        Axis = Vector3.new(0, 0, 1),
+        CarryPlayers = true,
+        Phase = i * 0.9,
+      },
+    })
+    addSparkles(cargo, Color3.fromRGB(255, 220, 130), 3)
+  end
+  addSign(model, ctx.origin * CFrame.new(span * 0.42, 7, -8), "Mind the shifting cargo")
   addSign(model, ctx.origin * CFrame.new(8, 6, -8), "Barge crossing")
   return model, endCFrame
 end
@@ -1235,6 +1335,7 @@ function StageTemplates.RoadsideConeSprint(ctx)
   )
   road.Material = Enum.Material.Asphalt
   road:SetAttribute("Speed", scaleSpeed(ctx, ObstacleConfig.ConveyorSpeed * 1.3, 0.7, 1.5))
+  road:SetAttribute("Direction", "Forward")
   Build.tag(road, { "Conveyor" })
 
   for i = 1, 7 do
@@ -1259,6 +1360,20 @@ function StageTemplates.RoadsideConeSprint(ctx)
     Vector3.new(length, 0.5, 4)
   )
   sidewalk.Material = Enum.Material.SmoothPlastic
+
+  -- A visible, riskier shortcut runs beside the marked road. It is optional:
+  -- the full-width road remains the reliable route for first-time players.
+  for i = 1, 5 do
+    local shortcut = basePlatform(
+      model,
+      ctx.origin * CFrame.new((length / 6) * i, 2.4, -WorldGenConfig.PathWidth * 0.52),
+      Color3.fromRGB(218, 166, 72),
+      Vector3.new(8, 0.8, 3.5)
+    )
+    shortcut.Name = "OptionalConeShortcut"
+    shortcut.Material = Enum.Material.WoodPlanks
+    Build.tag(shortcut, { "Beacon" })
+  end
 
   addSign(model, ctx.origin * CFrame.new(8, 6, -7), "Cone sprint!")
   addPathLights(model, ctx.origin, length, Color3.fromRGB(255, 210, 120), -WorldGenConfig.PathWidth * 0.45)
@@ -1328,6 +1443,42 @@ function StageTemplates.ToadHallFireworks(ctx)
 
   addArch(model, ctx.origin * CFrame.new(length * 0.82, 0, 0), "Toad Hall Party", Color3.fromRGB(120, 80, 50))
 
+  -- The finish line is a small theatrical set rather than a bare checkpoint:
+  -- towers, bunting, and bells make the destination readable from the approach.
+  for _, side in ipairs({ -1, 1 }) do
+    local tower = Build.part({
+      Name = "FinaleBellTower",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(length * 0.82, 5, side * 8),
+      Size = Vector3.new(3, 10, 3),
+      Color = Color3.fromRGB(184, 164, 128),
+      Material = Enum.Material.Slate,
+    })
+    tower.CanCollide = false
+    local bell = Build.part({
+      Name = "FinaleBell",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(length * 0.82, 11, side * 8),
+      Size = Vector3.new(4, 2, 4),
+      Color = Color3.fromRGB(218, 166, 72),
+      Material = Enum.Material.Metal,
+    })
+    bell.Shape = Enum.PartType.Ball
+    bell.CanCollide = false
+  end
+
+  for i = 1, 7 do
+    local bunting = Build.part({
+      Name = "FinaleBunting",
+      Parent = model,
+      CFrame = ctx.origin * CFrame.new(length * (0.58 + i * 0.05), 10 - math.abs(4 - i) * 0.45, 0),
+      Size = Vector3.new(3, 0.35, 5),
+      Color = (i % 2 == 0) and Color3.fromRGB(120, 240, 255) or Color3.fromRGB(255, 225, 110),
+      Material = Enum.Material.Fabric,
+    })
+    bunting.CanCollide = false
+  end
+
   for i = 1, 5 do
     local firework = Build.part({
       Name = "FinaleFirework",
@@ -1339,7 +1490,7 @@ function StageTemplates.ToadHallFireworks(ctx)
     })
     firework.CanCollide = false
     local burst = Instance.new("ParticleEmitter")
-    burst.Texture = "rbxassetid://258128463"
+    burst.Texture = AssetRegistry.getApprovedId("finale_firework")
     burst.Rate = 26
     burst.Lifetime = NumberRange.new(0.8, 1.4)
     burst.Speed = NumberRange.new(18, 28)

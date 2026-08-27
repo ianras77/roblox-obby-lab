@@ -1,6 +1,10 @@
 local controllers = script.Parent:WaitForChild("Controllers")
 local UIController = require(controllers:WaitForChild("UIController"))
 local EffectsController = require(controllers:WaitForChild("EffectsController"))
+local EnvironmentController = require(controllers:WaitForChild("EnvironmentController"))
+local CameraController = require(controllers:WaitForChild("CameraController"))
 
 UIController.new()
 EffectsController.new()
+EnvironmentController.new()
+CameraController.new()
