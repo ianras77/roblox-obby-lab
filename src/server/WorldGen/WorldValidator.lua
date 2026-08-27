@@ -5,6 +5,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
 local StageConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("StageConfig"))
 local WorldGenConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("WorldGenConfig"))
+local PlayabilityConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("PlayabilityConfig"))
 
 local WorldValidator = {}
 
@@ -122,6 +123,23 @@ function WorldValidator.validate(
       and finite(stage.stageIndex)
       and stage.stageIndex % 1 == 0
     local definition = validStageIndex and StageConfig.getByIndex(stage.stageIndex) or nil
+    if not definition or type(definition.requiredRoute) ~= "table" or #definition.requiredRoute < 3 then
+      table.insert(errors, string.format("stage %s missing required Adventure route", stageLabel(stage)))
+    else
+      for _, waypoint in ipairs(definition.requiredRoute) do
+        if
+          type(waypoint.id) ~= "string"
+          or typeof(waypoint.localPosition) ~= "Vector3"
+          or typeof(waypoint.minLandingSize) ~= "Vector2"
+        then
+          table.insert(errors, string.format("stage %s has malformed required route", stageLabel(stage)))
+          break
+        end
+        if waypoint.minLandingSize.X < 7 or waypoint.minLandingSize.Y < 7 then
+          table.insert(errors, string.format("stage %s required landing below size floor", stageLabel(stage)))
+        end
+      end
+    end
     if stage.stageIndex ~= expectedIndex then
       table.insert(errors, string.format("stage order gap or duplicate near %s", stageLabel(stage)))
     end
@@ -277,6 +295,34 @@ function WorldValidator.validate(
       table.insert(errors, string.format("stage %s missing model", stageLabel(stage)))
     elseif not stageModel:GetAttribute("PrimaryMechanic") then
       table.insert(errors, string.format("stage %s missing presentation metadata", stageLabel(stage)))
+    end
+    if modelIsModel then
+      for _, descendant in ipairs(stageModel:GetDescendants()) do
+        if descendant:IsA("BasePart") then
+          if CollectionService:HasTag(descendant, "Conveyor") and descendant:GetAttribute("Direction") == nil then
+            table.insert(errors, string.format("stage %s conveyor lacks direction", stageLabel(stage)))
+          elseif CollectionService:HasTag(descendant, "MovingPlatform") then
+            local amplitude = math.abs(descendant:GetAttribute("Amplitude") or 10)
+            local period = descendant:GetAttribute("PeriodSeconds")
+            if type(period) ~= "number" or period <= 0 then
+              table.insert(errors, string.format("stage %s moving platform lacks PeriodSeconds", stageLabel(stage)))
+            elseif amplitude * 2 * math.pi / period > PlayabilityConfig.Limits.MovingPlatformPeakVelocity then
+              table.insert(
+                errors,
+                string.format("stage %s moving platform exceeds peak velocity cap", stageLabel(stage))
+              )
+            end
+          elseif CollectionService:HasTag(descendant, "FallingPlatform") then
+            local delay = descendant:GetAttribute("DropDelay")
+            if type(delay) ~= "number" or delay < PlayabilityConfig.Limits.MinimumFallingDelay then
+              table.insert(
+                errors,
+                string.format("stage %s falling platform delay below Adventure floor", stageLabel(stage))
+              )
+            end
+          end
+        end
+      end
     end
   end
   if #stages ~= totalStages then

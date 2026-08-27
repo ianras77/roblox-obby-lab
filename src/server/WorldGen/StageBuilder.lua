@@ -68,6 +68,7 @@ function StageBuilder.buildStage(args)
   model:SetAttribute("ChapterFlavor", presentation.flavor)
   model:SetAttribute("PrimaryMechanic", presentation.mechanic)
   model:SetAttribute("DifficultyTier", presentation.tier)
+  model:SetAttribute("RequiredRouteWaypointCount", definition and #definition.requiredRoute or 0)
 
   local checkpointCFrame = endCFrame * CFrame.new(0, WorldGenConfig.PlatformSize.Y + 2, 0)
   local cp =

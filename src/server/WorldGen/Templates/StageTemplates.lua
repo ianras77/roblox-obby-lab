@@ -325,6 +325,7 @@ function StageTemplates.CaravanChase(ctx)
     Vector3.new(span, 1, WorldGenConfig.PathWidth)
   )
   conveyor:SetAttribute("Speed", scaleSpeed(ctx, ObstacleConfig.ConveyorSpeed * 1.2, 0.6, 1.4))
+  conveyor:SetAttribute("Direction", "Forward")
   Build.tag(conveyor, { "Conveyor" })
 
   for i = 0, math.floor(span / WorldGenConfig.LaneLightSpacing) do
@@ -432,7 +433,7 @@ function StageTemplates.RiverBarge(ctx)
     local boat = basePlatform(model, cframe, Color3.fromRGB(180, 140, 90), Vector3.new(12, 1, 6))
     boat:SetAttribute("Amplitude", 8)
     boat:SetAttribute("Axis", Vector3.new(0, 0, 1))
-    boat:SetAttribute("Speed", scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.6, 0.6, 1.4))
+    boat:SetAttribute("PeriodSeconds", 4)
     Build.tag(boat, { "MovingPlatform" })
   end
 
@@ -486,6 +487,7 @@ function StageTemplates.PubChaos(ctx)
           0.6,
           1.5
         ),
+        Direction = "Forward",
       },
     })
   end
@@ -553,8 +555,8 @@ function StageTemplates.TrainTunnel(ctx)
     Material = Enum.Material.Metal,
     Tags = { "MovingPlatform", "KillBrick" },
     Attributes = {
-      Amplitude = length + 16,
-      Speed = scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.4, 0.6, 1.5),
+      Amplitude = 8,
+      PeriodSeconds = 5,
       Axis = Vector3.new(1, 0, 0),
       CarryPlayers = true,
     },
@@ -724,6 +726,7 @@ function StageTemplates.MotorMadness(ctx)
   )
   road.Material = Enum.Material.Asphalt
   road:SetAttribute("Speed", scaleSpeed(ctx, ObstacleConfig.ConveyorSpeed * 1.6, 0.6, 1.6))
+  road:SetAttribute("Direction", "Forward")
   Build.tag(road, { "Conveyor" })
 
   -- Narrow sidewalk on the side for a safe (slower) path
@@ -823,7 +826,7 @@ function StageTemplates.WildWoods(ctx)
       Tags = { "MovingPlatform" },
       Attributes = {
         Amplitude = 5,
-        Speed = scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.55, 0.7, 1.5),
+        PeriodSeconds = 4,
         Axis = Vector3.new(0, 0, 1),
         CarryPlayers = true,
         Phase = (i - 1) * math.pi / 2,
@@ -1112,7 +1115,7 @@ function StageTemplates.RattyRiverStones(ctx)
       Tags = { "MovingPlatform", "Beacon" },
       Attributes = {
         Amplitude = 5,
-        Speed = scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.45, 0.7, 1.3),
+        PeriodSeconds = 4,
         Axis = Vector3.new(0, 0, 1),
         CarryPlayers = true,
         Phase = i,
@@ -1208,7 +1211,7 @@ function StageTemplates.LaundryCartEscape(ctx)
       Tags = { "MovingPlatform", "Beacon" },
       Attributes = {
         Amplitude = 5,
-        Speed = scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.5, 0.8, 1.5),
+        PeriodSeconds = 4,
         Axis = Vector3.new(0, 0, 1),
         CarryPlayers = true,
         Phase = i * 0.8,
@@ -1236,7 +1239,7 @@ function StageTemplates.BargeCrossing(ctx)
       Tags = { "MovingPlatform", "Beacon" },
       Attributes = {
         Amplitude = 4,
-        Speed = scaleSpeed(ctx, ObstacleConfig.MovingPlatformSpeed * 0.45, 0.7, 1.3),
+        PeriodSeconds = 4,
         Axis = Vector3.new(0, 0, 1),
         CarryPlayers = true,
         Phase = i * 0.9,
@@ -1332,6 +1335,7 @@ function StageTemplates.RoadsideConeSprint(ctx)
   )
   road.Material = Enum.Material.Asphalt
   road:SetAttribute("Speed", scaleSpeed(ctx, ObstacleConfig.ConveyorSpeed * 1.3, 0.7, 1.5))
+  road:SetAttribute("Direction", "Forward")
   Build.tag(road, { "Conveyor" })
 
   for i = 1, 7 do

@@ -779,6 +779,7 @@ function ObbyService:startHeartbeat()
             local on = (item.t % item.cycle) > (item.cycle / 2)
             item.part.Transparency = on and 0 or 0.8
             item.part.CanCollide = on
+            item.part.CanTouch = on
           end
         end
       end

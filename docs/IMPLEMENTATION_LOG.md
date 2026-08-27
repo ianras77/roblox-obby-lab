@@ -1833,3 +1833,7 @@
 - Completed: added stage-local `courseFloor` geometry helper; repaired long required floors for Toad Hall Gate, Library Tumble, and Jailbreak; added stable required-route anchors to every stage definition.
 - Tests: config contract, Stylua, and `git diff --check` passed; full check remains blocked by missing `luau`, and Rojo is unavailable.
 - Next: fail-closed structural playability validator and focused regression tests.
+- 2026-08-27 — Playability rescue phase 3
+- Completed: WorldValidator now fail-closes malformed required routes, undersized landings, missing conveyor directions, excessive moving-platform peak velocity, and unfair falling delays. Timed tiles synchronize visibility, collision, and touch lethality. Authored moving platforms and conveyors now declare safe parameters.
+- Tests: config contract, Stylua, and `git diff --check` passed. Luau and Rojo remain unavailable.
+- Next: focused playability tests and deterministic train/cart/hazard hardening.
