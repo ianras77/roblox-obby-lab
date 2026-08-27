@@ -1829,3 +1829,7 @@
 - Completed: initialized durable rescue state; removed generic every-third-stage carts; made moving-platform timing period-based; made conveyor default stage-local +X; bounded wind velocity; reduced Adventure obstacle defaults.
 - Tests: existing shell contracts passed until missing `luau`; `rojo` unavailable; Stylua and `git diff --check` passed.
 - Unverified: geometry, required-route traversal, Studio/device/multiplayer QA, and remaining hazard systems.
+- 2026-08-27 — Playability rescue phase 2
+- Completed: added stage-local `courseFloor` geometry helper; repaired long required floors for Toad Hall Gate, Library Tumble, and Jailbreak; added stable required-route anchors to every stage definition.
+- Tests: config contract, Stylua, and `git diff --check` passed; full check remains blocked by missing `luau`, and Rojo is unavailable.
+- Next: fail-closed structural playability validator and focused regression tests.

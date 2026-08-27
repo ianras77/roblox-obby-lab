@@ -27,6 +27,13 @@ local function basePlatform(parent, cframe, color, size)
   return part
 end
 
+-- Required floors use stage-local +X and begin at the stage origin. Keeping
+-- this contract in one helper prevents exits from floating past a centered
+-- platform.
+local function courseFloor(parent, origin, color, length, width)
+  return basePlatform(parent, origin * CFrame.new(length / 2, 0, 0), color, Vector3.new(length, 1, width))
+end
+
 local function addSign(parent, cframe, text)
   local sign = Build.part({
     Name = "Sign",
@@ -220,7 +227,7 @@ end
 function StageTemplates.ToadLibrary(ctx)
   local model = Build.model("Stage_ToadLibrary", ctx.parent)
   local length = WorldGenConfig.StageLengthMin
-  basePlatform(model, ctx.origin, ctx.color, Vector3.new(length, 1, WorldGenConfig.PathWidth))
+  courseFloor(model, ctx.origin, ctx.color, length + 12, WorldGenConfig.PathWidth)
 
   for i = 0, 3 do
     local armor = Build.part({
@@ -268,7 +275,7 @@ end
 function StageTemplates.ToadHallGate(ctx)
   local model = Build.model("Stage_ToadHallGate", ctx.parent)
   local width = 20
-  basePlatform(model, ctx.origin, ctx.color, Vector3.new(width, 1, WorldGenConfig.PathWidth))
+  courseFloor(model, ctx.origin, ctx.color, width + 12, WorldGenConfig.PathWidth)
   addSign(model, ctx.origin * CFrame.new(width * 0.25, 4, -WorldGenConfig.PathWidth * 0.3), "TOAD HALL")
   local arch = Build.part({
     Name = "Arch",
@@ -366,7 +373,7 @@ end
 function StageTemplates.JailBreak(ctx)
   local model = Build.model("Stage_JailBreak", ctx.parent)
   local length = WorldGenConfig.StageLengthMin
-  basePlatform(model, ctx.origin, ctx.color, Vector3.new(length, 1, WorldGenConfig.PathWidth - 4))
+  courseFloor(model, ctx.origin, ctx.color, length + 8, WorldGenConfig.PathWidth - 4)
   for i = 1, 4 do
     local bar = Build.part({
       Name = "CellBar",
