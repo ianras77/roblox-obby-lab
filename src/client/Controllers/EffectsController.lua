@@ -45,7 +45,11 @@ function EffectsController:checkpointPulse()
   gui.Position = UDim2.fromScale(0.41, 0.07)
   gui.BackgroundTransparency = 0.15
   gui.BorderSizePixel = 0
-  gui.Parent = self.player:WaitForChild("PlayerGui")
+  local screen = Instance.new("ScreenGui")
+  screen.Name = "CheckpointFeedback"
+  screen.Parent = self.player:WaitForChild("PlayerGui")
+  gui.Parent = screen
+  Debris:AddItem(screen, 0.6)
   TweenService:Create(gui, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
     BackgroundTransparency = 1,
     Size = UDim2.fromScale(0.3, 0.012),
@@ -105,10 +109,10 @@ function EffectsController:finale()
       boom.Texture = fireworkTexture
       boom.Lifetime = NumberRange.new(1, 1.6)
       boom.Speed = NumberRange.new(32, 38)
-      boom.Rate = self.player:GetAttribute("Accessibility_lowParticles") and 40 or 200
+      boom.Rate = 0
       boom.SpreadAngle = Vector2.new(360, 360)
       boom.Parent = root
-      boom:Emit(self.player:GetAttribute("Accessibility_lowParticles") and 40 or 200)
+      boom:Emit(self.player:GetAttribute("Accessibility_lowParticles") and 8 or 40)
       Debris:AddItem(boom, 2)
     end
     if finaleChime ~= "" then

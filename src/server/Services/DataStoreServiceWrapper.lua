@@ -3,6 +3,7 @@ local RunService = game:GetService("RunService")
 local GameConfig = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("GameConfig"))
 local ProfileSchema = require(game:GetService("ReplicatedStorage"):WaitForChild("Config"):WaitForChild("ProfileSchema"))
 
+local mockStores = {}
 local Wrapper = {}
 Wrapper.__index = Wrapper
 
@@ -31,6 +32,13 @@ function Wrapper.new(name)
   if RunService:IsStudio() and GameConfig.Environment == "StudioSandbox" then
     storeName = storeName .. "_StudioSandbox"
   end
+  storeName = storeName .. "_" .. GameConfig.Environment
+  self.mock = RunService:IsStudio() and GameConfig.Environment ~= "StudioSandbox"
+  if self.mock then
+    self.enabled = false
+  end
+  mockStores[storeName] = mockStores[storeName] or {}
+  self.mockStore = mockStores[storeName]
   self.store = self.enabled and DataStoreService:GetDataStore(storeName) or nil
   self.maxAttempts = 3
   return self
@@ -41,6 +49,9 @@ function Wrapper:isEnabled(): boolean
 end
 
 function Wrapper:GetAsync(key)
+  if self.mock then
+    return self.mockStore[key], true
+  end
   if not self.enabled then
     return nil, true
   end
@@ -62,6 +73,10 @@ function Wrapper:GetAsync(key)
 end
 
 function Wrapper:SetAsync(key, value)
+  if self.mock then
+    self.mockStore[key] = ProfileSchema.merge(self.mockStore[key], value)
+    return true
+  end
   if not self.enabled then
     return
   end
@@ -75,70 +90,7 @@ function Wrapper:SetAsync(key, value)
     end
     local ok, err = pcall(function()
       self.store:UpdateAsync(key, function(current)
-        if type(current) ~= "table" then
-          return value
-        end
-        local merged = table.clone(value)
-        merged.highestChapter = math.clamp(
-          math.max(tonumber(current.highestChapter) or 0, value.highestChapter or 0),
-          0,
-          ProfileSchema.MaxChapter
-        )
-        merged.totalDeaths =
-          math.clamp(math.max(tonumber(current.totalDeaths) or 0, value.totalDeaths or 0), 0, ProfileSchema.MaxCounter)
-        merged.completionCount = math.clamp(
-          math.max(tonumber(current.completionCount) or 0, value.completionCount or 0),
-          0,
-          ProfileSchema.MaxCounter
-        )
-        local mergedKeys = {}
-        local keyCount = 0
-        local function mergeKeys(source)
-          if type(source) ~= "table" then
-            return
-          end
-          for keyId, collected in pairs(source) do
-            if keyCount >= ProfileSchema.MaxCollectedKeys then
-              return
-            end
-            if type(keyId) == "string" and #keyId <= 100 and collected == true and not mergedKeys[keyId] then
-              mergedKeys[keyId] = true
-              keyCount += 1
-            end
-          end
-        end
-        mergeKeys(value.collectedKeys)
-        mergeKeys(current.collectedKeys)
-        merged.collectedKeys = mergedKeys
-        local currentBest = tonumber(current.bestRunMs)
-        if currentBest and currentBest > 0 and (not merged.bestRunMs or currentBest < merged.bestRunMs) then
-          merged.bestRunMs = currentBest
-        end
-        if type(current.bestChapterMs) == "table" then
-          merged.bestChapterMs = table.clone(value.bestChapterMs or {})
-          for chapter, timeMs in pairs(current.bestChapterMs) do
-            local chapterNumber = tonumber(chapter)
-            local oldTime = tonumber(timeMs)
-            local newTime = tonumber(merged.bestChapterMs[chapter])
-            if
-              chapterNumber
-              and chapterNumber % 1 == 0
-              and chapterNumber >= 1
-              and chapterNumber <= ProfileSchema.MaxChapter
-              and oldTime
-              and oldTime > 0
-              and oldTime < 86400000
-              and (not newTime or newTime < 1 or oldTime < newTime)
-            then
-              merged.bestChapterMs[chapter] = math.floor(oldTime)
-            end
-          end
-        end
-        -- Settings are session-owned preferences. The sanitized session
-        -- snapshot supplies this write; progression fields above use
-        -- monotonic merges because they must survive concurrent sessions.
-        merged.settings = table.clone(value.settings or {})
-        return merged
+        return ProfileSchema.merge(current, value)
       end)
     end)
     if ok then

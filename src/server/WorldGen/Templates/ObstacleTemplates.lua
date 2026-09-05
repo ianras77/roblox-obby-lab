@@ -16,7 +16,7 @@ function ObstacleTemplates.killBrick(parent, cframe, size)
   })
 end
 
-function ObstacleTemplates.movingPlatform(parent, cframe, amplitude, speed, props)
+function ObstacleTemplates.movingPlatform(parent, cframe, amplitude, _speed, props)
   local part = Build.part({
     Name = "MovingPlatform",
     Parent = parent,

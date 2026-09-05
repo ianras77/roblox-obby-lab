@@ -55,4 +55,24 @@ local nonFinite = ProfileSchema.sanitize({ highestChapter = math.huge, bestRunMs
 expect(nonFinite.highestChapter == 0, "non-finite chapter uses default")
 expect(nonFinite.bestRunMs == nil, "non-finite personal best is rejected")
 
-print("profile schema tests passed")
+local merged = ProfileSchema.merge({
+  highestChapter = 15,
+  completionCount = 3,
+  collectedKeys = { older = true },
+  medals = { Toad2 = true },
+  assistedChapters = { ["3"] = true },
+  bestRunMs = 10000,
+  bestChapterMs = { ["2"] = 400 },
+}, {
+  highestChapter = 4,
+  completionCount = 1,
+  collectedKeys = { newer = true },
+  medals = { Explorer4 = true },
+  bestRunMs = 12000,
+  bestChapterMs = { ["2"] = 600 },
+})
+expect(merged.highestChapter == 15 and merged.completionCount == 3, "stale session cannot regress")
+expect(merged.collectedKeys.older and merged.collectedKeys.newer, "personal key union")
+expect(merged.medals.Toad2 and merged.medals.Explorer4 and merged.assistedChapters["3"], "medal and assistance union")
+expect(merged.bestRunMs == 10000 and merged.bestChapterMs["2"] == 400, "best times survive stale server")
+print("profile schema tests passed (including concurrent monotonic merges)")

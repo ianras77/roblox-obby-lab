@@ -28,7 +28,9 @@ if chapter_keys != stage_types:
 game_max = re.search(r"MaxDevStage\s*=\s*(\d+)", (root / "src/shared/Config/GameConfig.lua").read_text())
 if not game_max or int(game_max.group(1)) != len(stage_types):
     raise SystemExit("developer stage limit does not match canonical route")
-if "id = string.lower(stageType" not in stage:
-    raise SystemExit("stable stage ID derivation is missing")
+definitions = (root / "src/shared/Config/StageDefinitions.lua").read_text()
+canonical = re.findall(r'canonicalName = "([A-Za-z]+)"', definitions)
+if canonical != stage_types or "id = authored.id" not in stage:
+    raise SystemExit("authored stable stage metadata is not canonical")
 print("config contract ok: 18 unique ordered chapters with matching metadata")
 PY

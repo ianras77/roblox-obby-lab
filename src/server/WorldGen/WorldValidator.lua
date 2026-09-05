@@ -63,7 +63,10 @@ local function validateZones(zones, totalZones, root)
       table.insert(errors, string.format("zone %s has invalid bounds", tostring(zone.zoneIndex)))
     end
     if previousExit and typeof(zone.entrance) == "CFrame" then
-      if (zone.entrance.Position - previousExit.Position).Magnitude > GameConfig.StageSpacing.X then
+      if
+        (zone.entrance.Position - previousExit.Position).Magnitude
+        > GameConfig.StageSpacing.X + GameConfig.ElevationPerZone
+      then
         table.insert(errors, string.format("zone %s entrance transition is too long", tostring(zone.zoneIndex)))
       end
     end
@@ -283,7 +286,7 @@ function WorldValidator.validate(
         local connector = (stage.entrance.Position - previousExit.Position).Magnitude
         if not validConnectorLength or math.abs(stage.connectorLength - connector) > 0.01 then
           table.insert(errors, string.format("connector before stage %s is not measured correctly", stageLabel(stage)))
-        elseif connector > GameConfig.StageSpacing.X then
+        elseif connector > GameConfig.StageSpacing.X + GameConfig.ElevationPerZone then
           table.insert(errors, string.format("connector before stage %s is too long", stageLabel(stage)))
         end
       elseif validConnectorLength and stage.connectorLength > 0.01 then

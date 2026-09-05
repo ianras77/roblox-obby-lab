@@ -2,6 +2,8 @@
 
 export type PlayerProfile = {
   schemaVersion: number,
+  medals: { [string]: boolean },
+  assistedChapters: { [string]: boolean },
   highestChapter: number,
   collectedKeys: { [string]: boolean },
   bestRunMs: number?,
@@ -12,7 +14,7 @@ export type PlayerProfile = {
 }
 
 local ProfileSchema = {}
-ProfileSchema.CurrentVersion = 1
+ProfileSchema.CurrentVersion = 2
 ProfileSchema.MaxCollectedKeys = 100
 ProfileSchema.MaxChapter = 18
 ProfileSchema.MaxCounter = 1000000000
@@ -28,6 +30,8 @@ end
 function ProfileSchema.default(): PlayerProfile
   return {
     schemaVersion = ProfileSchema.CurrentVersion,
+    medals = {},
+    assistedChapters = {},
     highestChapter = 0,
     collectedKeys = {},
     bestRunMs = nil,
@@ -99,6 +103,21 @@ function ProfileSchema.sanitize(raw: any): PlayerProfile
       end
     end
   end
+  for index = 1, ProfileSchema.MaxChapter do
+    local key = tostring(index)
+    if type(raw.assistedChapters) == "table" and raw.assistedChapters[key] == true then
+      profile.assistedChapters[key] = true
+    end
+    for _, kind in ipairs({ "Story", "Explorer", "Toad" }) do
+      local medal = kind .. key
+      if type(raw.medals) == "table" and raw.medals[medal] == true then
+        profile.medals[medal] = true
+      end
+    end
+    if index <= profile.highestChapter then
+      profile.medals["Story" .. key] = true
+    end
+  end
   if type(raw.settings) == "table" then
     for key, defaultValue in pairs(profile.settings) do
       if type(defaultValue) == "boolean" and type(raw.settings[key]) == "boolean" then
@@ -117,6 +136,31 @@ function ProfileSchema.sanitize(raw: any): PlayerProfile
     end
   end
   return profile
+end
+
+-- Concurrent servers may advance, never erase earned progress or faster times.
+function ProfileSchema.merge(current, incoming): PlayerProfile
+  local old = ProfileSchema.sanitize(current)
+  local result = ProfileSchema.sanitize(incoming)
+  result.highestChapter = math.max(old.highestChapter, result.highestChapter)
+  result.completionCount = math.max(old.completionCount, result.completionCount)
+  result.totalDeaths = math.max(old.totalDeaths, result.totalDeaths)
+  for _, field in ipairs({ "collectedKeys", "medals", "assistedChapters" }) do
+    for key, earned in pairs(old[field]) do
+      if earned then
+        result[field][key] = true
+      end
+    end
+  end
+  if old.bestRunMs and (not result.bestRunMs or old.bestRunMs < result.bestRunMs) then
+    result.bestRunMs = old.bestRunMs
+  end
+  for key, value in pairs(old.bestChapterMs) do
+    if not result.bestChapterMs[key] or value < result.bestChapterMs[key] then
+      result.bestChapterMs[key] = value
+    end
+  end
+  return ProfileSchema.sanitize(result)
 end
 
 return ProfileSchema

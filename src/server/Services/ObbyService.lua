@@ -5,8 +5,6 @@ local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("GameConfig"))
-local ObstacleConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("ObstacleConfig"))
-local PlayabilityConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("PlayabilityConfig"))
 local WorldBuilder = require(script.Parent.Parent.WorldGen.WorldBuilder)
 local CheckpointService = require(script.Parent.CheckpointService)
 local Maid = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("Maid"))
@@ -14,36 +12,8 @@ local RunStateService = require(script.Parent.RunStateService)
 local RemoteContracts = require(ReplicatedStorage:WaitForChild("Network"):WaitForChild("RemoteContracts"))
 local AnalyticsService = require(script.Parent.AnalyticsService)
 
-local mechanicOverlapParams = OverlapParams.new()
-mechanicOverlapParams.MaxParts = 64
-mechanicOverlapParams.RespectCanCollide = false
-
-local function resolveDirection(part)
-  local axisAttr = part:GetAttribute("Axis") or part:GetAttribute("Direction")
-  if typeof(axisAttr) == "Vector3" and axisAttr.Magnitude > 0 then
-    return axisAttr.Unit
-  elseif typeof(axisAttr) == "string" then
-    local axis = string.lower(axisAttr)
-    if axis == "x" then
-      return Vector3.new(1, 0, 0)
-    elseif axis == "y" then
-      return Vector3.new(0, 1, 0)
-    elseif axis == "-x" then
-      return Vector3.new(-1, 0, 0)
-    elseif axis == "-y" then
-      return Vector3.new(0, -1, 0)
-    elseif axis == "-z" then
-      return Vector3.new(0, 0, -1)
-    end
-  end
-  -- Stage-local forward is +X. Explicit attributes override this safely.
-  if axisAttr == "Forward" or axisAttr == nil then
-    return part.CFrame.RightVector
-  elseif axisAttr == "Backward" then
-    return -part.CFrame.RightVector
-  end
-  return Vector3.new(0, 0, 1)
-end
+local MovementService = require(script.Parent.MovementService)
+local AssistService = require(script.Parent.AssistService)
 
 local ObbyService = {}
 ObbyService.__index = ObbyService
@@ -80,40 +50,6 @@ local function getChapterPresentation(stages, stageIndex)
     mechanic = stage.model:GetAttribute("PrimaryMechanic"),
     flavor = stage.model:GetAttribute("ChapterFlavor"),
   }
-end
-
-local function getLivePlayerRoot(hit)
-  local character = hit.Parent
-  local player = character and Players:GetPlayerFromCharacter(character)
-  local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-  local root = character and character:FindFirstChild("HumanoidRootPart")
-  if player and humanoid and humanoid.Health > 0 and root then
-    return root
-  end
-  return nil
-end
-
-local function hasNearbyPlayer(position, radius)
-  local radiusSquared = radius * radius
-  for _, player in ipairs(Players:GetPlayers()) do
-    local character = player.Character
-    local root = character and character:FindFirstChild("HumanoidRootPart")
-    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-    if
-      root
-      and root:IsA("BasePart")
-      and humanoid
-      and humanoid.Health > 0
-      and (root.Position - position).Magnitude ^ 2 <= radiusSquared
-    then
-      return true
-    end
-  end
-  return false
-end
-
-local function getOverlappingParts(part)
-  return workspace:GetPartsInPart(part, mechanicOverlapParams)
 end
 
 local function bindSettings(self)
@@ -199,15 +135,20 @@ local function bindRunModes(self)
     if not self.runState:setMode(player, mode) then
       return
     end
+    self.analytics:resetRun(player)
+    if self.assists then
+      self.assists.states[player] = nil
+    end
+    player:SetAttribute("Assisted", false)
     if mode == "TimeTrial" then
       self.checkpoints:resetForTimeTrial(player)
       if self.world.startGate then
-        self.checkpoints:teleportToCFrame(player, self.world.startGate.CFrame * CFrame.new(-8, 0, 0))
+        self.checkpoints:teleportToCFrame(player, self.world.model.SpawnPad.CFrame + Vector3.new(0, 4, 0))
       end
     elseif mode == "Adventure" then
       self.checkpoints:resetForAdventure(player)
       if self.world.startGate then
-        self.checkpoints:teleportToCFrame(player, self.world.startGate.CFrame * CFrame.new(-8, 0, 0))
+        self.checkpoints:teleportToCFrame(player, self.world.model.SpawnPad.CFrame + Vector3.new(0, 4, 0))
       end
     end
     self.world.progressEvent:FireClient(player, {
@@ -242,7 +183,7 @@ local function bindPracticeStage(self)
       return
     end
     local profile = self.checkpoints:getProfile(player)
-    if profile.highestChapter < stage then
+    if profile.completionCount < 1 or profile.highestChapter < stage then
       return
     end
     lastCall[player] = os.clock()
@@ -250,9 +191,9 @@ local function bindPracticeStage(self)
     if not self.checkpoints:setPracticeCheckpoint(player, stage) then
       return
     end
-    self.checkpoints:teleportToStage(player, stage)
+    self.checkpoints:teleportToCFrame(player, self.world.stages[stage].entrance + Vector3.new(0, 4, 0))
     self.world.progressEvent:FireClient(player, {
-      stage = stage,
+      stage = stage - 1,
       total = self.world.totalStages,
       highestChapter = self.checkpoints and self.checkpoints:getProfile(player).highestChapter or 0,
       mode = "Practice",
@@ -286,9 +227,11 @@ function ObbyService.new()
       totalKeys = self.totalKeys,
       collectedKeys = self.checkpoints and self.checkpoints:getProfile(player).collectedKeys or {},
       settings = self.checkpoints and self.checkpoints:getProfile(player).settings or {},
+      medals = self.checkpoints and self.checkpoints:getProfile(player).medals or {},
       runStarted = run and run.running or false,
       elapsedMs = self.runState and math.floor(self.runState:getElapsed(player) * 1000) or 0,
-      chapter = getChapterPresentation(self.world.stages, stage),
+      chapter = getChapterPresentation(self.world.stages, math.min(stage + 1, self.world.totalStages)),
+      assist = self.assists and self.assists:snapshot(player) or {},
     }
   end
   self.runState = RunStateService.new(self.world.totalStages, GameConfig.MinimumTimeTrialSeconds)
@@ -431,7 +374,8 @@ function ObbyService:registerKey(part)
       return
     end
     self.collectedKeys[player][keyId] = true
-    self.analytics:track(player, "golden_key_discovered", { chapter = part:GetAttribute("StageIndex") })
+    self.checkpoints:getProfile(player).medals["Explorer" .. tostring(part:GetAttribute("StageIndex"))] = true
+    self.analytics:track(player, "CollectibleFound", { stage = part:GetAttribute("StageIndex") })
     self.keyProgress[player] = 0
     for _ in pairs(self.checkpoints:getProfile(player).collectedKeys) do
       self.keyProgress[player] += 1
@@ -451,487 +395,31 @@ function ObbyService:registerKey(part)
 end
 
 function ObbyService:scanBehaviors()
-  self.behaviors = {
-    movingPlatforms = {},
-    rotators = {},
-    timedTiles = {},
-    conveyors = {},
-    bouncePads = {},
-    windZones = {},
-    lasers = {},
-    lava = {},
-    beacons = {},
-    carts = {},
-    pads = {},
-    gates = {},
-    bossGavels = {},
-    fallingPlatforms = {},
-  }
-  self.gateTimers = {}
-
-  local function add(tag, handler)
-    for _, inst in ipairs(CollectionService:GetTagged(tag)) do
-      if self.world and self.world.model and inst:IsDescendantOf(self.world.model) then
-        handler(inst)
-      end
+  local events = ReplicatedStorage.SharedEvents
+  self.assists = AssistService.new(self.checkpoints, self.analytics, events.Assistance, self.maid)
+  for _, part in ipairs(CollectionService:GetTagged("KeyCollectible")) do
+    if part:IsDescendantOf(self.world.model) then
+      self:registerKey(part)
     end
   end
-
-  add("MovingPlatform", function(part)
-    local amplitude = part:GetAttribute("Amplitude")
-    if amplitude == nil then
-      amplitude = 10
+  self.maid:Give(self.world.startGate.Touched:Connect(function(hit)
+    local player = Players:GetPlayerFromCharacter(hit.Parent)
+    if player and self.checkpoints:isLoaded(player) then
+      self.runState:startAtGate(player, self.world.startGate)
     end
-    amplitude = math.abs(amplitude)
-    table.insert(self.behaviors.movingPlatforms, {
-      part = part,
-      origin = part.CFrame,
-      amplitude = amplitude,
-      period = math.max(1, part:GetAttribute("PeriodSeconds") or ObstacleConfig.MovingPlatformPeriod),
-      direction = resolveDirection(part),
-      phase = part:GetAttribute("Phase") or 0,
-      carryPlayers = part:GetAttribute("CarryPlayers") ~= false,
-      lastPos = part.Position,
-      riders = {},
-    })
-  end)
-
-  add("Rotator", function(part)
-    table.insert(self.behaviors.rotators, {
-      part = part,
-      speed = part:GetAttribute("RotSpeed") or ObstacleConfig.RotatorSpeed,
-    })
-  end)
-
-  add("BossGavel", function(part)
-    table.insert(self.behaviors.bossGavels, {
-      part = part,
-      origin = part.CFrame,
-      speed = part:GetAttribute("SlamSpeed") or 2.5,
-      angle = part:GetAttribute("SlamAngle") or math.rad(65),
-    })
-  end)
-
-  add("TimedTile", function(part)
-    table.insert(self.behaviors.timedTiles, {
-      part = part,
-      cycle = part:GetAttribute("Cycle") or ObstacleConfig.TimedTileInterval,
-      t = 0,
-    })
-  end)
-
-  add("Conveyor", function(part)
-    table.insert(self.behaviors.conveyors, {
-      part = part,
-      speed = math.clamp(part:GetAttribute("Speed") or ObstacleConfig.ConveyorSpeed, 0, 24),
-      direction = part:GetAttribute("Direction") or "Forward",
-    })
-    self.maid:Give(part.Touched:Connect(function(hit)
-      local humanoidRoot = getLivePlayerRoot(hit)
-      if humanoidRoot then
-        local vel = humanoidRoot.AssemblyLinearVelocity
-        local axis = part:GetAttribute("Direction")
-        local directionVector = axis == "Backward" and -part.CFrame.RightVector or part.CFrame.RightVector
-        local direction = directionVector * (part:GetAttribute("Speed") or ObstacleConfig.ConveyorSpeed)
-        humanoidRoot.AssemblyLinearVelocity = Vector3.new(direction.X, vel.Y, direction.Z)
-      end
-    end))
-  end)
-
-  add("BouncePad", function(part)
-    local power = part:GetAttribute("Power") or ObstacleConfig.BouncePower
-    self.maid:Give(part.Touched:Connect(function(hit)
-      local humanoidRoot = getLivePlayerRoot(hit)
-      if humanoidRoot then
-        humanoidRoot.AssemblyLinearVelocity =
-          Vector3.new(humanoidRoot.AssemblyLinearVelocity.X, power, humanoidRoot.AssemblyLinearVelocity.Z)
-      end
-    end))
-    table.insert(self.behaviors.bouncePads, part)
-  end)
-
-  add("WindZone", function(part)
-    table.insert(self.behaviors.windZones, {
-      part = part,
-      force = math.clamp(
-        part:GetAttribute("Force") or ObstacleConfig.WindForce,
-        0,
-        PlayabilityConfig.Limits.AdventureWindVelocity
-      ),
-    })
-  end)
-
-  add("Laser", function(part)
-    table.insert(self.behaviors.lasers, {
-      part = part,
-      cycle = part:GetAttribute("Cycle") or ObstacleConfig.LaserCycleTime,
-      phase = part:GetAttribute("Phase") or 1,
-    })
-  end)
-
-  add("Lava", function(part)
-    table.insert(self.behaviors.lava, {
-      part = part,
-      speed = part:GetAttribute("RiseSpeed") or ObstacleConfig.LavaRiseSpeed,
-      floorY = part:GetAttribute("FloorY") or part.Position.Y,
-    })
-  end)
-
-  add("Beacon", function(part)
-    local gameplayTags = {
-      MovingPlatform = true,
-      BouncePad = true,
-      FallingPlatform = true,
-      Conveyor = true,
-      TimedTile = true,
-      Laser = true,
-      KillBrick = true,
-      WindZone = true,
-      PressurePad = true,
-      Gate = true,
-      Cart = true,
-    }
-    for tag in pairs(gameplayTags) do
-      if CollectionService:HasTag(part, tag) or part:GetAttribute("PhysicsDecor") == true then
-        return
-      end
-    end
-    table.insert(self.behaviors.beacons, {
-      part = part,
-      origin = part.CFrame,
-    })
-  end)
-
-  add("Cart", function(part)
-    part:SetNetworkOwner(nil)
-    table.insert(self.behaviors.carts, {
-      base = part,
-      seat = part.Parent:FindFirstChild("Seat"),
-      force = part:FindFirstChildOfClass("LinearVelocity"),
-      origin = part.CFrame,
-      maxDistance = part:GetAttribute("RideMaxDistance") or 68,
-      elapsed = 0,
-      emptyTime = 0,
-    })
-  end)
-
-  add("Gate", function(part)
-    local id = part:GetAttribute("GateId") or part:GetFullName()
-    self.behaviors.gates[id] = part
-    self.gateTimers[id] = 0
-  end)
-
-  add("PressurePad", function(part)
-    table.insert(self.behaviors.pads, {
-      part = part,
-      gateId = part:GetAttribute("GateId"),
-      active = false,
-    })
-  end)
-
-  add("KeyCollectible", function(part)
-    self:registerKey(part)
-  end)
-
-  add("RunStartGate", function(part)
-    self.maid:Give(part.Touched:Connect(function(hit)
-      local player = Players:GetPlayerFromCharacter(hit.Parent)
-      local state = player and self.runState:get(player)
-      if
-        player
-        and self.checkpoints:isLoaded(player)
-        and state.mode == "TimeTrial"
-        and not state.running
-        and self.runState:startAtGate(player, part)
-      then
-        self.checkpoints:resetForTimeTrial(player)
-        self.world.progressEvent:FireClient(player, {
-          stage = player:GetAttribute("Checkpoint") or 0,
-          total = self.world.totalStages,
-          mode = "TimeTrial",
-          runStarted = true,
-          elapsedMs = 0,
-        })
-      end
-    end))
-  end)
-
-  add("KillBrick", function(part)
-    -- Humanoids are instance keys so defeated/removed characters do not keep
-    -- a permanent entry in the debounce table.
-    local lastHit = setmetatable({}, { __mode = "k" })
-    self.maid:Give(part.Touched:Connect(function(hit)
-      local character = hit.Parent
-      local player = character and Players:GetPlayerFromCharacter(character)
-      local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-      local root = character and character:FindFirstChild("HumanoidRootPart")
-      if player and humanoid and root and humanoid.Health > 0 then
-        local now = os.clock()
-        if now - (lastHit[humanoid] or 0) < 0.25 then
-          return
-        end
-        lastHit[humanoid] = now
-        humanoid.Health = 0
-      end
-    end))
-  end)
-
-  add("FallingPlatform", function(part)
-    local entry = {
-      part = part,
-      origin = part.CFrame,
-      dropDelay = part:GetAttribute("DropDelay") or ObstacleConfig.FallingPlatformDelay,
-      respawnTime = part:GetAttribute("RespawnTime") or ObstacleConfig.FallingPlatformRespawn,
-      state = "ready",
-      timer = 0,
-    }
-    table.insert(self.behaviors.fallingPlatforms, entry)
-    self.maid:Give(part.Touched:Connect(function(hit)
-      local humanoid = hit.Parent and hit.Parent:FindFirstChildOfClass("Humanoid")
-      if humanoid and humanoid.Health > 0 and entry.state == "ready" then
-        entry.state = "arming"
-        entry.timer = 0
-      end
-    end))
-  end)
-
+  end))
+  -- Hazard contacts are sampled by MovementService; toggling CanTouch must not own connections.
   self.totalKeys = countOwnedKeyTags(self.world.model)
 end
 
--- Move any players riding on a platform by the same translation vector so they don't get left behind.
-function ObbyService:carryRiders(touching, translation, dt)
-  if #touching == 0 then
-    return
-  end
-
-  local velocity = translation / math.max(dt, 1 / 60)
-  local movedCharacters = {}
-  for _, part in ipairs(touching) do
-    local character = part.Parent
-    if character and not movedCharacters[character] then
-      local humanoid = character:FindFirstChildOfClass("Humanoid")
-      local hrp = character:FindFirstChild("HumanoidRootPart")
-      if humanoid and humanoid.Health > 0 and hrp then
-        movedCharacters[character] = true
-        hrp.CFrame = hrp.CFrame + translation
-        local currentVelocity = hrp.AssemblyLinearVelocity
-        hrp.AssemblyLinearVelocity = Vector3.new(velocity.X, currentVelocity.Y, velocity.Z)
-      end
-    end
-  end
-end
-
 function ObbyService:startHeartbeat()
-  self.maid:Give(RunService.Heartbeat:Connect(function(dt)
-    self.clock = self.clock + dt
-    self.cosmeticClock = self.cosmeticClock + dt
-    self.queryClock = self.queryClock + dt
-    self.riderQueryClock = self.riderQueryClock + dt
-    local tickNow = self.clock
-    if self.riderQueryClock >= 0.05 then
-      self.riderQueryClock = 0
-      for _, item in ipairs(self.behaviors.movingPlatforms) do
-        if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, GameConfig.ActiveMechanicRadius) then
-          item.riders = getOverlappingParts(item.part)
-        else
-          item.riders = {}
-        end
-      end
-    end
-    for _, item in ipairs(self.behaviors.movingPlatforms) do
-      if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, GameConfig.ActiveMechanicRadius) then
-        local omega = (2 * math.pi) / item.period
-        local offsetScalar = math.sin(tickNow * omega + item.phase) * item.amplitude
-        local offset = item.direction * offsetScalar
-        local cf = item.origin * CFrame.new(offset)
-        local lastPos = item.lastPos or item.part.Position
-        item.part.CFrame = cf
-        item.lastPos = cf.Position
-
-        local translation = item.lastPos - lastPos
-        if item.carryPlayers and translation.Magnitude > 0.01 then
-          self:carryRiders(item.riders, translation, dt)
-        end
-      end
-    end
-
-    if self.cosmeticClock >= 1 / 30 then
-      local cosmeticDt = self.cosmeticClock
-      self.cosmeticClock = 0
-      for _, item in ipairs(self.behaviors.rotators) do
-        if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, 180) then
-          item.part.CFrame = item.part.CFrame * CFrame.Angles(0, item.speed * cosmeticDt, 0)
-        end
-      end
-
-      for _, item in ipairs(self.behaviors.bossGavels) do
-        if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, 180) then
-          local t = math.sin(tickNow * item.speed)
-          local pitch = t * item.angle
-          item.part.CFrame = item.origin * CFrame.Angles(pitch, 0, 0)
-        end
-      end
-
-      for _, item in ipairs(self.behaviors.timedTiles) do
-        if item.part and item.part.Parent then
-          item.t = item.t + cosmeticDt
-          if hasNearbyPlayer(item.part.Position, 180) then
-            local on = (item.t % item.cycle) > (item.cycle / 2)
-            item.part.Transparency = on and 0 or 0.8
-            item.part.CanCollide = on
-            item.part.CanTouch = on
-          end
-        end
-      end
-    end
-
-    if self.queryClock >= 0.1 then
-      local queryDt = self.queryClock
-      self.queryClock = 0
-      for _, item in ipairs(self.behaviors.windZones) do
-        if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, GameConfig.ActiveMechanicRadius) then
-          for _, touch in ipairs(getOverlappingParts(item.part)) do
-            local hrp = touch.Parent and touch.Parent:FindFirstChild("HumanoidRootPart")
-            if hrp then
-              local velocity = hrp.AssemblyLinearVelocity
-              local target = item.part.CFrame.RightVector * item.force
-              local lateral = Vector3.new(velocity.X, 0, velocity.Z)
-              local nextVelocity = lateral:Lerp(target, math.clamp(4 * queryDt, 0, 1))
-              hrp.AssemblyLinearVelocity = Vector3.new(nextVelocity.X, velocity.Y, nextVelocity.Z)
-            end
-          end
-        end
-      end
-      local gateActiveCount = {}
-      for _, pad in ipairs(self.behaviors.pads) do
-        if pad.part and pad.part.Parent and hasNearbyPlayer(pad.part.Position, GameConfig.ActiveMechanicRadius) then
-          pad.active = false
-          for _, p in ipairs(getOverlappingParts(pad.part)) do
-            if p.Parent and p.Parent:FindFirstChild("HumanoidRootPart") then
-              pad.active = true
-              break
-            end
-          end
-          if pad.active and pad.gateId then
-            gateActiveCount[pad.gateId] = (gateActiveCount[pad.gateId] or 0) + 1
-          end
-        end
-      end
-      local playerCount = #Players:GetPlayers()
-      for gateId, gate in pairs(self.behaviors.gates) do
-        if gate and gate.Parent then
-          local hits = gateActiveCount[gateId] or 0
-          if hits >= 2 then
-            self.gateTimers[gateId] = 0
-            gate.Transparency = 0.9
-            gate.CanCollide = false
-            gate.Color = Color3.fromRGB(120, 255, 120)
-          else
-            if hits >= 1 and playerCount <= 1 then
-              self.gateTimers[gateId] = (self.gateTimers[gateId] or 0) + queryDt
-            else
-              self.gateTimers[gateId] = 0
-            end
-            local soloOpen = (self.gateTimers[gateId] or 0) >= 6
-            gate.Transparency = soloOpen and 0.9 or 0
-            gate.CanCollide = not soloOpen
-            gate.Color = soloOpen and Color3.fromRGB(200, 255, 200) or Color3.fromRGB(255, 120, 120)
-          end
-        end
-      end
-    end
-
-    for _, item in ipairs(self.behaviors.lasers) do
-      if item.part and item.part.Parent then
-        local active = (tickNow + item.phase) % item.cycle < (item.cycle / 2)
-        item.part.Transparency = active and 0 or 1
-        item.part.CanTouch = active
-        item.part.CanCollide = active
-        local emitter = item.part:FindFirstChildOfClass("ParticleEmitter")
-        if emitter then
-          emitter.Enabled = active
-        end
-      end
-    end
-
-    for _, item in ipairs(self.behaviors.lava) do
-      if item.part and item.part.Parent then
-        local pos = item.part.Position
-        local y = item.floorY - 8 + math.abs(math.sin(tickNow * (item.speed / 6))) * 12
-        item.part.Position = Vector3.new(pos.X, y, pos.Z)
-      end
-    end
-
-    for _, item in ipairs(self.behaviors.beacons) do
-      if item.part and item.part.Parent and hasNearbyPlayer(item.part.Position, 180) then
-        local bob = math.sin(tickNow * 1.5) * 0.5
-        item.part.CFrame = item.origin * CFrame.new(0, bob, 0) * CFrame.Angles(0, dt * 1.2, 0)
-      end
-    end
-
-    for _, item in ipairs(self.behaviors.carts) do
-      if item.base and item.base.Parent and item.force then
-        local occupied = item.seat and item.seat.Occupant ~= nil
-        if occupied then
-          item.emptyTime = 0
-          item.elapsed += dt
-          item.force.VectorVelocity = item.base.CFrame.LookVector * 40
-        else
-          item.emptyTime += dt
-          item.force.VectorVelocity = Vector3.new()
-        end
-        local fellAway = item.base.Position.Y < item.origin.Position.Y - 30
-        local reachedRouteEnd = (item.base.Position - item.origin.Position).Magnitude > item.maxDistance
-        local timedOut = item.elapsed > 45
-        local abandoned = item.elapsed > 0 and item.emptyTime > 5
-        if fellAway or reachedRouteEnd or timedOut or abandoned then
-          local occupant = item.seat and item.seat.Occupant
-          if occupant then
-            occupant.Sit = false
-            local character = occupant.Parent
-            local root = character and character:FindFirstChild("HumanoidRootPart")
-            if root and root:IsA("BasePart") then
-              root.CFrame = item.origin * CFrame.new(-6, 3, 0)
-              root.AssemblyLinearVelocity = Vector3.new()
-              root.AssemblyAngularVelocity = Vector3.new()
-            end
-          end
-          item.base.AssemblyLinearVelocity = Vector3.new()
-          item.base.AssemblyAngularVelocity = Vector3.new()
-          item.base.CFrame = item.origin
-          item.elapsed = 0
-          item.emptyTime = 0
-        end
-      end
-    end
-
-    for _, item in ipairs(self.behaviors.fallingPlatforms) do
-      local part = item.part
-      if part and part.Parent then
-        if item.state == "arming" then
-          item.timer = item.timer + dt
-          if item.timer >= item.dropDelay then
-            part.Anchored = false
-            item.state = "fallen"
-            item.timer = 0
-          end
-        elseif item.state == "fallen" then
-          item.timer = item.timer + dt
-          if item.respawnTime > 0 and item.timer >= item.respawnTime then
-            part.AssemblyLinearVelocity = Vector3.new()
-            part.AssemblyAngularVelocity = Vector3.new()
-            part.CFrame = item.origin
-            part.Anchored = true
-            item.state = "ready"
-            item.timer = 0
-          end
-        end
-      end
-    end
-  end))
+  MovementService.start(self.world, self.maid, function(player, cause)
+    self.assists:fail(player, cause)
+  end)
 end
 
 function ObbyService:rebuild(seed)
+  local retained = self.checkpoints and self.checkpoints:exportSessions() or {}
   self.maid:DoCleaning()
   if self.checkpoints then
     self.checkpoints:destroy()
@@ -960,9 +448,11 @@ function ObbyService:rebuild(seed)
       totalKeys = self.totalKeys,
       collectedKeys = self.checkpoints and self.checkpoints:getProfile(player).collectedKeys or {},
       settings = self.checkpoints and self.checkpoints:getProfile(player).settings or {},
+      medals = self.checkpoints and self.checkpoints:getProfile(player).medals or {},
       runStarted = run and run.running or false,
       elapsedMs = self.runState and math.floor(self.runState:getElapsed(player) * 1000) or 0,
-      chapter = getChapterPresentation(self.world.stages, stage),
+      chapter = getChapterPresentation(self.world.stages, math.min(stage + 1, self.world.totalStages)),
+      assist = self.assists and self.assists:snapshot(player) or {},
     }
   end
   self.runState = RunStateService.new(self.world.totalStages, GameConfig.MinimumTimeTrialSeconds)
@@ -974,7 +464,8 @@ function ObbyService:rebuild(seed)
     self.analytics,
     function()
       return self.totalKeys
-    end
+    end,
+    retained
   )
   self.checkpoints:bindCheckpoints()
   self.keyProgress = {}

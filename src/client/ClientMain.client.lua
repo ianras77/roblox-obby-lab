@@ -4,6 +4,7 @@ local EffectsController = require(controllers:WaitForChild("EffectsController"))
 local EnvironmentController = require(controllers:WaitForChild("EnvironmentController"))
 local CameraController = require(controllers:WaitForChild("CameraController"))
 
+require(controllers:WaitForChild("VisualController")).start()
 UIController.new()
 EffectsController.new()
 EnvironmentController.new()

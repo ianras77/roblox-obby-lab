@@ -1,39 +1,26 @@
 --!strict
-
-local WorldGenConfig = require(script.Parent.WorldGenConfig)
-local GameConfig = require(script.Parent.GameConfig)
-
-export type StageDefinition = {
-  id: string,
-  index: number,
-  name: string,
-  zone: number,
-  difficulty: number,
-  requiredRoute: { { id: string, localPosition: Vector3, minLandingSize: Vector2 } },
-}
-
-local StageConfig = {}
-StageConfig.Definitions = {}
-
-for index, stageType in ipairs(WorldGenConfig.StageTypes) do
+local Definitions = require(script.Parent.StageDefinitions)
+local RoutePlan = require(script.Parent.Parent.Util.RoutePlan)
+local StageConfig = { Definitions = {} }
+for index, authored in ipairs(Definitions) do
+  local route = {}
+  for nodeIndex, node in ipairs(RoutePlan.stage(authored)) do
+    table.insert(route, {
+      id = "main_" .. nodeIndex,
+      localPosition = Vector3.new(node.x, node.y, node.z),
+      minLandingSize = Vector2.new(node.width, node.depth),
+    })
+  end
   StageConfig.Definitions[index] = {
-    id = string.lower(stageType:gsub("(%u)", "_%1"):gsub("^_", "")),
+    id = authored.id,
     index = index,
-    name = WorldGenConfig.StageDisplayNames[stageType] or stageType,
-    zone = math.ceil(index / GameConfig.StagesPerZone),
-    difficulty = math.clamp((index - 1) / 17, 0, 1),
-    -- Stable, authored route anchors. Templates may add intermediate anchors,
-    -- but the entrance-to-exit spine is never inferred from optional props.
-    requiredRoute = {
-      { id = "entrance", localPosition = Vector3.new(0, 0, 0), minLandingSize = Vector2.new(10, 10) },
-      { id = "checkpoint-approach", localPosition = Vector3.new(24, 0, 0), minLandingSize = Vector2.new(8, 8) },
-      { id = "exit", localPosition = Vector3.new(52, 0, 0), minLandingSize = Vector2.new(8, 8) },
-    },
+    name = authored.displayName,
+    zone = authored.zone,
+    difficulty = (index - 1) / 17,
+    requiredRoute = route,
   }
 end
-
-function StageConfig.getByIndex(index: number): StageDefinition?
+function StageConfig.getByIndex(index)
   return StageConfig.Definitions[index]
 end
-
 return StageConfig

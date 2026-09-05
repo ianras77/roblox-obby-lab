@@ -2,6 +2,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local StageBuilder = require(script.Parent.StageBuilder)
 local WorldGenConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("WorldGenConfig"))
 
+local GameConfig = require(ReplicatedStorage.Config.GameConfig)
+local RouteBuilder = require(script.Parent.RouteBuilder)
 local ZoneBuilder = {}
 
 function ZoneBuilder.buildZone(args)
@@ -23,10 +25,19 @@ function ZoneBuilder.buildZone(args)
       zoneColor = args.zoneConfig.ThemeColor,
       random = args.random,
     })
+    if previousExit then
+      RouteBuilder.connect(zoneModel, previousExit, result.entrance)
+    end
     local connectorLength = previousExit and (result.entrance.Position - previousExit.Position).Magnitude or 0
     result.model:SetAttribute("ZoneIndex", args.zoneIndex)
     table.insert(stages, {
       model = result.model,
+      mainPathNodes = result.mainPathNodes,
+      challengePathNodes = result.challengePathNodes,
+      finish = result.finish,
+      primaryMechanic = result.primaryMechanic,
+      expectedNoviceSeconds = result.expectedNoviceSeconds,
+      difficultyTier = result.difficultyTier,
       checkpoint = result.checkpoint,
       stageIndex = stageIndex,
       stageType = stageType,
@@ -42,7 +53,7 @@ function ZoneBuilder.buildZone(args)
       zoneModel = zoneModel,
     })
     previousExit = result.exit
-    currentCFrame = result.exit * CFrame.new(0, args.elevationStep, 0)
+    currentCFrame = result.exit * CFrame.new(GameConfig.StageSpacing.X, 0, 0)
   end
 
   -- Return the actual final stage exit. The world builder owns the connector

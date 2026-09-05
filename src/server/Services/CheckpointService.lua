@@ -30,9 +30,12 @@ end
 local CheckpointService = {}
 CheckpointService.__index = CheckpointService
 
-function CheckpointService.new(stages, progressEvent, runState, analytics, totalKeysProvider)
+function CheckpointService.new(stages, progressEvent, runState, analytics, totalKeysProvider, retained)
   local self = setmetatable({}, CheckpointService)
   self.stages = stages
+  self.retained = retained or {}
+  self.lastSave = {}
+  Players.RespawnTime = 1
   self.maid = Maid.new()
   self.progressEvent = progressEvent
   self.runState = runState
@@ -95,16 +98,16 @@ end
 
 function CheckpointService:initializePlayer(player)
   self:loadCheckpoint(player)
-  if not player.Parent then
+  if self.destroyed or not player.Parent then
     self.loaded[player] = nil
     self.persistenceAllowed[player] = nil
     self.profiles[player] = nil
     return
   end
   if self.analytics then
-    self.analytics:track(player, "joined")
+    self.analytics:funnel(player, 1)
   end
-  self.maid:Give(player.CharacterAdded:Connect(function(character)
+  local function attachCharacter(character)
     if self.collisionConnections[player] then
       self.collisionConnections[player]:Disconnect()
     end
@@ -115,7 +118,7 @@ function CheckpointService:initializePlayer(player)
       end
     end)
     self:teleportToSavedCheckpoint(player)
-    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+    local humanoid = character and character:WaitForChild("Humanoid", 5)
     if humanoid then
       if self.deathConnections[player] then
         self.deathConnections[player]:Disconnect()
@@ -123,9 +126,13 @@ function CheckpointService:initializePlayer(player)
       self.deathConnections[player] = humanoid.Died:Connect(function()
         local profile = self:getProfile(player)
         profile.totalDeaths += 1
+        if self.onDeath then
+          self.onDeath(player)
+        end
       end)
     end
-  end))
+  end
+  self.maid:Give(player.CharacterAdded:Connect(attachCharacter))
   self.maid:Give(player.CharacterRemoving:Connect(function()
     if self.collisionConnections[player] then
       self.collisionConnections[player]:Disconnect()
@@ -133,7 +140,7 @@ function CheckpointService:initializePlayer(player)
     end
   end))
   if player.Character then
-    configurePlayerCollision(player.Character)
+    task.spawn(attachCharacter, player.Character)
   end
   if self.progressEvent then
     local run = self.runState and self.runState:get(player)
@@ -182,14 +189,52 @@ function CheckpointService:hookPlayers()
     self.loaded[player] = nil
     self.persistenceAllowed[player] = nil
     self.profiles[player] = nil
+    self.lastSave[player] = nil
   end))
 end
 
+function CheckpointService:exportSessions()
+  local sessions = {}
+  for player, profile in pairs(self.profiles) do
+    sessions[player] = {
+      profile = ProfileSchema.sanitize(profile),
+      checkpoint = player:GetAttribute("Checkpoint") or 0,
+      allowed = self.persistenceAllowed[player],
+    }
+  end
+  return sessions
+end
+
 function CheckpointService:loadCheckpoint(player)
+  local retained = self.retained[player]
+  if retained then
+    self.profiles[player] = retained.profile
+    self.loaded[player] = true
+    self.persistenceAllowed[player] = retained.allowed
+    player:SetAttribute("Checkpoint", retained.checkpoint)
+    self.retained[player] = nil
+    self:teleportToSavedCheckpoint(player)
+    return
+  end
   player:SetAttribute("ProfileLoadStatus", "Loading")
   player:SetAttribute("Checkpoint", 0)
   player:SetAttribute("CheckpointId", nil)
-  local saved, loadSucceeded = self.store:GetAsync("player:" .. tostring(player.UserId))
+  local saved, loadSucceeded, finished = nil, false, false
+  task.spawn(function()
+    saved, loadSucceeded = self.store:GetAsync("player:" .. tostring(player.UserId))
+    finished = true
+  end)
+  local deadline = os.clock() + 5
+  while not finished and os.clock() < deadline and not self.destroyed do
+    task.wait(0.05)
+  end
+  if not finished then
+    saved = nil
+    loadSucceeded = false
+  end
+  if self.destroyed then
+    return
+  end
   if not player.Parent then
     return
   end
@@ -270,8 +315,8 @@ function CheckpointService:setPracticeCheckpoint(player, targetStage): boolean
   if not stage or not stage.checkpoint then
     return false
   end
-  player:SetAttribute("Checkpoint", targetStage)
-  player:SetAttribute("CheckpointId", stage.checkpoint:GetAttribute("StageId"))
+  player:SetAttribute("Checkpoint", targetStage - 1)
+  player:SetAttribute("CheckpointId", targetStage > 1 and self.stages[targetStage - 1].stageId or nil)
   return true
 end
 
@@ -340,29 +385,34 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
     player:SetAttribute("CheckpointId", checkpoint:GetAttribute("StageId"))
     local checkpointProfile = self:getProfile(player)
     checkpointProfile.highestChapter = math.max(checkpointProfile.highestChapter, stageIndex)
+    checkpointProfile.medals["Story" .. stageIndex] = true
+    local started = self.analytics and self.analytics:state(player).started[stageIndex]
+    if started and os.clock() - started <= 90 and not checkpointProfile.assistedChapters[tostring(stageIndex)] then
+      checkpointProfile.medals["Toad" .. stageIndex] = true
+    end
     self.profiles[player] = checkpointProfile
     if self.analytics then
-      self.analytics:track(player, "chapter_started", { stage = stageIndex })
-      self.analytics:track(player, "chapter_completed", { stage = stageIndex })
+      self.analytics:progress(player, "Complete", stageIndex)
+      if stageIndex == 1 then
+        self.analytics:funnel(player, 3)
+      end
+      if stageIndex == 3 then
+        self.analytics:funnel(player, 4)
+      end
+      if stageIndex == #self.stages then
+        self.analytics:funnel(player, 5)
+      end
     end
     local stageModel = stage.model
-    local sound = checkpoint:FindFirstChildOfClass("Sound")
-    if sound then
-      sound:Play()
-    end
-    local burst = checkpoint:FindFirstChild("CheckpointBurst")
-    if burst then
-      burst:Emit(24)
-    end
     local elapsed, eligible
     if self.runState then
       elapsed, eligible = self.runState:onChapterReached(player, stageIndex)
       local run = self.runState:get(player)
-      local split = run.chapterSplits[stageIndex - 1]
+      local split = run.chapterSplits[stageIndex]
       if split and player:GetAttribute("RunMode") == "TimeTrial" then
         local splitProfile = self:getProfile(player)
         local splitMs = math.floor(split * 1000)
-        local splitKey = tostring(stageIndex - 1)
+        local splitKey = tostring(stageIndex)
         if not splitProfile.bestChapterMs[splitKey] or splitMs < splitProfile.bestChapterMs[splitKey] then
           splitProfile.bestChapterMs[splitKey] = splitMs
         end
@@ -370,7 +420,7 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
     end
     if elapsed and eligible then
       if self.analytics then
-        self.analytics:track(player, "run_completed", { mode = player:GetAttribute("RunMode") })
+        self.analytics:track(player, "StoryCompleteDuration", { stage = stageIndex, value = elapsed })
       end
       local completionProfile = self:getProfile(player)
       completionProfile.completionCount += 1
@@ -393,11 +443,18 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
         bestRunMs = self:getProfile(player).bestRunMs,
         deaths = self:getProfile(player).totalDeaths,
         bestChapterMs = self:getProfile(player).bestChapterMs,
+        medals = self:getProfile(player).medals,
         chapterId = stage.stageId,
         chapterName = stageModel:GetAttribute("ChapterName") or checkpoint:GetAttribute("StageId"),
         mechanic = stageModel:GetAttribute("PrimaryMechanic"),
         flavor = stageModel:GetAttribute("ChapterFlavor"),
       })
+    end
+    if os.clock() - (self.lastSave[player] or -20) >= 15 or stageIndex == #self.stages then
+      self.lastSave[player] = os.clock()
+      task.spawn(function()
+        self:saveCheckpoint(player)
+      end)
     end
     if stageIndex == #self.stages then
       -- Finale presentation is sent to the completing player only. Shared
@@ -419,6 +476,8 @@ function CheckpointService:onCheckpointTouched(stageIndex, checkpoint, hit)
           keys = foundKeys,
           totalKeys = self.totalKeysProvider and self.totalKeysProvider() or nil,
           bestChapterMs = finaleProfile.bestChapterMs,
+          medals = finaleProfile.medals,
+          assisted = player:GetAttribute("Assisted") == true,
         })
       end
     end
@@ -438,7 +497,7 @@ function CheckpointService:teleportToStage(player, targetStage)
         root.AssemblyLinearVelocity = Vector3.new()
         root.AssemblyAngularVelocity = Vector3.new()
         root.CFrame = stage.safeSpawn or (cp.CFrame + Vector3.new(0, 5, 0))
-        root:SetNetworkOwner(nil)
+        player:SetAttribute("GraceUntil", os.clock() + 1.5)
       end
       return true
     end
@@ -458,7 +517,7 @@ function CheckpointService:teleportToCFrame(player, destination: CFrame)
   root.AssemblyLinearVelocity = Vector3.new()
   root.AssemblyAngularVelocity = Vector3.new()
   root.CFrame = destination
-  root:SetNetworkOwner(nil)
+  player:SetAttribute("GraceUntil", os.clock() + 1.5)
   return true
 end
 
@@ -467,11 +526,19 @@ function CheckpointService:teleportToSavedCheckpoint(player)
   if not target then
     return
   end
+  if target == 0 then
+    return self:teleportToCFrame(player, self.stages[1].entrance + Vector3.new(0, 4, 0))
+  end
   self:teleportToStage(player, target)
 end
 
 function CheckpointService:destroy()
+  self.destroyed = true
   self.maid:DoCleaning()
+  for player, connection in pairs(self.collisionConnections) do
+    connection:Disconnect()
+    self.collisionConnections[player] = nil
+  end
   for player, connection in pairs(self.deathConnections) do
     connection:Disconnect()
     self.deathConnections[player] = nil

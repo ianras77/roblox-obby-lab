@@ -101,11 +101,10 @@ function RunStateService:onChapterReached(player: Player, stageIndex: number): (
   if not state.running or not state.startedAt then
     return nil, false
   end
-  if not state.chapterStartedAt[stageIndex] then
-    state.chapterStartedAt[stageIndex] = os.clock()
-  end
-  if stageIndex > 1 and not state.chapterSplits[stageIndex - 1] then
-    state.chapterSplits[stageIndex - 1] = os.clock() - state.startedAt
+  local now = os.clock()
+  if not state.chapterSplits[stageIndex] then
+    state.chapterSplits[stageIndex] = now - (state.chapterStartedAt[stageIndex] or state.startedAt)
+    state.chapterStartedAt[stageIndex + 1] = now
   end
   if stageIndex == self.totalStages and not state.completedAt then
     state.completedAt = os.clock()

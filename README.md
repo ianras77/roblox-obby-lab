@@ -79,3 +79,5 @@ roblox-obby-lab/
 - The generated world is owned by `Workspace.GeneratedObby`; the seed and
   generator version are recorded on that model. See `docs/AUDIT.md` and
   `docs/IMPLEMENTATION_LOG.md` for verified status and Studio-only checks.
+
+Production playability work is on `codex/production-playability`. The canonical route is authored in `StageDefinitions`, `RoutePlan`, and `RouteBuilder`; old alternate templates are outside Rojo under `experiments/`. See [production gates](docs/PRODUCTION_CHECKLIST.md), [tuning](docs/TUNING_GUIDE.md), [Studio test matrix](docs/PLAYTEST_MATRIX.md), and [verification evidence](docs/VERIFICATION.md). No Studio or public release qualification is implied by a successful build.

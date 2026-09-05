@@ -6,10 +6,19 @@ local GameConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild
 local StageConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("StageConfig"))
 local ChapterConfig = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("ChapterConfig"))
 
+local Definitions = require(ReplicatedStorage.Config.StageDefinitions)
+local RoutePlan = require(ReplicatedStorage.Util.RoutePlan)
 local StageBuilder = {}
 
 export type StageBuildResult = {
   model: Model,
+  stageId: string,
+  mainPathNodes: { any },
+  challengePathNodes: { CFrame },
+  primaryMechanic: string,
+  expectedNoviceSeconds: number,
+  difficultyTier: number,
+  finish: BasePart,
   entrance: CFrame,
   exit: CFrame,
   checkpoint: BasePart,
@@ -65,14 +74,14 @@ function StageBuilder.buildStage(args)
   model:SetAttribute("StageId", stageId)
   model:SetAttribute("StageIndex", args.stageIndex)
   model:SetAttribute("ChapterName", displayName)
-  model:SetAttribute("ChapterFlavor", presentation.flavor)
-  model:SetAttribute("PrimaryMechanic", presentation.mechanic)
-  model:SetAttribute("DifficultyTier", presentation.tier)
+  model:SetAttribute("ChapterFlavor", Definitions[args.stageIndex].teachingGoal)
+  model:SetAttribute("PrimaryMechanic", Definitions[args.stageIndex].primaryMechanic)
+  model:SetAttribute("DifficultyTier", Definitions[args.stageIndex].difficultyTier)
   model:SetAttribute("RequiredRouteWaypointCount", definition and #definition.requiredRoute or 0)
 
-  local checkpointCFrame = endCFrame * CFrame.new(0, WorldGenConfig.PlatformSize.Y + 2, 0)
+  local checkpointCFrame = endCFrame * CFrame.new(0, 0.75, 0)
   local cp =
-    Build.checkpoint(string.format("CP_%03d", args.stageIndex), checkpointCFrame, WorldGenConfig.CheckpointSize, model)
+    Build.checkpoint(string.format("CP_%03d", args.stageIndex), checkpointCFrame, Vector3.new(12, 0.5, 12), model)
   cp:SetAttribute("StageId", stageId)
   cp:SetAttribute("StageIndex", args.stageIndex)
 
@@ -85,6 +94,7 @@ function StageBuilder.buildStage(args)
   banner.Parent = model
 
   local bannerText = Instance.new("TextLabel")
+  bannerText.Size = UDim2.fromScale(1, 1)
   bannerText.BackgroundTransparency = 0.15
   bannerText.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
   bannerText.BorderSizePixel = 0
@@ -102,6 +112,7 @@ function StageBuilder.buildStage(args)
   arrow.Adornee = cp
   arrow.Parent = model
   local arrowLabel = Instance.new("TextLabel")
+  arrowLabel.Size = UDim2.fromScale(1, 1)
   arrowLabel.BackgroundTransparency = 1
   arrowLabel.Text = ">> NEXT CHAPTER >>"
   arrowLabel.Font = Enum.Font.GothamBlack
@@ -114,15 +125,30 @@ function StageBuilder.buildStage(args)
     -- Keep the collectible route authored and reproducible. Decorative seed
     -- variation must not move a progression-adjacent key into an accidental
     -- hazard or change its intended exploration lane.
-    local keyOffset = ((args.stageIndex - 1) % 3 - 1) * 6
-    local key = Build.collectibleKey(args.origin * CFrame.new(10, 6, keyOffset), model)
+    local keyOffset = Definitions[args.stageIndex].collectible.z
+    local key = Build.collectibleKey(args.origin * CFrame.new(48, 4, keyOffset), model)
     key:SetAttribute("KeyId", string.format("%s_key_01", stageId))
     key:SetAttribute("StageIndex", args.stageIndex)
   end
 
+  local authored = Definitions[args.stageIndex]
+  local mainPathNodes = {}
+  for _, node in ipairs(RoutePlan.stage(authored)) do
+    table.insert(
+      mainPathNodes,
+      { cframe = args.origin * CFrame.new(node.x, node.y, node.z), width = node.width, depth = node.depth }
+    )
+  end
   local _, bounds = model:GetBoundingBox()
   return {
     model = model,
+    stageId = stageId,
+    finish = cp,
+    mainPathNodes = mainPathNodes,
+    challengePathNodes = { args.origin * CFrame.new(48, 0, 22) },
+    primaryMechanic = authored.primaryMechanic,
+    expectedNoviceSeconds = authored.expectedNoviceSeconds,
+    difficultyTier = authored.difficultyTier,
     entrance = args.origin,
     exit = endCFrame,
     checkpoint = cp,

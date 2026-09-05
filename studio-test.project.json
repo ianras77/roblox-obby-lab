@@ -1,0 +1,26 @@
+{
+  "name": "roblox-obby-lab",
+  "servePort": 34872,
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$path": "src/shared"
+    },
+    "ServerScriptService": {
+      "$path": "src/server"
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "$path": "src/client"
+      }
+    },
+    "Workspace": {
+      "$path": "src/workspace"
+    },
+    "ServerStorage": {
+      "PlayabilityHarness": {
+        "$path": "tests/studio/PlayabilityHarness.lua"
+      }
+    }
+  }
+}

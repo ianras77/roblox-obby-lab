@@ -9,6 +9,8 @@ local DecorBuilder = require(script.Parent.DecorBuilder)
 local WorldValidator = require(script.Parent.WorldValidator)
 local RemoteContracts = require(ReplicatedStorage:WaitForChild("Network"):WaitForChild("RemoteContracts"))
 
+local RouteBuilder = require(script.Parent.RouteBuilder)
+local RouteValidator = require(script.Parent.RouteValidator)
 local WorldBuilder = {}
 
 local function ensureRemote(folder, name, className)
@@ -43,6 +45,7 @@ local function ensureFolders()
     folder.Parent = ReplicatedStorage
   end
   local events = {
+    "Assistance",
     RemoteContracts.Progress.name,
     RemoteContracts.Keys.name,
     RemoteContracts.Finale.name,
@@ -88,8 +91,8 @@ function WorldBuilder.buildWorld(seed)
 
   local startGate = Instance.new("Part")
   startGate.Name = "TimeTrialStartGate"
-  startGate.Size = Vector3.new(2, 8, 20)
-  startGate.CFrame = CFrame.new(-8, 8, 0)
+  startGate.Size = Vector3.new(20, 8, 2)
+  startGate.CFrame = CFrame.new(0, 8, -8)
   startGate.Anchored = true
   startGate.CanCollide = false
   startGate.Transparency = 0.35
@@ -97,6 +100,7 @@ function WorldBuilder.buildWorld(seed)
   CollectionService:AddTag(startGate, "RunStartGate")
   startGate.Parent = obbyModel
 
+  RouteBuilder.connect(obbyModel, spawnPad.CFrame, CFrame.new(0, 5, 0), "SpawnBridge")
   local rng = RandomUtil.new(seed)
   local totalStages = GameConfig.Zones * GameConfig.StagesPerZone
   local lastCFrame = CFrame.new(0, 5, 0)
@@ -131,9 +135,16 @@ function WorldBuilder.buildWorld(seed)
       table.insert(allStages, s)
     end
     previousZoneExit = endCFrame
-    lastCFrame = endCFrame * CFrame.new(0, GameConfig.ElevationPerZone, 0)
+    lastCFrame = endCFrame * CFrame.new(GameConfig.StageSpacing.X, GameConfig.ElevationPerZone, 0)
   end
 
+  RouteBuilder.connect(
+    obbyModel,
+    allStages[#allStages].exit,
+    allStages[#allStages].exit * CFrame.new(24, 0, 0),
+    "FinaleReplayDeck"
+  )
+  RouteValidator.assertWorld(allStages, obbyModel, spawnPad)
   local validationErrors = WorldValidator.validate(allStages, totalStages, zones, obbyModel)
   for _, err in ipairs(validationErrors) do
     warn("[WorldValidator] " .. err)

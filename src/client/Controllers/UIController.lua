@@ -7,6 +7,10 @@ local Theme = require(ReplicatedStorage:WaitForChild("Config"):WaitForChild("The
 local RemoteContracts = require(ReplicatedStorage:WaitForChild("Network"):WaitForChild("RemoteContracts"))
 local SoundGroups = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("SoundGroups"))
 
+local UserInputService = game:GetService("UserInputService")
+local GuiService = game:GetService("GuiService")
+local Definitions = require(ReplicatedStorage.Config.StageDefinitions)
+local Strings = require(ReplicatedStorage.Config.Strings)
 local UIController = {}
 UIController.__index = UIController
 
@@ -40,8 +44,54 @@ function UIController.new()
   self.highestChapter = 0
   self.timerStartedAt = nil
   self:bind()
-  self:syncInitialState()
+  if RunService:IsStudio() then
+    self:bindPseudolocalization()
+  end
+  task.spawn(function()
+    for _ = 1, 20 do
+      if self:syncInitialState() then
+        return
+      end
+      task.wait(0.5)
+    end
+  end)
   return self
+end
+
+-- Development-only expansion mode exercises every dynamic label and newly opened panel.
+function UIController:bindPseudolocalization()
+  local entries = setmetatable({}, { __mode = "k" })
+  local function attach(label)
+    if not (label:IsA("TextLabel") or label:IsA("TextButton")) or entries[label] then
+      return
+    end
+    local entry = { source = label.Text, busy = false }
+    entries[label] = entry
+    local function apply()
+      entry.busy = true
+      entry.rendered = self.player:GetAttribute("PseudoLocalization") and ("[" .. entry.source .. " ~ extended text ~]")
+        or entry.source
+      label.Text = entry.rendered
+      entry.busy = false
+    end
+    label:GetPropertyChangedSignal("Text"):Connect(function()
+      if not entry.busy and label.Text ~= entry.rendered then
+        entry.source = label.Text
+        apply()
+      end
+    end)
+    entry.apply = apply
+    apply()
+  end
+  for _, label in ipairs(self.gui:GetDescendants()) do
+    attach(label)
+  end
+  self.gui.DescendantAdded:Connect(attach)
+  self.player:GetAttributeChangedSignal("PseudoLocalization"):Connect(function()
+    for _, entry in pairs(entries) do
+      entry.apply()
+    end
+  end)
 end
 
 function UIController:syncInitialState()
@@ -67,7 +117,9 @@ function UIController:syncInitialState()
     self:applyAccessibility()
     self:applyAudioVolumes()
     self:refreshVolumeLabels()
+    return true
   end
+  return false
 end
 
 function UIController:applyAudioVolumes()
@@ -81,7 +133,16 @@ end
 function UIController:applyUIScale()
   local scale = self.gui:FindFirstChild("AccessibilityScale")
   if scale then
-    scale.Scale = (self.settings.uiScale or 1) * (self.settings.largeText and 1.15 or 1)
+    scale.Scale = 1
+    for _, label in ipairs(self.gui:GetDescendants()) do
+      if label:IsA("TextLabel") or label:IsA("TextButton") then
+        local bounds = label:FindFirstChildOfClass("UITextSizeConstraint") or Instance.new("UITextSizeConstraint")
+        bounds.MinTextSize = 12
+        bounds.MaxTextSize = math.floor((self.settings.largeText and 28 or 24) * (self.settings.uiScale or 1))
+        bounds.Parent = label
+        label.TextWrapped = true
+      end
+    end
   end
 end
 
@@ -111,8 +172,8 @@ function UIController:applyAccessibilityToHazard(part)
   end
   self.originalHazardColors[part] = self.originalHazardColors[part] or part.Color
   self.originalHazardMaterials[part] = self.originalHazardMaterials[part] or part.Material
-  part.Color = self.settings.highContrast and Color3.fromRGB(255, 255, 255) or self.originalHazardColors[part]
-  part.Material = self.settings.highContrast and Enum.Material.Neon or self.originalHazardMaterials[part]
+  -- Preserve semantic phase colors; contrast uses outlines.
+  -- Material remains authored; outlines carry the additional contrast cue.
   local highlight = self.hazardHighlights[part]
   if not highlight then
     highlight = Instance.new("Highlight")
@@ -155,6 +216,8 @@ function UIController:createGui()
   local gui = Instance.new("ScreenGui")
   gui.Name = "ObbyHUD"
   gui.ResetOnSpawn = false
+  gui.ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets
+  gui.ClipToDeviceSafeArea = true
   gui.Parent = self.player:WaitForChild("PlayerGui")
   local uiScale = Instance.new("UIScale")
   uiScale.Name = "AccessibilityScale"
@@ -193,7 +256,7 @@ function UIController:createGui()
   label.Name = "Label"
   label.Size = UDim2.fromScale(1, 1)
   label.BackgroundTransparency = 1
-  label.Text = "Stage 0/0"
+  label.Text = "Chapter 1/18 • Riverbank Welcome"
   label.Font = Enum.Font.GothamBold
   label.TextScaled = true
   label.TextColor3 = Color3.new(1, 1, 1)
@@ -235,7 +298,7 @@ function UIController:createGui()
   panel.ScrollBarThickness = 8
   panel.Parent = gui
   local panelConstraint = Instance.new("UISizeConstraint")
-  panelConstraint.MinSize = Vector2.new(180, 200)
+  panelConstraint.MinSize = Vector2.new(180, 100)
   panelConstraint.MaxSize = Vector2.new(420, 360)
   panelConstraint.Parent = panel
   local list = Instance.new("UIListLayout")
@@ -336,16 +399,17 @@ function UIController:createGui()
   end
 
   local skip = Instance.new("TextButton")
-  skip.Name = "SkipButton"
+  skip.Name = "HelpButton"
   skip.Size = UDim2.fromOffset(120, Theme.MinimumTouchSize)
   skip.Position = UDim2.fromScale(0.16, 0.12)
   skip.BackgroundColor3 = Color3.fromRGB(110, 130, 170)
   skip.TextColor3 = Color3.new(1, 1, 1)
   skip.Font = Enum.Font.GothamBold
   skip.TextScaled = true
-  skip.Text = "Skip (off)"
-  skip.Active = false
-  skip.AutoButtonColor = false
+  skip.Text = Strings.help
+  skip.Active = true
+  skip.Selectable = true
+  skip.Visible = false
   skip.Parent = gui
 
   local keyHud = Instance.new("TextLabel")
@@ -357,7 +421,7 @@ function UIController:createGui()
   keyHud.TextColor3 = Color3.fromRGB(20, 35, 60)
   keyHud.Font = Enum.Font.GothamBold
   keyHud.TextScaled = true
-  keyHud.Text = "Keys 0/0"
+  keyHud.Text = "Keys 0/18"
   keyHud.Parent = gui
 
   local timer = Instance.new("TextLabel")
@@ -375,23 +439,78 @@ function UIController:createGui()
   return gui
 end
 
+function UIController:layout()
+  local camera = workspace.CurrentCamera
+  local size = camera and camera.ViewportSize or Vector2.new(800, 600)
+  local narrow = size.X < 600
+  local gui = self.gui
+  gui.Title.Size = UDim2.new(1, -24, 0, 30)
+  gui.Title.Position = UDim2.fromOffset(12, 0)
+  gui.ProgressBar.Size = UDim2.new(1, -24, 0, 38)
+  gui.ProgressBar.Position = UDim2.fromOffset(12, 34)
+  gui.ResetButton.Size = UDim2.fromOffset(96, 48)
+  gui.ResetButton.Position = UDim2.fromOffset(12, 78)
+  gui.SettingsButton.Position = UDim2.fromOffset(114, 78)
+  gui.SettingsButton.Size = UDim2.fromOffset(48, 48)
+  gui.HelpButton.Size = UDim2.fromOffset(148, 48)
+  gui.HelpButton.Position = UDim2.fromOffset(168, 78)
+  gui.KeyCounter.Size = UDim2.fromOffset(120, 28)
+  gui.KeyCounter.Position = UDim2.new(1, -132, 0, 130)
+  gui.Timer.Size = UDim2.fromOffset(150, 28)
+  gui.Timer.Position = UDim2.fromOffset(12, 130)
+  gui.SettingsPanel.Size = UDim2.new(narrow and 1 or 0.55, narrow and -24 or 0, 0, math.max(100, size.Y - 190))
+  gui.SettingsPanel.Position = UDim2.fromOffset(12, 170)
+  gui.Hint.Size = UDim2.new(1, -24, 0, 42)
+  gui.Hint.Position = UDim2.fromOffset(12, 162)
+end
+
 function UIController:bind()
   local reset = self.gui:FindFirstChild("ResetButton")
+  local assistance = ReplicatedStorage.SharedEvents:WaitForChild("Assistance")
   reset.Activated:Connect(function()
-    if self.player:GetAttribute("RunMode") == "TimeTrial" then
-      self.modeEvent:FireServer("TimeTrial")
-    end
-    local character = self.player.Character or self.player.CharacterAdded:Wait()
-    local humanoid = character:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-      humanoid.Health = 0
+    assistance:FireServer("Reset")
+  end)
+  self.gui.HelpButton.Activated:Connect(function()
+    assistance:FireServer("Help")
+  end)
+  assistance.OnClientEvent:Connect(function(state)
+    self.gui.HelpButton.Visible = state.help == true
+    self.gui.Hint.Text = string.format("Try %d • %s", state.attempts or 1, state.hint or "Follow >>")
+    if state.failures and state.failures >= 2 then
+      self:guideToStage(state.stage)
     end
   end)
+  local hint = Instance.new("TextLabel")
+  hint.Name = "Hint"
+  hint.Text = Strings.routeHint
+  hint.TextWrapped = true
+  hint.TextScaled = true
+  hint.BackgroundTransparency = 0.2
+  hint.Parent = self.gui
+  local function inputHint()
+    local input = UserInputService:GetLastInputType()
+    reset.Text = Strings.retry
+    hint.Text = input == Enum.UserInputType.Touch and Strings.touchHint
+      or string.find(input.Name, "Gamepad") and Strings.gamepadHint
+      or Strings.keyboardHint
+  end
+  UserInputService.LastInputTypeChanged:Connect(inputHint)
+  inputHint()
+  self:layout()
+  if workspace.CurrentCamera then
+    workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
+      self:layout()
+    end)
+  end
 
   local settingsButton = self.gui:FindFirstChild("SettingsButton")
   local panel = self.gui:FindFirstChild("SettingsPanel")
   settingsButton.Activated:Connect(function()
     panel.Visible = not panel.Visible
+    hint.Visible = not panel.Visible
+    if panel.Visible and UserInputService.GamepadEnabled then
+      GuiService.SelectedObject = panel:FindFirstChildWhichIsA("TextButton")
+    end
   end)
   for _, toggle in ipairs(panel:GetChildren()) do
     if toggle:IsA("TextButton") and toggle:GetAttribute("SettingKey") then
@@ -598,7 +717,7 @@ function UIController:showResults(payload)
   local mode = payload and payload.mode or self.player:GetAttribute("RunMode") or "Adventure"
   local elapsed = payload and payload.elapsedMs and string.format("\nTime: %.2fs", payload.elapsedMs / 1000) or ""
   local best = payload and payload.bestRunMs and string.format("\nPersonal best: %.2fs", payload.bestRunMs / 1000) or ""
-  local deaths = payload and payload.deaths and string.format("\nDeaths: %d", payload.deaths) or ""
+  local deaths = payload and payload.deaths and string.format("\nRetries: %d", payload.deaths) or ""
   local keys = payload
       and payload.keys
       and payload.totalKeys
@@ -609,12 +728,22 @@ function UIController:showResults(payload)
     exploration = string.format("\nExploration: %d%%", math.floor(payload.keys / payload.totalKeys * 100))
   end
   local medals = ""
-  if payload and payload.bestChapterMs then
-    local splitCount = 0
-    for _ in pairs(payload.bestChapterMs) do
-      splitCount += 1
+  if payload and payload.medals then
+    local counts = { Story = 0, Explorer = 0, Toad = 0 }
+    for key, earned in pairs(payload.medals) do
+      if earned then
+        for kind in pairs(counts) do
+          if string.sub(key, 1, #kind) == kind then
+            counts[kind] += 1
+          end
+        end
+      end
     end
-    medals = string.format("\nChapter medals: %d/%d", splitCount, payload.total or 18)
+    medals =
+      string.format("\nMedals • Story %d • Explorer %d • Toad %d", counts.Story, counts.Explorer, counts.Toad)
+    if payload.assisted then
+      medals ..= "\nYou and your helpers made it home!"
+    end
   end
   result.Text = string.format(
     "Toad Hall reached!\n%s run complete%s%s%s%s%s%s\nRoute completion: 100%%",
@@ -663,8 +792,13 @@ function UIController:updateProgress(stage, total)
   local fill = bar:FindFirstChild("Fill")
   local label = bar:FindFirstChild("Label")
   local pct = total > 0 and stage / total or 0
-  fill:TweenSize(UDim2.fromScale(pct, 1), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true)
-  label.Text = string.format("Stage %d/%d", stage, total)
+  if self.settings.reducedMotion then
+    fill.Size = UDim2.fromScale(pct, 1)
+  else
+    fill:TweenSize(UDim2.fromScale(pct, 1), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true)
+  end
+  local nextIndex = math.clamp(stage + 1, 1, #Definitions)
+  label.Text = string.format(Strings.progress, nextIndex, total, Definitions[nextIndex].displayName)
 end
 
 function UIController:updateKeys(found, total)
@@ -672,36 +806,29 @@ function UIController:updateKeys(found, total)
   if not keyHud then
     return
   end
-  keyHud.Text = string.format("Keys %d/%d", found, total)
+  keyHud.Text = string.format(Strings.keys, found, total)
 end
 
 function UIController:guideToStage(nextStage)
   local obby = workspace:FindFirstChild("GeneratedObby")
+  if self.routeHighlight then
+    self.routeHighlight:Destroy()
+    self.routeHighlight = nil
+  end
   if not obby then
     return
   end
-  local label = self.gui:FindFirstChild("ArrowHint")
-  if label then
-    label:Destroy()
-  end
-  local nextName = string.format("CP_%03d", nextStage)
-  local target = obby:FindFirstChild(nextName, true)
-  if target and target:IsA("BasePart") then
-    local billboard = Instance.new("BillboardGui")
-    billboard.Name = "ArrowHint"
-    billboard.Adornee = target
-    billboard.Size = UDim2.fromOffset(80, 80)
-    billboard.StudsOffset = Vector3.new(0, 6, 0)
-    billboard.AlwaysOnTop = true
-    billboard.Parent = self.gui
-
-    local arrow = Instance.new("TextLabel")
-    arrow.BackgroundTransparency = 1
-    arrow.Text = "^"
-    arrow.TextScaled = true
-    arrow.Font = Enum.Font.GothamBold
-    arrow.TextColor3 = Color3.fromRGB(255, 255, 0)
-    arrow.Parent = billboard
+  for _, model in ipairs(obby:GetDescendants()) do
+    if model:IsA("Model") and model:GetAttribute("StageIndex") == nextStage then
+      local highlight = Instance.new("Highlight")
+      highlight.Name = "PersonalRouteHelp"
+      highlight.Adornee = model
+      highlight.FillTransparency = 1
+      highlight.OutlineColor = Color3.fromRGB(255, 240, 160)
+      highlight.Parent = self.gui
+      self.routeHighlight = highlight
+      return
+    end
   end
 end
 

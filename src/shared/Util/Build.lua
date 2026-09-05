@@ -4,6 +4,7 @@ local AssetRegistry = require(ReplicatedStorage:WaitForChild("Config"):WaitForCh
 local SoundGroups = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("SoundGroups"))
 
 local Build = {}
+local PartProperties = require(ReplicatedStorage:WaitForChild("Util"):WaitForChild("PartProperties"))
 
 local function applyAttributes(instance, attributes)
   if not attributes then
@@ -32,9 +33,10 @@ function Build.part(props)
   part.BottomSurface = Enum.SurfaceType.Smooth
   part.Material = props.Material or Enum.Material.Plastic
   part.Name = props.Name or "Part"
-  part.Parent = props.Parent
+  PartProperties.apply(part, props, game:GetService("RunService"):IsStudio())
   applyAttributes(part, props.Attributes)
   Build.tag(part, props.Tags)
+  part.Parent = props.Parent
   return part
 end
 
@@ -80,6 +82,7 @@ function Build.checkpoint(name, cframe, size, parent)
   gui.Parent = cp
 
   local text = Instance.new("TextLabel")
+  text.Size = UDim2.fromScale(1, 1)
   text.BackgroundTransparency = 1
   text.Text = cp.Name
   text.Font = Enum.Font.GothamBold
@@ -112,14 +115,15 @@ function Build.collectibleKey(cframe, parent)
     Size = Vector3.new(1.5, 3, 0.5),
     Color = Color3.fromRGB(255, 215, 0),
     Material = Enum.Material.Neon,
-    Tags = { "KeyCollectible", "Beacon" },
+    Tags = { "KeyCollectible", "VisualBob" },
+    CanCollide = false,
     Anchored = true,
   })
   local spark = Instance.new("ParticleEmitter")
   spark.Texture = AssetRegistry.getApprovedId("soft_particle")
   spark.Lifetime = NumberRange.new(0.6, 1)
   spark.Speed = NumberRange.new(4, 7)
-  spark.Rate = 18
+  spark.Rate = 0
   spark.Parent = key
 
   local sound = Instance.new("Sound")
@@ -161,7 +165,7 @@ function Build.cart(cframe, parent, rideMaxDistance)
 
   local vel = Instance.new("LinearVelocity")
   vel.MaxForce = 4000
-  vel.VectorVelocity = Vector3.new(40, 0, 0)
+  vel.VectorVelocity = cframe.RightVector * 8
   vel.Attachment0 = attachment
   vel.Parent = base
 

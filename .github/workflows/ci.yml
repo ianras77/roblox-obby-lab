@@ -41,5 +41,9 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Format & lint
         run: ./scripts/check.sh
-      - name: Build place artifact
-        run: rojo build default.project.json -o /tmp/toads-great-escape.rbxlx
+      - name: Build production and isolated Studio harness artifacts
+        run: |
+          rojo build default.project.json -o /tmp/toads-great-escape.rbxlx
+          rojo build studio-test.project.json -o /tmp/toads-studio-tests.rbxlx
+      - name: Whitespace validation
+        run: git diff --check

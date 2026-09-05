@@ -192,7 +192,7 @@ function DecorBuilder.decorateZone(zoneModel, zoneConfig)
 
   local emitter = Instance.new("ParticleEmitter")
   emitter.Texture = AssetRegistry.getApprovedId("soft_particle")
-  emitter.Rate = 80
+  emitter.Rate = 0
   emitter.Lifetime = NumberRange.new(4, 7)
   emitter.Speed = NumberRange.new(6, 10)
   emitter.SpreadAngle = Vector2.new(360, 360)

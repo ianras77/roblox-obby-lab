@@ -19,3 +19,5 @@ build. Roblox-only behavior still requires Studio execution using
 
 The server-side validator runs during world generation and reports invalid stage
 manifests without deleting user-owned Workspace content.
+
+The production gate now executes campaign/route mutation tests, movement/assist math, Build property application, progression, profile merge, run and asset suites, plus a small source-wiring check. `studio-test.project.json` packages the isolated integration harness; see `docs/PLAYTEST_MATRIX.md` for invocation and the boundary between direct checkpoint traversal and physical playtesting.
