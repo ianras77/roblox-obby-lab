@@ -8,7 +8,7 @@ Build `rojo build studio-test.project.json -o /tmp/toads-studio-tests.rbxlx`. Op
 require(game.ServerStorage.PlayabilityHarness).run()
 ```
 
-The harness is excluded from the production project. It checks actual generated support and negative mutations, property behavior, ordered checkpoint traversal and dedupe, saved recovery target, personal claim isolation with at least two clients, and connected-player rebuild. It moves test characters directly to checkpoints: it does not substitute for walking/jumping or prove two-second human control recovery. Use a disposable Studio mock session. The harness intentionally fails outside Studio.
+The harness is excluded from the production project. A separate headless runner (`LUNE_BIN=/tmp/obby-tools/lune ROJO_BIN=/tmp/obby-tools/rojo ./scripts/headless.sh`) now executes the generated world and lifecycle contracts for simulated 1/2/8 players; it passed locally, but remains distinct from Studio. The Studio harness checks actual generated support and negative mutations, property behavior, ordered checkpoint traversal and dedupe, saved recovery target, personal claim isolation with at least two clients, and connected-player rebuild. It moves test characters directly to checkpoints: it does not substitute for walking/jumping or prove two-second human control recovery. Use a disposable Studio mock session. The harness intentionally fails outside Studio.
 
 | Test | Setup / action | Required observation | Evidence |
 | --- | --- | --- | --- |

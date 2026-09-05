@@ -45,5 +45,6 @@ jobs:
         run: |
           rojo build default.project.json -o /tmp/toads-great-escape.rbxlx
           rojo build studio-test.project.json -o /tmp/toads-studio-tests.rbxlx
+          lune run tests/headless/run.luau /tmp/toads-great-escape.rbxlx
       - name: Whitespace validation
         run: git diff --check
