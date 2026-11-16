@@ -1,5 +1,5 @@
--- selene: allow(incorrect_standard_library_use)
--- selene: allow(shadowing)
+--# selene: allow(incorrect_standard_library_use)
+--# selene: allow(shadowing)
 -- Executes production modules against explicit headless service adapters.
 -- This is NOT Studio, engine physics, renderer, networking, or live backend proof.
 local Environment = require("./Environment")

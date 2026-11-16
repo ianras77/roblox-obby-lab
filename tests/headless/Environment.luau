@@ -1,5 +1,5 @@
--- selene: allow(incorrect_standard_library_use)
--- selene: allow(shadowing)
+--# selene: allow(incorrect_standard_library_use)
+--# selene: allow(shadowing)
 -- Headless adapters, not a Roblox engine. Native Lune Instances/CFrames/Vector3s;
 -- explicit virtual scheduler, signals, remotes and oriented-box ray intersections.
 local roblox = require("@lune/roblox")
