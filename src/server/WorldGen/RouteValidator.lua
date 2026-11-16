@@ -1,4 +1,5 @@
 local CollectionService = game:GetService("CollectionService")
+local Players = game:GetService("Players")
 local Definitions = require(game:GetService("ReplicatedStorage").Config.StageDefinitions)
 local RouteValidator = {}
 local transformTags =
@@ -8,11 +9,45 @@ function RouteValidator.assertWorld(stages, root, spawn)
   params.FilterType = Enum.RaycastFilterType.Include
   params.FilterDescendantsInstances = { root }
   params.RespectCanCollide = true
-  local function supported(position, id)
+  local function supported(position, id, required)
     local hit = workspace:Raycast(position + Vector3.new(0, 2, 0), Vector3.new(0, -4, 0), params)
     assert(hit and hit.Instance.Anchored and hit.Instance.CanCollide, id .. ": missing stable support")
+    if required then
+      assert(
+        hit.Instance:GetAttribute("RequiredSupport") or CollectionService:HasTag(hit.Instance, "Checkpoint"),
+        id .. ": required support replaced by " .. hit.Instance:GetFullName()
+      )
+    end
+  end
+  -- Include the actual workspace, not just generated parts: imported mountains,
+  -- roofs and terrain can obstruct a perfectly supported route. Ignore players
+  -- during rebuilds so a visitor cannot invalidate the world.
+  local clearance = RaycastParams.new()
+  clearance.FilterType = Enum.RaycastFilterType.Exclude
+  local characters = {}
+  for _, player in ipairs(Players:GetPlayers()) do
+    if player.Character then
+      table.insert(characters, player.Character)
+    end
+  end
+  clearance.FilterDescendantsInstances = characters
+  clearance.RespectCanCollide = true
+  local function clear(position, id)
+    local hit = workspace:Raycast(position + Vector3.new(0, 1.1, 0), Vector3.new(0, 12, 0), clearance)
+    assert(not hit, id .. ": blocked walking/jump clearance by " .. (hit and hit.Instance:GetFullName() or "?"))
+  end
+  local function clearStrip(a, b, width, id)
+    local delta = b - a
+    local side = Vector3.new(-delta.Z, 0, delta.X).Unit
+    local count = math.max(1, math.ceil(delta.Magnitude / 2))
+    for step = 0, count do
+      for _, offset in ipairs({ -width / 2 + 2, 0, width / 2 - 2 }) do
+        clear(a:Lerp(b, step / count) + side * offset, id)
+      end
+    end
   end
   supported(spawn.Position, "spawn")
+  clear(spawn.Position, "spawn")
   local previous = spawn.CFrame
   for index, stage in ipairs(stages) do
     local id = stage.stageId
@@ -21,12 +56,28 @@ function RouteValidator.assertWorld(stages, root, spawn)
     supported(stage.entrance.Position, id)
     supported(stage.exit.Position, id)
     supported(stage.checkpoint.Position, id)
+    assert(stage.safeSpawn.LookVector:Dot(stage.entrance.RightVector) > 0.99, id .. ": respawn faces off route")
+    clearStrip(stage.entrance.Position, stage.exit.Position, 10, id)
+    -- Every fall has three visible low ramps back to a broad landing.
+    for _, x in ipairs({ 16, 48, 80 }) do
+      local a = (stage.entrance * CFrame.new(x, -2, -19)).Position
+      local b = (stage.entrance * CFrame.new(x, 0, -7)).Position
+      for step = 0, 12 do
+        local position = a:Lerp(b, step / 12)
+        supported(position, id .. " recovery ramp", true)
+        clear(position, id .. " recovery ramp")
+      end
+    end
     assert(#stage.mainPathNodes >= 3, id .. ": missing main path")
     for n, node in ipairs(stage.mainPathNodes) do
-      supported(node.cframe.Position, id)
+      supported(node.cframe.Position, id, true)
       for _, x in ipairs({ -0.4, 0.4 }) do
         for _, z in ipairs({ -0.4, 0.4 }) do
-          supported((node.cframe * CFrame.new(x * node.width, 0, z * node.depth)).Position, id .. " landing footprint")
+          supported(
+            (node.cframe * CFrame.new(x * node.width, 0, z * node.depth)).Position,
+            id .. " landing footprint",
+            true
+          )
         end
       end
       if n > 1 then
@@ -58,6 +109,9 @@ function RouteValidator.assertWorld(stages, root, spawn)
       math.abs(delta.Y) / math.max(1, Vector3.new(delta.X, 0, delta.Z).Magnitude) <= 0.3,
       id .. ": steep connector"
     )
+    if delta.Magnitude > 0.01 then
+      clearStrip(previous.Position, stage.entrance.Position, 10, id .. " connector")
+    end
     for step = 0, math.ceil(delta.Magnitude) do
       supported(
         previous.Position:Lerp(stage.entrance.Position, step / math.max(1, math.ceil(delta.Magnitude))),

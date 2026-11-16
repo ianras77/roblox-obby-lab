@@ -191,7 +191,9 @@ local function bindPracticeStage(self)
     if not self.checkpoints:setPracticeCheckpoint(player, stage) then
       return
     end
-    self.checkpoints:teleportToCFrame(player, self.world.stages[stage].entrance + Vector3.new(0, 4, 0))
+    local entrance = self.world.stages[stage].entrance
+    local position = entrance.Position + Vector3.new(0, 4, 0)
+    self.checkpoints:teleportToCFrame(player, CFrame.lookAt(position, position + entrance.RightVector))
     self.world.progressEvent:FireClient(player, {
       stage = stage - 1,
       total = self.world.totalStages,

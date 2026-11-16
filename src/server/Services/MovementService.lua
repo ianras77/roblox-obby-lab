@@ -80,6 +80,7 @@ function MovementService.start(world, maid, fail)
         if not display then
           display = Instance.new("BillboardGui")
           display.Name = "PhaseDisplay"
+          display.MaxDistance = 100
           display.Size = UDim2.fromOffset(160, 48)
           display.StudsOffset = Vector3.new(0, 5, 0)
           display.Parent = part

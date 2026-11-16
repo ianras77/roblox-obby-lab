@@ -167,16 +167,6 @@ function DecorBuilder.applyLighting(zoneConfig)
 end
 
 function DecorBuilder.decorateZone(zoneModel, zoneConfig)
-  for _, stageModel in ipairs(zoneModel:GetChildren()) do
-    if stageModel:IsA("Model") then
-      for _, child in ipairs(stageModel:GetDescendants()) do
-        if child:IsA("BasePart") then
-          child.Color = zoneConfig.ThemeColor:Lerp(child.Color, 0.25)
-        end
-      end
-    end
-  end
-
   local zoneCFrame, zoneSize = zoneModel:GetBoundingBox()
   addLandmark(zoneModel, zoneConfig, zoneCFrame.Position, zoneSize)
 

@@ -78,6 +78,7 @@ function Build.checkpoint(name, cframe, size, parent)
   local gui = Instance.new("BillboardGui")
   gui.Size = UDim2.fromOffset(120, 40)
   gui.AlwaysOnTop = true
+  gui.MaxDistance = 100
   gui.Adornee = cp
   gui.Parent = cp
 

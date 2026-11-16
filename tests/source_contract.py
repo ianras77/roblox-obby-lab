@@ -26,7 +26,7 @@ assert "FireAllClients" not in checkpoint and "evt:FireClient(player" in checkpo
 assert "RouteValidator.assertWorld" in world
 assert "RouteBuilder.connect" in world and "RouteBuilder.connect" in zone
 assert zone.count("GameConfig.StageSpacing.X")==1
-assert world.count("GameConfig.StageSpacing.X")==1 # alternate ownership at zone transition, not both on same edge
+assert world.count("GameConfig.ZoneTransitionLength")==1 # alternate ownership at zone transition, not both on same edge
 assert "Experimental" not in read("src/server/WorldGen/Templates/StageTemplates.lua")
 assert "LegacyStageTemplates" not in read("default.project.json")
 boots=[p for p in (root/"src").rglob("*.server.lua") if "ObbyService.new()" in p.read_text()]

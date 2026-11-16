@@ -4,6 +4,26 @@ A procedural Roblox obby inspired by the public-domain book world of **The Wind 
 
 The goal is for kids to play it, laugh at the chaos, then open the configs and remix it.
 
+## Open the current game
+
+Use a place built from this checkout, not the historical `obby-export.rbxlx` or
+`obby-export-fixed.rbxlx`. Those files embedded an obsolete generator and have
+been removed. Build a fresh local place:
+
+```bash
+rojo build default.project.json -o obby-current.rbxlx
+```
+
+Open `obby-current.rbxlx` in Roblox Studio and press Play. Alternatively, download
+the revision-labelled `toads-places-<SHA>` artifact from a successful GitHub Actions
+run. The Studio harness place is for testing only. See the
+[November route review and reproducible playtest](docs/ROUTE_REVIEW_2026-11.md).
+
+During Play the generator reserves a bounded terrain-free corridor around the
+route (including camera clearance). Terrain outside that corridor is preserved.
+Test imported landscapes in a disposable Studio copy first. Solid imported parts
+are not deleted: a sampled walking/jump-clearance check identifies obstructions.
+
 ## Quick start
 
 If you are using the shared studio workspace:

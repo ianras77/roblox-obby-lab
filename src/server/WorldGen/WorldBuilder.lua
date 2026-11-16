@@ -82,7 +82,7 @@ function WorldBuilder.buildWorld(seed)
   local spawnPad = Instance.new("SpawnLocation")
   spawnPad.Name = "SpawnPad"
   spawnPad.Size = Vector3.new(16, 1, 16)
-  spawnPad.Position = Vector3.new(0, 4.5, -20)
+  spawnPad.CFrame = CFrame.new(0, 4.5, -20) * CFrame.Angles(0, math.pi, 0)
   spawnPad.Anchored = true
   spawnPad.Transparency = 0.2
   spawnPad.BrickColor = BrickColor.new("Bright green")
@@ -135,7 +135,7 @@ function WorldBuilder.buildWorld(seed)
       table.insert(allStages, s)
     end
     previousZoneExit = endCFrame
-    lastCFrame = endCFrame * CFrame.new(GameConfig.StageSpacing.X, GameConfig.ElevationPerZone, 0)
+    lastCFrame = endCFrame * CFrame.new(GameConfig.ZoneTransitionLength, GameConfig.ElevationPerZone, 0)
   end
 
   RouteBuilder.connect(
@@ -144,6 +144,21 @@ function WorldBuilder.buildWorld(seed)
     allStages[#allStages].exit * CFrame.new(24, 0, 0),
     "FinaleReplayDeck"
   )
+  -- The procedural course owns this play-session corridor, including camera
+  -- clearance. Rojo sync does not remove pre-existing Studio terrain. Never
+  -- clear the entire Terrain: preserve the surrounding landscape.
+  local terrain = workspace:FindFirstChildOfClass("Terrain")
+  if terrain then
+    local startX = spawnPad.Position.X - 24
+    local endX = allStages[#allStages].exit.X + 40
+    local lowY = allStages[1].entrance.Y - 12
+    local highY = allStages[#allStages].exit.Y + 64
+    terrain:FillBlock(
+      CFrame.new((startX + endX) / 2, (lowY + highY) / 2, 8),
+      Vector3.new(endX - startX, highY - lowY, 112),
+      Enum.Material.Air
+    )
+  end
   RouteValidator.assertWorld(allStages, obbyModel, spawnPad)
   local validationErrors = WorldValidator.validate(allStages, totalStages, zones, obbyModel)
   for _, err in ipairs(validationErrors) do

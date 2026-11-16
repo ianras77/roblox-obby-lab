@@ -8,6 +8,7 @@ local GameConfig = {
   StagesPerZone = 6,
   StageSpacing = Vector3.new(16, 0, 0),
   ElevationPerZone = 4,
+  ZoneTransitionLength = 48, -- Broad, low-slope ramp between raised zones.
   AllowlistUserIds = { 0 }, -- Kid Notes: add your userId here to unlock /reseed, /rebuild, /stage
   DevCommandsEnabled = true,
   MaxDevSeed = 2147483647,

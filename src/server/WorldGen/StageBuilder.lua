@@ -90,6 +90,7 @@ function StageBuilder.buildStage(args)
   banner.Size = UDim2.fromOffset(280, 120)
   banner.StudsOffset = Vector3.new(0, 14, 0)
   banner.AlwaysOnTop = true
+  banner.MaxDistance = 130
   banner.Adornee = cp
   banner.Parent = model
 
@@ -109,12 +110,13 @@ function StageBuilder.buildStage(args)
   arrow.Size = UDim2.fromOffset(200, 80)
   arrow.StudsOffset = Vector3.new(0, 8, 0)
   arrow.AlwaysOnTop = true
+  arrow.MaxDistance = 100
   arrow.Adornee = cp
   arrow.Parent = model
   local arrowLabel = Instance.new("TextLabel")
   arrowLabel.Size = UDim2.fromScale(1, 1)
   arrowLabel.BackgroundTransparency = 1
-  arrowLabel.Text = ">> NEXT CHAPTER >>"
+  arrowLabel.Text = args.stageIndex == totalStages and "HOME! Replay from the menu" or ">> NEXT CHAPTER >>"
   arrowLabel.Font = Enum.Font.GothamBlack
   arrowLabel.TextScaled = true
   arrowLabel.TextColor3 = Color3.fromRGB(255, 255, 200)
@@ -152,7 +154,10 @@ function StageBuilder.buildStage(args)
     entrance = args.origin,
     exit = endCFrame,
     checkpoint = cp,
-    safeSpawn = cp.CFrame + Vector3.new(0, 4, 0),
+    safeSpawn = CFrame.lookAt(
+      cp.Position + Vector3.new(0, 4, 0),
+      cp.Position + Vector3.new(0, 4, 0) + args.origin.RightVector
+    ),
     bounds = bounds,
     mechanics = { presentation.mechanic },
     pathCorridor = {
