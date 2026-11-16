@@ -8,12 +8,15 @@ function RouteBuilder.connect(parent, a, b, name)
   if delta.Magnitude < 0.01 then
     return nil
   end
-  -- Roblox lookAt aims -Z; rotate so the long local X axis follows the route.
+  -- Construct the support basis directly: its long X axis must match both
+  -- endpoint positions, including sideways recovery ramps and elevation.
+  local right = delta.Unit
+  local up = (Vector3.yAxis - right * right.Y).Unit
   return Build.part({
     Name = name or "ScenicConnector",
     Parent = parent,
     Size = Vector3.new(delta.Magnitude + 2, 1, 14),
-    CFrame = CFrame.lookAt((a.Position + b.Position) / 2, b.Position) * CFrame.Angles(0, math.pi / 2, 0),
+    CFrame = CFrame.fromMatrix((a.Position + b.Position) / 2, right, up),
     Color = Color3.fromRGB(170, 196, 135),
     Material = Enum.Material.WoodPlanks,
     Attributes = { RequiredSupport = true },
@@ -66,10 +69,14 @@ function RouteBuilder.stage(ctx, definition)
     Name = "CatchFloor",
     Parent = model,
     Size = Vector3.new(112, 1, 60),
-    CFrame = ctx.origin * CFrame.new(48, -4, 8),
+    CFrame = ctx.origin * CFrame.new(48, -2, 8),
     Color = Color3.fromRGB(125, 170, 125),
   })
-  RouteBuilder.connect(model, ctx.origin * CFrame.new(16, -4, 0), ctx.origin * CFrame.new(32, 0, 0), "CatchRamp")
+  -- Recover alongside the pads, not beneath their low ceiling. Three broad
+  -- ramps meet the near edge of a landing with no overhead platform to hit.
+  for _, x in ipairs({ 16, 48, 80 }) do
+    RouteBuilder.connect(model, ctx.origin * CFrame.new(x, -2, -19), ctx.origin * CFrame.new(x, 0, -7), "CatchRamp")
+  end
   -- The challenge detour is explicit, visible and connected at both ends.
   Build.part({
     Name = "OptionalLane",
@@ -142,12 +149,12 @@ function RouteBuilder.stage(ctx, definition)
   if index == 10 then
     Build.cart(ctx.origin * CFrame.new(24, 2, 22), model, 48)
   end
-  for _, z in ipairs({ -9, 31 }) do
+  for _, z in ipairs({ -21, 37 }) do
     Build.part({
       Name = "CatchRail",
       Parent = model,
       Size = Vector3.new(108, 3, 1),
-      CFrame = ctx.origin * CFrame.new(48, 0, z),
+      CFrame = ctx.origin * CFrame.new(48, -0.5, z),
       Color = Color3.fromRGB(110, 80, 50),
       Material = Enum.Material.Wood,
     })
@@ -163,6 +170,7 @@ function RouteBuilder.stage(ctx, definition)
     })
     local sign = Instance.new("BillboardGui")
     sign.Size = UDim2.fromOffset(240, 80)
+    sign.MaxDistance = 100
     sign.Adornee = lantern
     sign.StudsOffset = Vector3.new(0, 5, 0)
     sign.Parent = lantern

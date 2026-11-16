@@ -7,7 +7,18 @@ local process = require("@lune/process")
 local env = Environment.new(process.args[1] or "/tmp/toads-production-playability.rbxlx")
 local V, CF = env.roblox.Vector3, env.roblox.CFrame
 local start = os.clock()
-local service = env:require(env.game.ServerScriptService.Services.ObbyService).new()
+-- Record the bounded terrain operation; this adapter does NOT simulate voxels.
+local terrain = env.instance.new("Terrain")
+terrain.Parent = env.workspace
+local ok, service = pcall(function()
+  return env:require(env.game.ServerScriptService.Services.ObbyService).new()
+end)
+if not ok then
+  for _, warning in ipairs(env.warnings) do
+    print(warning)
+  end
+  error(service)
+end
 local function expect(condition, message)
   assert(condition, message)
 end
@@ -20,6 +31,21 @@ local function touchCheckpoint(player, index)
   service.checkpoints:onCheckpointTouched(index, stage.checkpoint, root(player))
 end
 expect(#service.world.stages == 18, "world builds all stages")
+expect(#env.terrainClears == 1, "one bounded terrain reservation")
+local reserved = env.terrainClears[1]
+expect(reserved.material == env.roblox.Enum.Material.Air and reserved.size.Z == 112, "terrain reservation dimensions")
+expect(reserved.size.X < 2200 and reserved.size.Y < 100, "terrain reservation stays bounded")
+expect(service.world.model.SpawnPad.CFrame.LookVector:Dot(V.zAxis) > 0.99, "spawn faces bridge")
+for _, stage in ipairs(service.world.stages) do
+  expect(stage.safeSpawn.LookVector:Dot(V.xAxis) > 0.99, "checkpoint faces travel")
+end
+-- Direct endpoint checks catch a mirrored/inverted ramp basis independently of rays.
+for _, part in ipairs(service.world.model:GetDescendants()) do
+  if part:IsA("BasePart") and (part.Name == "ScenicConnector" or part.Name == "CatchRamp") then
+    expect(part.CFrame.RightVector.Y >= -0.001, "ramp rises toward the destination")
+    expect(part.CFrame.UpVector.Y > 0.98, "gentle recovery and transition slopes")
+  end
+end
 local validator = env:require(env.game.ServerScriptService.WorldGen.RouteValidator)
 local function validate()
   env.invalidateGeometry()
@@ -37,7 +63,31 @@ expect(not pcall(validate), "transform ownership mutation must fail")
 env.collection:RemoveTag(pad, "MovingPlatform")
 env.collection:RemoveTag(pad, "Rotator")
 validate()
-print("HEADLESS geometry: actual 18-stage generation and validator; missing-support/controller mutations passed")
+local firstStage = service.world.stages[1]
+local ramp = firstStage.model:FindFirstChild("CatchRamp", true)
+local rampParent = ramp.Parent
+ramp.Parent = nil
+expect(not pcall(validate), "missing recovery ramp must fail even above catch floor")
+ramp.Parent = rampParent
+local savedSpawn = firstStage.safeSpawn
+firstStage.safeSpawn = CF.new(savedSpawn.Position)
+expect(not pcall(validate), "wrong respawn direction must fail")
+firstStage.safeSpawn = savedSpawn
+local blocker = env.instance.new("Part")
+blocker.Name = "ImportedMountainProbe"
+blocker.Anchored = true
+blocker.Size = V.new(4, 10, 20)
+blocker.CFrame = firstStage.entrance * CF.new(40, 6, 0)
+blocker.Parent = env.workspace
+expect(not pcall(validate), "external obstacle BETWEEN route nodes must fail")
+blocker.CFrame = firstStage.entrance * CF.new(40, 10, 0)
+blocker.Size = V.new(20, 2, 20)
+expect(not pcall(validate), "overhead obstruction must fail")
+blocker:Destroy()
+validate()
+print(
+  "HEADLESS geometry: 18 stages; missing support/ramp, external mountain/ceiling, wrong orientation and controller mutations passed"
+)
 
 for _, count in ipairs({ 1, 2, 8 }) do
   local players = {}
@@ -48,6 +98,12 @@ for _, count in ipairs({ 1, 2, 8 }) do
   for _, player in ipairs(players) do
     expect(service.checkpoints:isLoaded(player), "late join/profile load")
     expect(root(player) ~= nil, "delayed character root")
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+    expect(
+      humanoid.WalkSpeed == 16 and math.abs(humanoid.JumpHeight - 7.2) < 0.001 and not humanoid.UseJumpPower,
+      "authored movement baseline"
+    )
+    expect(root(player).CFrame.LookVector:Dot(V.xAxis) > 0.99, "new player faces chapter one")
     local snapshot = service.world.stateFunction.OnServerInvoke(player)
     expect(
       snapshot.ready and snapshot.total == 18 and snapshot.totalKeys == 18 and snapshot.stage == 0,
@@ -59,6 +115,11 @@ for _, count in ipairs({ 1, 2, 8 }) do
   for index = 1, 3 do
     touchCheckpoint(first, index)
   end
+  local humanoid = first.Character:FindFirstChildOfClass("Humanoid")
+  humanoid.Sit = true
+  service.checkpoints:teleportToSavedCheckpoint(first)
+  expect(not humanoid.Sit, "cart passenger released before recovery")
+  expect(root(first).CFrame.LookVector:Dot(V.xAxis) > 0.99, "saved respawn faces next chapter")
   local messages = env:messageCount("ObbyProgress", first)
   touchCheckpoint(first, 3)
   expect(env:messageCount("ObbyProgress", first) == messages, "duplicate checkpoint emits nothing")

@@ -38,6 +38,11 @@ jobs:
             --output /tmp/luau.zip
           unzip -q /tmp/luau.zip -d /tmp/luau
           install -m 0755 /tmp/luau/luau "$HOME/.local/bin/luau"
+          curl --fail --silent --show-error --location \
+            "https://github.com/lune-org/lune/releases/download/v0.10.4/lune-0.10.4-linux-x86_64.zip" \
+            --output /tmp/lune.zip
+          unzip -q /tmp/lune.zip -d /tmp/lune
+          install -m 0755 /tmp/lune/lune "$HOME/.local/bin/lune"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Format & lint
         run: ./scripts/check.sh
@@ -46,5 +51,12 @@ jobs:
           rojo build default.project.json -o /tmp/toads-great-escape.rbxlx
           rojo build studio-test.project.json -o /tmp/toads-studio-tests.rbxlx
           lune run tests/headless/run.luau /tmp/toads-great-escape.rbxlx
+      - name: Upload places built from this revision
+        uses: actions/upload-artifact@v4
+        with:
+          name: toads-places-${{ github.sha }}
+          path: |
+            /tmp/toads-great-escape.rbxlx
+            /tmp/toads-studio-tests.rbxlx
       - name: Whitespace validation
         run: git diff --check

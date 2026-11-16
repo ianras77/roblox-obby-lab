@@ -47,11 +47,14 @@ function Environment.new(placePath)
     return value
   end
   wrap = function(native)
-    if wrappers[native] then
-      return wrappers[native]
+    -- Lune can return distinct userdata handles for the same Instance. Table
+    -- keys use handle identity even when == succeeds; preserve proxy identity.
+    local identity = native:GetDebugId()
+    if wrappers[identity] then
+      return wrappers[identity]
     end
     local proxy = { _native = native, __type = "Instance" }
-    wrappers[native] = proxy
+    wrappers[identity] = proxy
     setmetatable(proxy, {
       __index = function(instance, key)
         for _, override in ipairs(propertyOverrides[key] or {}) do
@@ -366,29 +369,51 @@ function Environment.new(placePath)
   self.invalidateGeometry = function()
     table.clear(rayCache)
   end
+  self.terrainClears = {}
+  methods("Terrain", "FillBlock", function(_, cframe, size, material)
+    table.insert(self.terrainClears, { cframe = cframe, size = size, material = material })
+  end)
   methods("Workspace", "Raycast", function(_, origin, direction, params)
     local best, result = math.huge, nil
-    for _, root in ipairs(params.FilterDescendantsInstances) do
+    local excluded = params.FilterType == roblox.Enum.RaycastFilterType.Exclude
+    local roots = excluded and { self.workspace } or params.FilterDescendantsInstances
+    for _, root in ipairs(roots) do
       if not rayCache[root] then
         rayCache[root] = {}
         for _, part in ipairs(root:GetDescendants()) do
-          if part:IsA("BasePart") and part.CanCollide then
-            table.insert(rayCache[root], part)
+          if part:IsA("BasePart") and not part:IsA("Terrain") and part.CanCollide then
+            table.insert(
+              rayCache[root],
+              { part = part, position = part.Position, size = part.Size, cframe = part.CFrame }
+            )
           end
         end
       end
-      for _, part in ipairs(rayCache[root]) do
+      for _, geometry in ipairs(rayCache[root]) do
+        local part = geometry.part
+        local radius = geometry.size.Magnitude / 2 + direction.Magnitude
+        if (origin - geometry.position).Magnitude > radius then
+          continue
+        end
         if not part.Parent or not part.CanCollide then
           continue
         end
-        local radius = part.Size.Magnitude / 2 + direction.Magnitude
-        if (origin - part.Position).Magnitude > radius then
+        local skip = false
+        if excluded then
+          for _, ignored in ipairs(params.FilterDescendantsInstances) do
+            if part == ignored or part:IsDescendantOf(ignored) then
+              skip = true
+              break
+            end
+          end
+        end
+        if skip then
           continue
         end
-        local o, d = part.CFrame:PointToObjectSpace(origin), part.CFrame:VectorToObjectSpace(direction)
+        local o, d = geometry.cframe:PointToObjectSpace(origin), geometry.cframe:VectorToObjectSpace(direction)
         local lo, hi = 0, 1
         for _, axis in ipairs({ "X", "Y", "Z" }) do
-          local half = part.Size[axis] / 2
+          local half = geometry.size[axis] / 2
           if math.abs(d[axis]) < 0.000001 then
             if math.abs(o[axis]) > half then
               hi = -1

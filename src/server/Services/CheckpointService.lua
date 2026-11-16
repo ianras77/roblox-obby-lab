@@ -120,6 +120,11 @@ function CheckpointService:initializePlayer(player)
     self:teleportToSavedCheckpoint(player)
     local humanoid = character and character:WaitForChild("Humanoid", 5)
     if humanoid then
+      -- Make the authored jump budgets independent of place/avatar defaults.
+      humanoid.WalkSpeed = 16
+      humanoid.UseJumpPower = false
+      humanoid.JumpHeight = 7.2
+      humanoid.AutoJumpEnabled = true
       if self.deathConnections[player] then
         self.deathConnections[player]:Disconnect()
       end
@@ -494,12 +499,9 @@ function CheckpointService:teleportToStage(player, targetStage)
         root = character:WaitForChild("HumanoidRootPart", 5)
       end
       if cp and root and root:IsA("BasePart") then
-        root.AssemblyLinearVelocity = Vector3.new()
-        root.AssemblyAngularVelocity = Vector3.new()
-        root.CFrame = stage.safeSpawn or (cp.CFrame + Vector3.new(0, 5, 0))
-        player:SetAttribute("GraceUntil", os.clock() + 1.5)
+        return self:teleportToCFrame(player, stage.safeSpawn or (cp.CFrame + Vector3.new(0, 5, 0)))
       end
-      return true
+      return false
     end
   end
   return false
@@ -514,6 +516,10 @@ function CheckpointService:teleportToCFrame(player, destination: CFrame)
   if not root or not root:IsA("BasePart") then
     return false
   end
+  local humanoid = character:FindFirstChildOfClass("Humanoid")
+  if humanoid then
+    humanoid.Sit = false
+  end
   root.AssemblyLinearVelocity = Vector3.new()
   root.AssemblyAngularVelocity = Vector3.new()
   root.CFrame = destination
@@ -527,7 +533,9 @@ function CheckpointService:teleportToSavedCheckpoint(player)
     return
   end
   if target == 0 then
-    return self:teleportToCFrame(player, self.stages[1].entrance + Vector3.new(0, 4, 0))
+    local entrance = self.stages[1].entrance
+    local position = entrance.Position + Vector3.new(0, 4, 0)
+    return self:teleportToCFrame(player, CFrame.lookAt(position, position + entrance.RightVector))
   end
   self:teleportToStage(player, target)
 end

@@ -5,3 +5,7 @@
 *.log
 *.rbxl.lock
 *.rbxlx.lock
+
+# Rebuild places from the reviewed source; CI uploads revision-labelled artifacts.
+*.rbxlx
+roblox.yml

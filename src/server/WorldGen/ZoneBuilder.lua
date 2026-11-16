@@ -26,7 +26,9 @@ function ZoneBuilder.buildZone(args)
       random = args.random,
     })
     if previousExit then
-      RouteBuilder.connect(zoneModel, previousExit, result.entrance)
+      -- Meet landing EDGES. Center-to-center ramps end underneath the
+      -- raised next landing and leave a head-height collision lip.
+      RouteBuilder.connect(zoneModel, previousExit * CFrame.new(7, 0, 0), result.entrance * CFrame.new(-7, 0, 0))
     end
     local connectorLength = previousExit and (result.entrance.Position - previousExit.Position).Magnitude or 0
     result.model:SetAttribute("ZoneIndex", args.zoneIndex)
